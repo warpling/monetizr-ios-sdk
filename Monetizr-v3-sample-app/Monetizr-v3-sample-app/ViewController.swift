@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var firstBlock: UIView!
     @IBOutlet var secondBlock: UIView!
@@ -21,12 +21,45 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Dismiss keyboard
+        self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         tokenField.text = "4D2E54389EB489966658DDD83E2D1"
         merchIdField.text = "1794883780674"
         merchTagField.text = "30-credits"
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    @IBAction func buttonTap(sender: UIButton) {
+        if sender == openButton {
+            // Open product here
+        }
+    }
 
+}
 
+// Extension to dismiss keyboard when tapped in blank space
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 
