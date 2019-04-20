@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2877204B226BA42C00F54AFA /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877204A226BA42C00F54AFA /* ProductViewController.swift */; };
+		2877204D226BA4AD00F54AFA /* Monetizr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877204C226BA4AD00F54AFA /* Monetizr.swift */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
 		28E6B7942262109300E43C83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7922262109300E43C83 /* Main.storyboard */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2877204A226BA42C00F54AFA /* ProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
+		2877204C226BA4AD00F54AFA /* Monetizr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monetizr.swift; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28E6B7902262109300E43C83 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -35,9 +39,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28772049226BA34800F54AFA /* Monetizr-SDK */ = {
+			isa = PBXGroup;
+			children = (
+				2877204A226BA42C00F54AFA /* ProductViewController.swift */,
+				2877204C226BA4AD00F54AFA /* Monetizr.swift */,
+			);
+			name = "Monetizr-SDK";
+			path = "Monetizr-v3-sample-app/Monetizr-SDK";
+			sourceTree = "<group>";
+		};
 		28E6B7822262109300E43C83 = {
 			isa = PBXGroup;
 			children = (
+				28772049226BA34800F54AFA /* Monetizr-SDK */,
 				28E6B78D2262109300E43C83 /* Monetizr-v3-sample-app */,
 				28E6B78C2262109300E43C83 /* Products */,
 			);
@@ -156,6 +171,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2877204B226BA42C00F54AFA /* ProductViewController.swift in Sources */,
+				2877204D226BA4AD00F54AFA /* Monetizr.swift in Sources */,
 				28E6B7912262109300E43C83 /* ViewController.swift in Sources */,
 				28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */,
 			);

@@ -26,7 +26,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view.
         tokenField.text = "4D2E54389EB489966658DDD83E2D1"
         merchIdField.text = "1794883780674"
-        merchTagField.text = "30-credits"
+        merchTagField.text = "monetizr-sample-t-shirt" //30-credits"
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -45,6 +45,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction func buttonTap(sender: UIButton) {
         if sender == openButton {
             // Open product here
+            Monetizr.shared.openProductForTag(tag: merchTagField.text!)
         }
     }
 

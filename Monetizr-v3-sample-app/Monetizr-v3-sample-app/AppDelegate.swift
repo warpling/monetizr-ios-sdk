@@ -16,6 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Setup Monetizr
+        Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1"
+        
         return true
     }
 
