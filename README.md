@@ -10,5 +10,5 @@
 ```objc
 - Example token, can be used for testing: 4D2E54389EB489966658DDD83E2D1
 - Example merchandise id: 1794883780674
-- Example merchandise tag: 30-credits
+- Example merchandise tags: 30-credits, monetizr-sample-t-shirt
 ```
