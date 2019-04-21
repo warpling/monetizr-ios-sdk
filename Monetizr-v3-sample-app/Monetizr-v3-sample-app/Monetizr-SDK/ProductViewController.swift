@@ -16,11 +16,31 @@ class ProductViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Background configuration
+        self.view.backgroundColor = .white
+        
+        // Close button
+        let closeButton = UIButton(frame: .zero)
+        closeButton.closeProductButtonStyle()
+        closeButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        self.view.addSubview(closeButton)
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
+            closeButton.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: -20),
+            closeButton.widthAnchor.constraint(equalToConstant: 44),
+            closeButton.heightAnchor.constraint(equalToConstant: 44),
+            ])
         
     }
     
     // Open product with given TAG and TOKEN
     func openProductForTagWithToken(tag:String, token:String) {
         
+    }
+    
+    // Handle button clicks
+    @objc func buttonAction(sender:UIButton!){
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 }

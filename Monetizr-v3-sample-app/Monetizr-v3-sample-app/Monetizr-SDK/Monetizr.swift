@@ -30,6 +30,7 @@ class Monetizr {
             let productViewController = ProductViewController()
             productViewController.token = token
             productViewController.tag = tag
+            productViewController.modalPresentationStyle = .overCurrentContext
             topController.present(productViewController, animated: true, completion: nil)
         }
         
