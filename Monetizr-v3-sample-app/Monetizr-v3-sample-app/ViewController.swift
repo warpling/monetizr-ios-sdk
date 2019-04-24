@@ -14,7 +14,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var secondBlock: UIView!
     
     @IBOutlet var tokenField: UITextField!
-    @IBOutlet var merchIdField: UITextField!
     @IBOutlet var merchTagField: UITextField!
     
     @IBOutlet var openButton: UIButton!
@@ -25,8 +24,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         tokenField.text = "4D2E54389EB489966658DDD83E2D1"
-        merchIdField.text = "1794883780674"
-        merchTagField.text = "monetizr-sample-t-shirt" //30-credits"
+        merchTagField.text = "monetizr-sample-t-shirt" //"30-credits", "1794883780674"
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {

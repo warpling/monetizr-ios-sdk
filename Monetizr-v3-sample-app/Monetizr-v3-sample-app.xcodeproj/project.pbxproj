@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28267F012270E2190031E6C0 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28267F002270E2190031E6C0 /* Product.swift */; };
 		2877204B226BA42C00F54AFA /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877204A226BA42C00F54AFA /* ProductViewController.swift */; };
 		2877204D226BA4AD00F54AFA /* Monetizr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877204C226BA4AD00F54AFA /* Monetizr.swift */; };
 		28772051226D08B600F54AFA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28772050226D08B600F54AFA /* Extensions.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		28267F002270E2190031E6C0 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		2877204A226BA42C00F54AFA /* ProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
 		2877204C226BA4AD00F54AFA /* Monetizr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monetizr.swift; sourceTree = "<group>"; };
 		28772050226D08B600F54AFA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -50,6 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				2877204A226BA42C00F54AFA /* ProductViewController.swift */,
+				28267F002270E2190031E6C0 /* Product.swift */,
 				2877204C226BA4AD00F54AFA /* Monetizr.swift */,
 				28772050226D08B600F54AFA /* Extensions.swift */,
 			);
@@ -95,7 +98,6 @@
 				36BF1201E621B75EEE391125 /* Pods-Monetizr-v3-sample-app.debug.xcconfig */,
 				77A3F60495AE31152A231C31 /* Pods-Monetizr-v3-sample-app.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -248,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28772051226D08B600F54AFA /* Extensions.swift in Sources */,
+				28267F012270E2190031E6C0 /* Product.swift in Sources */,
 				2877204B226BA42C00F54AFA /* ProductViewController.swift in Sources */,
 				2877204D226BA4AD00F54AFA /* Monetizr.swift in Sources */,
 				28E6B7912262109300E43C83 /* ViewController.swift in Sources */,

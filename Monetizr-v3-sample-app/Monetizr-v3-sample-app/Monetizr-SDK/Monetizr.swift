@@ -34,7 +34,6 @@ class Monetizr {
             topController.present(productViewController, animated: true, completion: nil)
         }
         
-        //ProductViewController().openProductForTagWithToken(tag:tag, token:token)
     }
     
 }
