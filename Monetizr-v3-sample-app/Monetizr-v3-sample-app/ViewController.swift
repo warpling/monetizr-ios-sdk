@@ -43,6 +43,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction func buttonTap(sender: UIButton) {
         if sender == openButton {
             // Open product here
+            Monetizr.shared.token = tokenField.text!
             Monetizr.shared.openProductForTag(tag: merchTagField.text!)
         }
     }
