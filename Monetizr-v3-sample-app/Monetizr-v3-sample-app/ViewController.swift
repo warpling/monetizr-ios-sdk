@@ -52,7 +52,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     self.textLabel.text = "Product was loaded"
                 }
                 else {
-                    self.textLabel.text = "Some error received - developer should look for error"
+                    //self.textLabel.text = "Some error received - developer should look for error"
+                    self.textLabel.text = error?.localizedDescription
                 }
             }
         }

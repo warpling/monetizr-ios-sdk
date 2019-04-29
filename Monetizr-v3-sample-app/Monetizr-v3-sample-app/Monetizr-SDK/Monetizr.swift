@@ -32,9 +32,15 @@ class Monetizr {
         Alamofire.request(url, headers: headers).responseProduct { response in
             if let retrievedProduct = response.result.value {
                 //var product: Product?
-                let product = retrievedProduct
-                self.openProductViewForProduct(product: product)
-                completionHandler(true, nil)
+                if retrievedProduct.data != nil {
+                    let product = retrievedProduct
+                    self.openProductViewForProduct(product: product)
+                    completionHandler(true, nil)
+                }
+                else {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
+                    completionHandler(false, error)
+                }
             }
             else if let error = response.result.error as? URLError {
                 print("URLError occurred: \(error)")
