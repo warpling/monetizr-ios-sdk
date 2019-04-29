@@ -13,28 +13,25 @@ import Alamofire
 class ProductViewController: UIViewController {
     
     let textView = UITextView(frame: .zero)
-    var token = ""
-    var tag = ""
-    var product: Product? {
-        didSet{
-            //print(product!)
-            print("Product retrieved")
-            let someProduct = self.product?.data?.productByHandle
-            
-            let text = String(describing: someProduct)
-            textView.text = text
-            textView.isScrollEnabled = true
-            
-        }
-    }
+    var product: Product?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Background configuration
         self.view.backgroundColor = .white
         
+        // Text View
+        self.configureTextView()
+        
+        // Close button
+        self.configureCloseButton()
+        
+        // Load product
+        self.loadProduct()
+    }
+    
+    func configureTextView() {
         // TextView
-        //textView.backgroundColor = .red
         self.view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -43,7 +40,9 @@ class ProductViewController: UIViewController {
             textView.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 0),
             textView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor, constant: 0),
             ])
-        
+    }
+    
+    func configureCloseButton() {
         // Close button
         let closeButton = UIButton(frame: .zero)
         closeButton.closeProductButtonStyle()
@@ -51,32 +50,18 @@ class ProductViewController: UIViewController {
         self.view.addSubview(closeButton)
         NSLayoutConstraint.activate([
             closeButton.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
-            closeButton.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: -20),
+            closeButton.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
             closeButton.widthAnchor.constraint(equalToConstant: 44),
             closeButton.heightAnchor.constraint(equalToConstant: 44),
             ])
-        
-        // Load product
-        self.loadProductData()
     }
     
-    // Load product data
-    func loadProductData() {
-        let url = URL(string: "https://api3.themonetizr.com/api/products/tag/"+tag)!
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer "+token
-        ]
-        Alamofire.request(url, headers: headers).responseProduct { response in
-            if let retrievedProduct = response.result.value {
-                self.product = retrievedProduct
-            }
-            else if let error = response.result.error as? URLError {
-                print("URLError occurred: \(error)")
-            }
-            else {
-                print("Unknown error: \(String(describing: response.result.error))")
-            }
-        }
+    func loadProduct() {
+        //print(product!)
+        let someProduct = self.product?.data?.productByHandle
+        let text = String(describing: someProduct)
+        textView.text = text
+        textView.isScrollEnabled = true
     }
     
     // Handle button clicks

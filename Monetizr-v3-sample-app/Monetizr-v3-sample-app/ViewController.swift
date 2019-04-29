@@ -44,7 +44,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if sender == openButton {
             // Open product here
             Monetizr.shared.token = tokenField.text!
-            Monetizr.shared.openProductForTag(tag: merchTagField.text!)
+            Monetizr.shared.openProductForTag(tag: merchTagField.text!) { success, error in
+                // Show some error if needed
+            }
         }
     }
 
