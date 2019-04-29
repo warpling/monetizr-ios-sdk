@@ -15,6 +15,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var tokenField: UITextField!
     @IBOutlet var merchTagField: UITextField!
+    @IBOutlet var textLabel: UILabel!
     
     @IBOutlet var openButton: UIButton!
 
@@ -43,9 +44,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction func buttonTap(sender: UIButton) {
         if sender == openButton {
             // Open product here
+            textLabel.text = "Product loading..."
             Monetizr.shared.token = tokenField.text!
             Monetizr.shared.openProductForTag(tag: merchTagField.text!) { success, error in
                 // Show some error if needed
+                if success {
+                    self.textLabel.text = "Product was loaded"
+                }
+                else {
+                    self.textLabel.text = "Some error received - developer should look for error"
+                }
             }
         }
     }
