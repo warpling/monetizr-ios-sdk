@@ -15,6 +15,7 @@ class Monetizr {
     static let shared = Monetizr(token: "")
     
     var token: String
+    let apiUrl = "https://api3.themonetizr.com/api/"
     
     // Initialization
     
@@ -24,7 +25,7 @@ class Monetizr {
     
     // Load product data
     func openProductForTag(tag: String, completionHandler: @escaping (Bool, Error?) -> Void){
-        let url = URL(string: "https://api3.themonetizr.com/api/products/tag/"+tag)!
+        let url = URL(string: apiUrl+"products/tag/"+tag)!
         let headers: HTTPHeaders = [
             "Authorization": "Bearer "+token
         ]
