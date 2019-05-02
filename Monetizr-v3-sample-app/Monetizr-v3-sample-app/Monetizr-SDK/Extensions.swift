@@ -67,7 +67,7 @@ extension UIButton {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .black
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
-        self.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        self.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         self.setTitleColor(UIColor.white, for: .normal)
         self.layer.cornerRadius = 5
     }
