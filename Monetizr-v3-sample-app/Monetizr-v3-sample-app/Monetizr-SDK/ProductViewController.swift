@@ -14,22 +14,33 @@ class ProductViewController: UIViewController {
     
     let textView = UITextView(frame: .zero)
     var product: Product?
+    var variantCount = 0
     let closeButton = UIButton(frame: .zero)
+    let checkoutButtonBackgroundView = UIView(frame: .zero)
     let checkoutButton = UIButton(frame: .zero)
+    let variantOptionsContainerView = UIView(frame: .zero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Background configuration
         self.view.backgroundColor = .white
         
-        // Text View
-        self.configureTextView()
+        // Count variants
+        variantCount = (product?.data?.productByHandle?.variants?.edges!.count)!
         
         // Close button
         self.configureCloseButton()
         
         // Checkout button
         self.configureCheckOutButton()
+        
+        // Variant option selection container view
+        if variantCount > 0 {
+            self.configureVariantOptionsContainerView()
+        }
+        
+        // Text View
+        self.configureTextView()
         
         // Load product
         self.loadProduct()
@@ -43,7 +54,7 @@ class ProductViewController: UIViewController {
             textView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 0),
             textView.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: 0),
             textView.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 0),
-            textView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor, constant: 0),
+            textView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
             ])
     }
     
@@ -61,6 +72,16 @@ class ProductViewController: UIViewController {
     }
     
     func configureCheckOutButton() {
+        // Checkout buttons background
+        checkoutButtonBackgroundView.checkoutButtonBackgroundViewStyle()
+        self.view.addSubview(checkoutButtonBackgroundView)
+        NSLayoutConstraint.activate([
+            checkoutButtonBackgroundView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor, constant: 0),
+            checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 0),
+            checkoutButtonBackgroundView.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: 0),
+            checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70),
+            ])
+        
         // Checkout button
         checkoutButton.checkoutProductButtonStyle()
         checkoutButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
@@ -71,6 +92,19 @@ class ProductViewController: UIViewController {
             checkoutButton.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: -10),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50),
             ])
+    }
+    
+    func configureVariantOptionsContainerView() {
+        // Variant option selection container view
+        variantOptionsContainerView.variantOptionsContainerViewStyle()
+        self.view.addSubview(variantOptionsContainerView)
+        NSLayoutConstraint.activate([
+            variantOptionsContainerView.bottomAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 0),
+            variantOptionsContainerView.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 0),
+            variantOptionsContainerView.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: 0),
+            variantOptionsContainerView.heightAnchor.constraint(equalToConstant: 60),
+            ])
+        
     }
     
     func loadProduct() {

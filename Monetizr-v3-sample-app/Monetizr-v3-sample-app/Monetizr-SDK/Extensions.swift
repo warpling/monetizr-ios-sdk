@@ -38,9 +38,22 @@ extension UIView {
         }
         return self.bottomAnchor
     }
+    
+    // Styles
+    func checkoutButtonBackgroundViewStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .white
+    }
+    
+    func variantOptionsContainerViewStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = UIColor(hex: 0x231f20)
+    }
 }
 
 extension UIButton {
+    
+    // Styles
     
     func closeProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -58,4 +71,17 @@ extension UIButton {
         self.setTitleColor(UIColor.white, for: .normal)
         self.layer.cornerRadius = 5
     }
+}
+
+extension UIColor {
+    
+    convenience init(hex: Int) {
+        let components = (
+            R: CGFloat((hex >> 16) & 0xff) / 255,
+            G: CGFloat((hex >> 08) & 0xff) / 255,
+            B: CGFloat((hex >> 00) & 0xff) / 255
+        )
+        self.init(red: components.R, green: components.G, blue: components.B, alpha: 1)
+    }
+    
 }
