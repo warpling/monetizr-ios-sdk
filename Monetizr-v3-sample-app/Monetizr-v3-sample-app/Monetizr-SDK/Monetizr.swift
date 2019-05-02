@@ -62,11 +62,9 @@ class Monetizr {
             }
             
             let productViewController = ProductViewController()
-            productViewController.product = product
             productViewController.modalPresentationStyle = .overCurrentContext
+            productViewController.product = product
             topController.present(productViewController, animated: true, completion: nil)
         }
-        
     }
-    
 }

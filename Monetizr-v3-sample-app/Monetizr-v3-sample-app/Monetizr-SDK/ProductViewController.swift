@@ -14,6 +14,8 @@ class ProductViewController: UIViewController {
     
     let textView = UITextView(frame: .zero)
     var product: Product?
+    let closeButton = UIButton(frame: .zero)
+    let checkoutButton = UIButton(frame: .zero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +27,9 @@ class ProductViewController: UIViewController {
         
         // Close button
         self.configureCloseButton()
+        
+        // Checkout button
+        self.configureCheckOutButton()
         
         // Load product
         self.loadProduct()
@@ -44,7 +49,6 @@ class ProductViewController: UIViewController {
     
     func configureCloseButton() {
         // Close button
-        let closeButton = UIButton(frame: .zero)
         closeButton.closeProductButtonStyle()
         closeButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         self.view.addSubview(closeButton)
@@ -53,6 +57,19 @@ class ProductViewController: UIViewController {
             closeButton.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
             closeButton.widthAnchor.constraint(equalToConstant: 44),
             closeButton.heightAnchor.constraint(equalToConstant: 44),
+            ])
+    }
+    
+    func configureCheckOutButton() {
+        // Checkout button
+        checkoutButton.checkoutProductButtonStyle()
+        checkoutButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        self.view.addSubview(checkoutButton)
+        NSLayoutConstraint.activate([
+            checkoutButton.bottomAnchor.constraint(equalTo: view.safeBottomAnchor, constant: -10),
+            checkoutButton.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 10),
+            checkoutButton.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: -10),
+            checkoutButton.heightAnchor.constraint(equalToConstant: 50),
             ])
     }
     
@@ -66,7 +83,12 @@ class ProductViewController: UIViewController {
     
     // Handle button clicks
     @objc func buttonAction(sender:UIButton!){
-        navigationController?.popViewController(animated: true)
-        dismiss(animated: true, completion: nil)
+        if sender == closeButton {
+            navigationController?.popViewController(animated: true)
+            dismiss(animated: true, completion: nil)
+        }
+        if sender == checkoutButton {
+            
+        }
     }
 }
