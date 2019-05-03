@@ -49,6 +49,16 @@ extension UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = UIColor(hex: 0x231f20)
     }
+    
+    func imageCarouselContainerViewStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = UIColor(hex: 0xc1c1c1)
+    }
+    
+    func descriptionContainerScrollViewStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .black
+    }
 }
 
 extension UIButton {
