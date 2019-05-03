@@ -59,13 +59,14 @@ class ProductViewController: UIViewController {
         // Description container scroll view
         self.configureDescriptionContainerScrollView()
         
+        // Close button
+        self.configureCloseButton()
+        
         // Setup constraints
         self.configureSharedConstraints()
         self.configureCompatConstraints()
         self.configureRegularConstraints()
-        
-        // Close button
-        self.configureCloseButton()
+        self.activateInitialConstraints()
         
         // Load product
         self.loadProduct()
@@ -75,10 +76,100 @@ class ProductViewController: UIViewController {
         super.viewDidLayoutSubviews()
     }
     
+    func activateInitialConstraints() {
+        if #available(iOS 11.0, *) {
+            let window = UIApplication.shared.keyWindow
+            topPadding = (window?.safeAreaInsets.top)!
+            bottomPadding = (window?.safeAreaInsets.bottom)!
+            viewHeight = view.frame.size.height
+            viewWidth = view.frame.size.width
+        }
+        // Checkout buttons background
+        checkoutButtonBackgroundViewConstraint.constant = 70+bottomPadding
+        if (!sharedConstraints[0].isActive) {
+            // activating shared constraints
+            NSLayoutConstraint.activate(sharedConstraints)
+        }
+        if UIDevice.current.orientation.isLandscape {
+            print("Landscape")
+            if regularConstraints.count > 0 && regularConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(regularConstraints)
+            }
+            // Image carousel container view
+            imageCarouselContainerViewHeightConstraint.constant = viewHeight
+            
+            // Image carousel container view
+            imageCarouselContainerViewWidthConstraint.constant = viewWidth/100*55
+            
+            // activating compact constraints
+            NSLayoutConstraint.activate(compactConstraints)
+        } else {
+            print("Portrait")
+            if compactConstraints.count > 0 && compactConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(compactConstraints)
+            }
+            // Image carousel container view
+            imageCarouselContainerViewHeightConstraint.constant = viewHeight/100*55
+            
+            // Image carousel container view
+            imageCarouselContainerViewWidthConstraint.constant = viewWidth
+            // activating regular constraints
+            NSLayoutConstraint.activate(regularConstraints)
+        }
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        viewWidth = size.width
+        viewHeight = size.height
+        coordinator.animate(alongsideTransition: { (context) in
+            //
+            if #available(iOS 11.0, *) {
+                self.topPadding = self.view.safeAreaInsets.top
+            } else {
+                // Fallback on earlier versions
+            }
+            if #available(iOS 11.0, *) {
+                self.bottomPadding = self.view.safeAreaInsets.bottom
+            } else {
+                // Fallback on earlier versions
+            }
+            // Checkout buttons background
+            self.checkoutButtonBackgroundViewConstraint.constant = 70+self.bottomPadding
+        }, completion: nil)
+        
+        if UIDevice.current.orientation.isLandscape {
+            print("Landscape")
+            if regularConstraints.count > 0 && regularConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(regularConstraints)
+            }
+            // Image carousel container view
+            imageCarouselContainerViewHeightConstraint.constant = viewHeight
+            
+            // Image carousel container view
+            imageCarouselContainerViewWidthConstraint.constant = viewWidth/100*55
+            
+            // activating compact constraints
+            NSLayoutConstraint.activate(compactConstraints)
+        } else {
+            print("Portrait")
+            if compactConstraints.count > 0 && compactConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(compactConstraints)
+            }
+            // Image carousel container view
+            imageCarouselContainerViewHeightConstraint.constant = viewHeight/100*55
+            
+            // Image carousel container view
+            imageCarouselContainerViewWidthConstraint.constant = viewWidth
+            // activating regular constraints
+            NSLayoutConstraint.activate(regularConstraints)
+        }
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         
         super.traitCollectionDidChange(previousTraitCollection)
-        
+        /*
         if #available(iOS 11.0, *) {
             let window = UIApplication.shared.keyWindow
             topPadding = (window?.safeAreaInsets.top)!
@@ -90,26 +181,20 @@ class ProductViewController: UIViewController {
         // Checkout buttons background
         checkoutButtonBackgroundViewConstraint.constant = 70+bottomPadding
         
-        // Image carousel container view
-        //imageCarouselContainerViewHeightConstraint.constant = viewHeight/100*55
-        
-        // Image carousel container view
-        //imageCarouselContainerViewWidthConstraint.constant = viewWidth/100*55
-        
         if (!sharedConstraints[0].isActive) {
             // activating shared constraints
             NSLayoutConstraint.activate(sharedConstraints)
         }
         
-        if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .regular {
+        if traitCollection.verticalSizeClass == .compact {
             if regularConstraints.count > 0 && regularConstraints[0].isActive {
                 NSLayoutConstraint.deactivate(regularConstraints)
             }
             // Image carousel container view
-            imageCarouselContainerViewHeightConstraint.constant = viewHeight/100*55
+            imageCarouselContainerViewHeightConstraint.constant = viewHeight
             
             // Image carousel container view
-            imageCarouselContainerViewWidthConstraint.constant = viewWidth
+            imageCarouselContainerViewWidthConstraint.constant = viewWidth/100*55
             
             // activating compact constraints
             NSLayoutConstraint.activate(compactConstraints)
@@ -118,13 +203,14 @@ class ProductViewController: UIViewController {
                 NSLayoutConstraint.deactivate(compactConstraints)
             }
             // Image carousel container view
-            imageCarouselContainerViewHeightConstraint.constant = viewHeight
+            imageCarouselContainerViewHeightConstraint.constant = viewHeight/100*55
             
             // Image carousel container view
-            imageCarouselContainerViewWidthConstraint.constant = viewWidth/100*55
+            imageCarouselContainerViewWidthConstraint.constant = viewWidth
             // activating regular constraints
             NSLayoutConstraint.activate(regularConstraints)
         }
+ */
     }
     
     func configureSharedConstraints() {
@@ -178,20 +264,6 @@ class ProductViewController: UIViewController {
     func configureCompatConstraints() {
         compactConstraints.append(contentsOf: [
             // Checkout buttons background
-            checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
-            
-            // Variant option selection container view
-            variantOptionsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
-            
-            // Description container scroll view
-            descriptionContainerScrollView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
-            descriptionContainerScrollView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
-            ])
-    }
-    
-    func configureRegularConstraints() {
-        regularConstraints.append(contentsOf: [
-            // Checkout buttons background
             checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
             
             // Variant option selection container view
@@ -200,6 +272,20 @@ class ProductViewController: UIViewController {
             // Description container scroll view
             descriptionContainerScrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             descriptionContainerScrollView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
+            ])
+    }
+    
+    func configureRegularConstraints() {
+        regularConstraints.append(contentsOf: [
+            // Checkout buttons background
+            checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            
+            // Variant option selection container view
+            variantOptionsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            
+            // Description container scroll view
+            descriptionContainerScrollView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
+            descriptionContainerScrollView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             ])
     }
     
