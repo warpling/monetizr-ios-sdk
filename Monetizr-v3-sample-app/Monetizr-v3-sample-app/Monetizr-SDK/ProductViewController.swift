@@ -12,22 +12,28 @@ import Alamofire
 
 class ProductViewController: UIViewController {
     
-    let textView = UITextView(frame: .zero)
     var product: Product?
     var variantCount = 0
+    
+    // Outlets
+    let textView = UITextView(frame: .zero)
     let closeButton = UIButton(frame: .zero)
     let checkoutButtonBackgroundView = UIView(frame: .zero)
     let checkoutButton = UIButton(frame: .zero)
     let variantOptionsContainerView = UIView(frame: .zero)
+    let imageCarouselContainerView = UIView(frame: .zero)
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
     private var regularConstraints: [NSLayoutConstraint] = []
     private var sharedConstraints: [NSLayoutConstraint] = []
     private var checkoutButtonBackgroundViewConstraint = NSLayoutConstraint()
+    private var imageCarouselContainerViewHeightConstraint = NSLayoutConstraint()
     
+    // Size values
     var bottomPadding: CGFloat = 0
     var topPadding: CGFloat = 0
+    var viewHeight: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,13 +54,16 @@ class ProductViewController: UIViewController {
         // Text View
         self.configureTextView()
         
-        // Close button
-        self.configureCloseButton()
+        // Image carousel
+        self.configureImageCarouselContainerView()
         
         // Setup constraints
         self.configureSharedConstraints()
         self.configureCompatConstraints()
         self.configureRegularConstraints()
+        
+        // Close button
+        self.configureCloseButton()
         
         // Load product
         self.loadProduct()
@@ -72,9 +81,14 @@ class ProductViewController: UIViewController {
             let window = UIApplication.shared.keyWindow
             topPadding = (window?.safeAreaInsets.top)!
             bottomPadding = (window?.safeAreaInsets.bottom)!
+            viewHeight = view.frame.size.height
         }
         
+        // Checkout buttons background
         checkoutButtonBackgroundViewConstraint.constant = 70+bottomPadding
+        
+        // Image carousel container view
+        imageCarouselContainerViewHeightConstraint.constant = viewHeight/100*55
         
         if (!sharedConstraints[0].isActive) {
             // activating shared constraints
@@ -101,20 +115,17 @@ class ProductViewController: UIViewController {
         // Checkout buttons background
         checkoutButtonBackgroundViewConstraint = checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding)
         
+        // Image carousel container view
+        imageCarouselContainerViewHeightConstraint = imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight/100*55)
+        
         // Create shared constraints array
         sharedConstraints.append(contentsOf: [
             
             // TextView
-            textView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 0),
+            textView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
             textView.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: 0),
             textView.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 0),
             textView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
-            
-            // Close button
-            closeButton.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
-            closeButton.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
-            closeButton.widthAnchor.constraint(equalToConstant: 44),
-            closeButton.heightAnchor.constraint(equalToConstant: 44),
             
             // Checkout buttons background
             checkoutButtonBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
@@ -133,6 +144,18 @@ class ProductViewController: UIViewController {
             variantOptionsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             variantOptionsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             variantOptionsContainerView.heightAnchor.constraint(equalToConstant: 60),
+            
+            // Image carousel container view
+            imageCarouselContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            imageCarouselContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            imageCarouselContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            imageCarouselContainerViewHeightConstraint,
+            
+            // Close button
+            closeButton.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
+            closeButton.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
+            closeButton.widthAnchor.constraint(equalToConstant: 44),
+            closeButton.heightAnchor.constraint(equalToConstant: 44)
             ])
     }
     
@@ -177,6 +200,13 @@ class ProductViewController: UIViewController {
         variantOptionsContainerView.variantOptionsContainerViewStyle()
         self.view.addSubview(variantOptionsContainerView)
         
+    }
+    
+    func configureImageCarouselContainerView() {
+        // Image carousel container view
+        imageCarouselContainerView.translatesAutoresizingMaskIntoConstraints = false
+        imageCarouselContainerView.backgroundColor = .orange
+        view.addSubview(imageCarouselContainerView)
     }
     
     func loadProduct() {

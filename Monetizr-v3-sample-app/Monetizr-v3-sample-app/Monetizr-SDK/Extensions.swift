@@ -65,10 +65,10 @@ extension UIButton {
     
     func checkoutProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .black
+        self.backgroundColor = UIColor(hex: 0x007aff)
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
-        self.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         self.setTitleColor(UIColor.white, for: .normal)
+        self.setTitleColor(UIColor.lightGray, for: .highlighted)
         self.layer.cornerRadius = 5
     }
 }
