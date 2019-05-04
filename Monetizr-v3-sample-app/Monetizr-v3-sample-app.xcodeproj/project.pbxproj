@@ -11,6 +11,7 @@
 		2877204B226BA42C00F54AFA /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877204A226BA42C00F54AFA /* ProductViewController.swift */; };
 		2877204D226BA4AD00F54AFA /* Monetizr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2877204C226BA4AD00F54AFA /* Monetizr.swift */; };
 		28772051226D08B600F54AFA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28772050226D08B600F54AFA /* Extensions.swift */; };
+		288716C1227DE073005DFE43 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288716C0227DE073005DFE43 /* Device.swift */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
 		28E6B7942262109300E43C83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7922262109300E43C83 /* Main.storyboard */; };
@@ -24,6 +25,7 @@
 		2877204A226BA42C00F54AFA /* ProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
 		2877204C226BA4AD00F54AFA /* Monetizr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monetizr.swift; sourceTree = "<group>"; };
 		28772050226D08B600F54AFA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		288716C0227DE073005DFE43 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28E6B7902262109300E43C83 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -55,6 +57,7 @@
 				28267F002270E2190031E6C0 /* Product.swift */,
 				2877204C226BA4AD00F54AFA /* Monetizr.swift */,
 				28772050226D08B600F54AFA /* Extensions.swift */,
+				288716C0227DE073005DFE43 /* Device.swift */,
 			);
 			name = "Monetizr-SDK";
 			path = "Monetizr-v3-sample-app/Monetizr-SDK";
@@ -254,6 +257,7 @@
 				2877204B226BA42C00F54AFA /* ProductViewController.swift in Sources */,
 				2877204D226BA4AD00F54AFA /* Monetizr.swift in Sources */,
 				28E6B7912262109300E43C83 /* ViewController.swift in Sources */,
+				288716C1227DE073005DFE43 /* Device.swift in Sources */,
 				28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -25,7 +25,8 @@ class Monetizr {
     
     // Load product data
     func openProductForTag(tag: String, completionHandler: @escaping (Bool, Error?) -> Void){
-        let url = URL(string: apiUrl+"products/tag/"+tag)!
+        let size = screenWidthPixelsInPortraitOrientation().description
+        let url = URL(string: apiUrl+"products/tag/"+tag+"?size="+size)!
         let headers: HTTPHeaders = [
             "Authorization": "Bearer "+token
         ]

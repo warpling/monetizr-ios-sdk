@@ -38,6 +38,9 @@ class ProductViewController: UIViewController {
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
+    // Elements
+    var imageLinks: NSMutableArray = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Background configuration
@@ -64,7 +67,7 @@ class ProductViewController: UIViewController {
         self.configureCloseButton()
         
         // Configure price tag
-        self.configurePriceTagdLabel()
+        self.configurePriceTagLabel()
         
         // Setup constraints
         self.configureSharedConstraints()
@@ -190,6 +193,10 @@ class ProductViewController: UIViewController {
             descriptionContainerScrollView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             descriptionContainerScrollView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
             
+            // Price tag
+            priceLabel.topAnchor.constraint(equalTo: descriptionContainerScrollView.bottomAnchor, constant: 0),
+            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerScrollView.rightAnchor, constant: 0),
+            
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
             closeButton.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
@@ -264,12 +271,31 @@ class ProductViewController: UIViewController {
         view.addSubview(descriptionContainerScrollView)
     }
     
-    func configurePriceTagdLabel() {
-        
+    func configurePriceTagLabel() {
+        // Configure price tag
+        priceLabel.translatesAutoresizingMaskIntoConstraints = false
+        descriptionContainerScrollView.addSubview(priceLabel)
+        priceLabel.backgroundColor = .white
+        priceLabel.textColor = UIColor(hex: 0x007aff)
+        priceLabel.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
+        priceLabel.numberOfLines = 1
+        priceLabel.frame.size.width = 120
+        priceLabel.frame.size.height = 30
+        priceLabel.textAlignment = .right
+        priceLabel.adjustsFontSizeToFitWidth = true
+        priceLabel.minimumScaleFactor = 0.5
+        priceLabel.text = "USD 25.99"
+        //let size = descriptionContainerScrollView.contentSize
     }
     
     func loadProduct() {
         //print(product!)
+        let images = self.product?.data?.productByHandle?.images?.edges
+        for image in images! {
+            let link = image.node?.transformedSrc
+            imageLinks.add(link!)
+        }
+        print(imageLinks)
         let someProduct = self.product?.data?.productByHandle
         _ = String(describing: someProduct)
     }
