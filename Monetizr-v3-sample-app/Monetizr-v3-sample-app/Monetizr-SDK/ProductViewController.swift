@@ -16,13 +16,14 @@ class ProductViewController: UIViewController {
     var variantCount = 0
     
     // Outlets
-    let closeButton = UIButton(frame: .zero)
-    let checkoutButtonBackgroundView = UIView(frame: .zero)
-    let checkoutButton = UIButton(frame: .zero)
-    let variantOptionsContainerView = UIView(frame: .zero)
-    let imageCarouselContainerView = UIView(frame: .zero)
-    let descriptionContainerScrollView = UIScrollView(frame: .zero)
+    let closeButton = UIButton()
+    let checkoutButtonBackgroundView = UIView()
+    let checkoutButton = UIButton()
+    let variantOptionsContainerView = UIView()
+    let imageCarouselContainerView = UIView()
+    let descriptionContainerView = UIView()
     let priceLabel = UILabel()
+    let titleLabel = UILabel()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -60,14 +61,17 @@ class ProductViewController: UIViewController {
         // Image carousel
         self.configureImageCarouselContainerView()
         
-        // Description container scroll view
-        self.configureDescriptionContainerScrollView()
+        // Description container view
+        self.configureDescriptionContainerView()
         
         // Close button
         self.configureCloseButton()
         
         // Configure price tag
         self.configurePriceTagLabel()
+        
+        // Configure title label
+        self.configureTitleLabel()
         
         // Setup constraints
         self.configureSharedConstraints()
@@ -189,13 +193,21 @@ class ProductViewController: UIViewController {
             imageCarouselContainerViewWidthConstraint,
             imageCarouselContainerViewHeightConstraint,
             
-            // Description container scroll view
-            descriptionContainerScrollView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            descriptionContainerScrollView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
+            // Description container view
+            descriptionContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
+            descriptionContainerView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
             
             // Price tag
-            priceLabel.topAnchor.constraint(equalTo: descriptionContainerScrollView.bottomAnchor, constant: 0),
-            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerScrollView.rightAnchor, constant: 0),
+            priceLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
+            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.safeRightAnchor, constant: -10),
+            priceLabel.heightAnchor.constraint(equalToConstant: 30),
+            priceLabel.widthAnchor.constraint(equalToConstant: 120),
+            
+            // Product title
+            titleLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
+            titleLabel.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
+            titleLabel.rightAnchor.constraint(equalTo: priceLabel.leftAnchor, constant: -10),
+            titleLabel.heightAnchor.constraint(equalToConstant: 30),
             
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
@@ -213,9 +225,9 @@ class ProductViewController: UIViewController {
             // Variant option selection container view
             variantOptionsContainerView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
             
-            // Description container scroll view
-            descriptionContainerScrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            descriptionContainerScrollView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
+            // Description container view
+            descriptionContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            descriptionContainerView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
             ])
     }
     
@@ -227,9 +239,9 @@ class ProductViewController: UIViewController {
             // Variant option selection container view
             variantOptionsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             
-            // Description container scroll view
-            descriptionContainerScrollView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
-            descriptionContainerScrollView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            // Description container view
+            descriptionContainerView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
+            descriptionContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             ])
     }
     
@@ -264,28 +276,24 @@ class ProductViewController: UIViewController {
         view.addSubview(imageCarouselContainerView)
     }
     
-    func configureDescriptionContainerScrollView() {
-        // Description container scroll view
-        descriptionContainerScrollView.descriptionContainerScrollViewStyle()
-        //descriptionContainerScrollView.contentSize = descriptionContainerScrollView.frame.size
-        view.addSubview(descriptionContainerScrollView)
+    func configureDescriptionContainerView() {
+        // Description container view
+        descriptionContainerView.descriptionContainerViewStyle()
+        view.addSubview(descriptionContainerView)
     }
     
     func configurePriceTagLabel() {
         // Configure price tag
-        priceLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionContainerScrollView.addSubview(priceLabel)
-        priceLabel.backgroundColor = .white
-        priceLabel.textColor = UIColor(hex: 0x007aff)
-        priceLabel.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
-        priceLabel.numberOfLines = 1
-        priceLabel.frame.size.width = 120
-        priceLabel.frame.size.height = 30
-        priceLabel.textAlignment = .right
-        priceLabel.adjustsFontSizeToFitWidth = true
-        priceLabel.minimumScaleFactor = 0.5
+        priceLabel.priceLabelStyle()
+        descriptionContainerView.addSubview(priceLabel)
         priceLabel.text = "USD 25.99"
-        //let size = descriptionContainerScrollView.contentSize
+    }
+    
+    func configureTitleLabel() {
+        // Configure product title
+        titleLabel.titleLabelStyle()
+        descriptionContainerView.addSubview(titleLabel)
+        titleLabel.text = "Monetizr sample T-Shirt"
     }
     
     func loadProduct() {

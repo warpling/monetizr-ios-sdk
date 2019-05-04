@@ -55,7 +55,7 @@ extension UIView {
         self.backgroundColor = UIColor(hex: 0xc1c1c1)
     }
     
-    func descriptionContainerScrollViewStyle() {
+    func descriptionContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .black
     }
@@ -94,4 +94,28 @@ extension UIColor {
         self.init(red: components.R, green: components.G, blue: components.B, alpha: 1)
     }
     
+}
+
+extension UILabel {
+    func priceLabelStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
+        self.textColor = UIColor(hex: 0x007aff)
+        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
+        self.numberOfLines = 1
+        self.textAlignment = .right
+        self.adjustsFontSizeToFitWidth = true
+        self.minimumScaleFactor = 0.5
+    }
+    
+    func titleLabelStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
+        self.textColor = .white
+        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
+        self.numberOfLines = 1
+        self.textAlignment = .left
+        self.adjustsFontSizeToFitWidth = true
+        self.minimumScaleFactor = 0.5
+    }
 }
