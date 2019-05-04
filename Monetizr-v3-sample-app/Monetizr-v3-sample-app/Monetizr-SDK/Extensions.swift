@@ -119,3 +119,11 @@ extension UILabel {
         self.minimumScaleFactor = 0.5
     }
 }
+
+extension UITextView {
+    func descriptionTextViewStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
+        self.textColor = .white
+    }
+}

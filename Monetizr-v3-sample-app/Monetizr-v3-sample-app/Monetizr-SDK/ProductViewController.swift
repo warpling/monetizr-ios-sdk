@@ -13,7 +13,9 @@ import Alamofire
 class ProductViewController: UIViewController {
     
     var product: Product?
+    var selectedVariant: PurpleNode?
     var variantCount = 0
+    var imageLinks: NSMutableArray = []
     
     // Outlets
     let closeButton = UIButton()
@@ -24,6 +26,7 @@ class ProductViewController: UIViewController {
     let descriptionContainerView = UIView()
     let priceLabel = UILabel()
     let titleLabel = UILabel()
+    let descriptionTextView = UITextView()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -39,16 +42,13 @@ class ProductViewController: UIViewController {
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
-    // Elements
-    var imageLinks: NSMutableArray = []
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Background configuration
         self.view.backgroundColor = .white
         
-        // Count variants
-        variantCount = (product?.data?.productByHandle?.variants?.edges!.count)!
+        // Load product
+        self.loadProductData()
         
         // Checkout button
         self.configureCheckOutButton()
@@ -73,14 +73,17 @@ class ProductViewController: UIViewController {
         // Configure title label
         self.configureTitleLabel()
         
+        // Configure description text
+        self.configureDescriptionTextView()
+        
+        // Update views data
+        self.updateViewsData()
+        
         // Setup constraints
         self.configureSharedConstraints()
         self.configureCompatConstraints()
         self.configureRegularConstraints()
         self.activateInitialConstraints()
-        
-        // Load product
-        self.loadProduct()
     }
     
     override func viewDidLayoutSubviews() {
@@ -209,6 +212,12 @@ class ProductViewController: UIViewController {
             titleLabel.rightAnchor.constraint(equalTo: priceLabel.leftAnchor, constant: -10),
             titleLabel.heightAnchor.constraint(equalToConstant: 30),
             
+            // Description text
+            descriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            descriptionTextView.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
+            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.safeRightAnchor, constant: -10),
+            descriptionTextView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: 0),
+            
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
             closeButton.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
@@ -286,26 +295,44 @@ class ProductViewController: UIViewController {
         // Configure price tag
         priceLabel.priceLabelStyle()
         descriptionContainerView.addSubview(priceLabel)
-        priceLabel.text = "USD 25.99"
     }
     
     func configureTitleLabel() {
         // Configure product title
         titleLabel.titleLabelStyle()
         descriptionContainerView.addSubview(titleLabel)
-        titleLabel.text = "Monetizr sample T-Shirt"
     }
     
-    func loadProduct() {
-        //print(product!)
+    func configureDescriptionTextView() {
+        // Configure description text
+        descriptionTextView.descriptionTextViewStyle()
+        descriptionContainerView.addSubview(descriptionTextView)
+    }
+    
+    func loadProductData() {
+        // Prepare image links Array
         let images = self.product?.data?.productByHandle?.images?.edges
         for image in images! {
             let link = image.node?.transformedSrc
             imageLinks.add(link!)
         }
-        print(imageLinks)
-        let someProduct = self.product?.data?.productByHandle
-        _ = String(describing: someProduct)
+        
+        // Count variants
+        variantCount = (product?.data?.productByHandle?.variants?.edges!.count)!
+        
+        // Select default variant
+        selectedVariant = product?.data?.productByHandle?.variants?.edges![0].node
+    }
+    
+    func updateViewsData() {
+        // Title label
+        titleLabel.text = selectedVariant?.product?.title
+        
+        // Price tagd label
+        priceLabel.text = (selectedVariant?.priceV2?.currencyCode)!+" "+(selectedVariant?.priceV2?.amount)!
+        
+        // Description text view
+        descriptionTextView.text = selectedVariant?.product?.description
     }
     
     // Handle button clicks
