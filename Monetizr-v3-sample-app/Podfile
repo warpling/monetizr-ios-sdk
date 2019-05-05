@@ -4,6 +4,7 @@ def shared_pods
 use_frameworks! 
 pod 'Alamofire'
 pod 'AlamofireImage'
+pod 'ImageSlideshow', '~> 1.6'
 end
 
 target 'Monetizr-v3-sample-app' do
