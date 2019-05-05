@@ -119,22 +119,11 @@ extension UILabel {
         self.minimumScaleFactor = 0.7
     }
     
-    func optionNameStyle() {
+    func optionsTitleLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
+        self.backgroundColor = .clear
         self.textColor = .lightGray
-        self.backgroundColor = .clear
-        self.numberOfLines = 1
-        self.textAlignment = .left
-        self.adjustsFontSizeToFitWidth = true
-        self.minimumScaleFactor = 0.7
-    }
-    
-    func optionValueStyle() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.font = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.medium)
-        self.textColor = UIColor(hex: 0x007aff)
-        self.backgroundColor = .clear
+        self.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)
         self.numberOfLines = 1
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
@@ -228,19 +217,5 @@ extension UILabel {
         contentSize.width = ceil(newSize.size.width) + insetsWidth
         
         return contentSize
-    }
-    
-    func sizeForOptionName() {
-        //self.sizeToFit()
-        self.padding = UIEdgeInsets(top: 5, left: 10, bottom: 0, right: 10)
-        self.frame.size.width = self.frame.size.width+self.padding!.left+self.padding!.right
-        self.frame.size.height = self.frame.size.height+self.padding!.top+self.padding!.bottom
-    }
-    
-    func sizeForOptionValue() {
-        //self.sizeToFit()
-        self.padding = UIEdgeInsets(top: 27, left: 10, bottom: 0, right: 10)
-        self.frame.size.width = self.frame.size.width+self.padding!.left+self.padding!.right
-        self.frame.size.height = self.frame.size.height+self.padding!.top+self.padding!.bottom
     }
 }

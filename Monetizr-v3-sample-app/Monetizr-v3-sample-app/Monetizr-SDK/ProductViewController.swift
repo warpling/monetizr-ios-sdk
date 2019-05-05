@@ -30,7 +30,7 @@ class ProductViewController: UIViewController {
     let descriptionTextView = UITextView()
     let slideShow = ImageSlideshow()
     let variantOptionDisclosureView = UIImageView()
-    let optionsStackView = UIStackView()
+    let optionsTitleLabel = UILabel()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -85,7 +85,7 @@ class ProductViewController: UIViewController {
         self.configureImageSlider()
         
         // Configure options selector
-        self.configureOptionsSelector()
+        self.configureOptionsTitleLabel()
         
         // Update views data
         self.updateViewsData()
@@ -208,10 +208,12 @@ class ProductViewController: UIViewController {
             variantOptionDisclosureView.widthAnchor.constraint(equalToConstant: 40),
             
             // Option selection stack view
-            optionsStackView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
-            optionsStackView.leftAnchor.constraint(equalTo: variantOptionsContainerView.leftAnchor, constant: 0),
-            optionsStackView.rightAnchor.constraint(equalTo: variantOptionDisclosureView.leftAnchor, constant: 0),
-            optionsStackView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
+            optionsTitleLabel.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
+            optionsTitleLabel.leftAnchor.constraint(equalTo: variantOptionsContainerView.leftAnchor, constant: 10),
+            optionsTitleLabel.rightAnchor.constraint(equalTo: variantOptionDisclosureView.leftAnchor, constant: 10),
+            optionsTitleLabel.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
+            //optionsTitleLabel.heightAnchor.constraint(equalToConstant: 40),
+            //optionsTitleLabel.centerYAnchor.constraint(equalTo: variantOptionsContainerView.centerYAnchor),
             
             // Image carousel container view
             imageCarouselContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
@@ -353,14 +355,10 @@ class ProductViewController: UIViewController {
         imageCarouselContainerView.addSubview(slideShow)
     }
     
-    func configureOptionsSelector() {
-        // Configure options selector
-        optionsStackView.translatesAutoresizingMaskIntoConstraints = false
-        optionsStackView.axis = .horizontal
-        optionsStackView.alignment = .leading // .leading .firstBaseline .center .trailing .lastBaseline
-        optionsStackView.distribution = .fillEqually // .fillEqually .fillProportionally .equalSpacing .equalCentering
-        optionsStackView.backgroundColor = .orange
-        variantOptionsContainerView.addSubview(optionsStackView)
+    func configureOptionsTitleLabel() {
+        // Configure options title label
+        optionsTitleLabel.optionsTitleLabelStyle()
+        variantOptionsContainerView.addSubview(optionsTitleLabel)
     }
     
     func loadProductData() {
@@ -395,27 +393,8 @@ class ProductViewController: UIViewController {
         }
         slideShow.setImageInputs(imageSources as! [InputSource])
         
-        // Selected options
-        optionsStackView.removeAllArrangedSubviews()
-        for option in (selectedVariant?.selectedOptions)! {
-            let view = UIView()
-            //view.backgroundColor = .blue
-            optionsStackView.addArrangedSubview(view)
-            
-            // Name label
-            let nameLabel = UILabel()
-            nameLabel.optionNameStyle()
-            nameLabel.text = option.name
-            nameLabel.sizeForOptionName()
-            view.addSubview(nameLabel)
-            
-            // Value label
-            let valueLabel = UILabel()
-            valueLabel.optionValueStyle()
-            valueLabel.text = option.value
-            valueLabel.sizeForOptionValue()
-            view.addSubview(valueLabel)
-        }
+        // Selected option title
+        optionsTitleLabel.text = selectedVariant?.title
     }
     
     // Handle button clicks
