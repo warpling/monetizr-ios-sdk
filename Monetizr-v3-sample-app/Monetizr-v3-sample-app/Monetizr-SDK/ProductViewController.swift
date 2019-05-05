@@ -199,7 +199,7 @@ class ProductViewController: UIViewController {
             // Variant option selection container view
             variantOptionsContainerView.bottomAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 0),
             variantOptionsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            variantOptionsContainerView.heightAnchor.constraint(equalToConstant: 60),
+            variantOptionsContainerView.heightAnchor.constraint(equalToConstant: 55),
             
             // Option disclosure view
             variantOptionDisclosureView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
@@ -401,11 +401,20 @@ class ProductViewController: UIViewController {
             let view = UIView()
             //view.backgroundColor = .blue
             optionsStackView.addArrangedSubview(view)
+            
+            // Name label
             let nameLabel = UILabel()
             nameLabel.optionNameStyle()
             nameLabel.text = option.name
-            nameLabel.sizeForOption()
+            nameLabel.sizeForOptionName()
             view.addSubview(nameLabel)
+            
+            // Value label
+            let valueLabel = UILabel()
+            valueLabel.optionValueStyle()
+            valueLabel.text = option.value
+            valueLabel.sizeForOptionValue()
+            view.addSubview(valueLabel)
         }
     }
     
