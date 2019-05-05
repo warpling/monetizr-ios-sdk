@@ -29,6 +29,8 @@ class ProductViewController: UIViewController {
     let titleLabel = UILabel()
     let descriptionTextView = UITextView()
     let slideShow = ImageSlideshow()
+    let variantOptionDisclosureView = UIImageView()
+    let optionsStackView = UIStackView()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -56,9 +58,10 @@ class ProductViewController: UIViewController {
         self.configureCheckOutButton()
         
         // Variant option selection container view
-        if variantCount > 0 {
-            self.configureVariantOptionsContainerView()
-        }
+        self.configureVariantOptionsContainerView()
+        
+        // Variant option disclosure
+        self.configureVariantOptionDisclosure()
         
         // Image carousel
         self.configureImageCarouselContainerView()
@@ -80,6 +83,9 @@ class ProductViewController: UIViewController {
         
         // Configure image slider
         self.configureImageSlider()
+        
+        // Configure options selector
+        self.configureOptionsSelector()
         
         // Update views data
         self.updateViewsData()
@@ -195,6 +201,18 @@ class ProductViewController: UIViewController {
             variantOptionsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             variantOptionsContainerView.heightAnchor.constraint(equalToConstant: 60),
             
+            // Option disclosure view
+            variantOptionDisclosureView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
+            variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.safeRightAnchor, constant: 0),
+            variantOptionDisclosureView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
+            variantOptionDisclosureView.widthAnchor.constraint(equalToConstant: 40),
+            
+            // Option selection stack view
+            optionsStackView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
+            optionsStackView.leftAnchor.constraint(equalTo: variantOptionsContainerView.leftAnchor, constant: 0),
+            optionsStackView.rightAnchor.constraint(equalTo: variantOptionDisclosureView.leftAnchor, constant: 0),
+            optionsStackView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
+            
             // Image carousel container view
             imageCarouselContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             imageCarouselContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
@@ -290,6 +308,14 @@ class ProductViewController: UIViewController {
         
     }
     
+    func configureVariantOptionDisclosure() {
+        variantOptionDisclosureView.translatesAutoresizingMaskIntoConstraints = false
+        variantOptionDisclosureView.backgroundColor = .clear
+        variantOptionDisclosureView.image = UIImage.disclosureIndicator()
+        variantOptionDisclosureView.contentMode = .center
+        variantOptionsContainerView.addSubview(variantOptionDisclosureView)
+    }
+    
     func configureImageCarouselContainerView() {
         // Image carousel container view
         imageCarouselContainerView.imageCarouselContainerViewStyle()
@@ -321,9 +347,20 @@ class ProductViewController: UIViewController {
     }
     
     func configureImageSlider() {
+        // Configure image slider
         slideShow.translatesAutoresizingMaskIntoConstraints = false
         slideShow.contentScaleMode = .scaleAspectFill
         imageCarouselContainerView.addSubview(slideShow)
+    }
+    
+    func configureOptionsSelector() {
+        // Configure options selector
+        optionsStackView.translatesAutoresizingMaskIntoConstraints = false
+        optionsStackView.axis = .horizontal
+        optionsStackView.alignment = .leading // .leading .firstBaseline .center .trailing .lastBaseline
+        optionsStackView.distribution = .fillEqually // .fillEqually .fillProportionally .equalSpacing .equalCentering
+        optionsStackView.backgroundColor = .orange
+        variantOptionsContainerView.addSubview(optionsStackView)
     }
     
     func loadProductData() {
@@ -357,6 +394,19 @@ class ProductViewController: UIViewController {
             imageSources.add(AlamofireSource(urlString: url as! String)!)
         }
         slideShow.setImageInputs(imageSources as! [InputSource])
+        
+        // Selected options
+        optionsStackView.removeAllArrangedSubviews()
+        for option in (selectedVariant?.selectedOptions)! {
+            let view = UIView()
+            //view.backgroundColor = .blue
+            optionsStackView.addArrangedSubview(view)
+            let nameLabel = UILabel()
+            nameLabel.optionNameStyle()
+            nameLabel.text = option.name
+            nameLabel.sizeForOption()
+            view.addSubview(nameLabel)
+        }
     }
     
     // Handle button clicks

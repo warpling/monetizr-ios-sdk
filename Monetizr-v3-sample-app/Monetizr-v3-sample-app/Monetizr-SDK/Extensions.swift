@@ -105,7 +105,7 @@ extension UILabel {
         self.numberOfLines = 1
         self.textAlignment = .right
         self.adjustsFontSizeToFitWidth = true
-        self.minimumScaleFactor = 0.5
+        self.minimumScaleFactor = 0.7
     }
     
     func titleLabelStyle() {
@@ -116,7 +116,18 @@ extension UILabel {
         self.numberOfLines = 1
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
-        self.minimumScaleFactor = 0.5
+        self.minimumScaleFactor = 0.7
+    }
+    
+    func optionNameStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
+        self.textColor = .lightGray
+        self.backgroundColor = .clear
+        self.numberOfLines = 1
+        self.textAlignment = .left
+        self.adjustsFontSizeToFitWidth = true
+        self.minimumScaleFactor = 0.7
     }
 }
 
@@ -125,5 +136,93 @@ extension UITextView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white
+    }
+}
+
+extension UIStackView {
+    
+    func removeAllArrangedSubviews() {        
+        let removedSubviews = arrangedSubviews.reduce([]) { (allSubviews, subview) -> [UIView] in
+            self.removeArrangedSubview(subview)
+            return allSubviews + [subview]
+        }
+        
+        // Deactivate all constraints
+        NSLayoutConstraint.deactivate(removedSubviews.flatMap({ $0.constraints }))
+        
+        // Remove the views from self
+        removedSubviews.forEach({ $0.removeFromSuperview() })
+    }
+}
+
+extension UIImage {
+    
+    class func disclosureIndicator() -> UIImage? {
+        let disclosureCell = UITableViewCell()
+        disclosureCell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
+        for view in disclosureCell.subviews {
+            if let button = view as? UIButton {
+                if let image = button.backgroundImage(for: UIControl.State.normal) {
+                    return image
+                }
+            }
+        }
+        return nil
+    }
+}
+
+extension UILabel {
+    private struct AssociatedKeys {
+        static var padding = UIEdgeInsets()
+    }
+    
+    public var padding: UIEdgeInsets? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.padding) as? UIEdgeInsets
+        }
+        set {
+            if let newValue = newValue {
+                objc_setAssociatedObject(self, &AssociatedKeys.padding, newValue as UIEdgeInsets?, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
+        }
+    }
+    
+    override open func draw(_ rect: CGRect) {
+        if let insets = padding {
+            self.drawText(in: rect.inset(by: insets))
+        } else {
+            self.drawText(in: rect)
+        }
+    }
+    
+    override open var intrinsicContentSize: CGSize {
+        guard let text = self.text else { return super.intrinsicContentSize }
+        
+        var contentSize = super.intrinsicContentSize
+        var textWidth: CGFloat = frame.size.width
+        var insetsHeight: CGFloat = 0.0
+        var insetsWidth: CGFloat = 0.0
+        
+        if let insets = padding {
+            insetsWidth += insets.left + insets.right
+            insetsHeight += insets.top + insets.bottom
+            textWidth -= insetsWidth
+        }
+        
+        let newSize = text.boundingRect(with: CGSize(width: textWidth, height: CGFloat.greatestFiniteMagnitude),
+                                        options: NSStringDrawingOptions.usesLineFragmentOrigin,
+                                        attributes: [NSAttributedString.Key.font: self.font!], context: nil)
+        
+        contentSize.height = ceil(newSize.size.height) + insetsHeight
+        contentSize.width = ceil(newSize.size.width) + insetsWidth
+        
+        return contentSize
+    }
+    
+    func sizeForOption() {
+        self.sizeToFit()
+        self.padding = UIEdgeInsets(top: 5, left: 10, bottom: 0, right: 10)
+        self.frame.size.width = self.frame.size.width+self.padding!.left+self.padding!.right
+        self.frame.size.height = self.frame.size.height+self.padding!.top+self.padding!.bottom
     }
 }
