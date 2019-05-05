@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Alamofire
+import ImageSlideshow
 
 class ProductViewController: UIViewController {
     
@@ -27,6 +28,7 @@ class ProductViewController: UIViewController {
     let priceLabel = UILabel()
     let titleLabel = UILabel()
     let descriptionTextView = UITextView()
+    let slideShow = ImageSlideshow()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -75,6 +77,9 @@ class ProductViewController: UIViewController {
         
         // Configure description text
         self.configureDescriptionTextView()
+        
+        // Configure image slider
+        self.configureImageSlider()
         
         // Update views data
         self.updateViewsData()
@@ -196,6 +201,12 @@ class ProductViewController: UIViewController {
             imageCarouselContainerViewWidthConstraint,
             imageCarouselContainerViewHeightConstraint,
             
+            // Image slideshow
+            slideShow.topAnchor.constraint(equalTo: imageCarouselContainerView.topAnchor, constant: 0),
+            slideShow.leftAnchor.constraint(equalTo: imageCarouselContainerView.leftAnchor, constant: 0),
+            slideShow.rightAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
+            slideShow.bottomAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
+            
             // Description container view
             descriptionContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             descriptionContainerView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
@@ -309,6 +320,12 @@ class ProductViewController: UIViewController {
         descriptionContainerView.addSubview(descriptionTextView)
     }
     
+    func configureImageSlider() {
+        slideShow.translatesAutoresizingMaskIntoConstraints = false
+        slideShow.contentScaleMode = .scaleAspectFill
+        imageCarouselContainerView.addSubview(slideShow)
+    }
+    
     func loadProductData() {
         // Prepare image links Array
         let images = self.product?.data?.productByHandle?.images?.edges
@@ -333,6 +350,13 @@ class ProductViewController: UIViewController {
         
         // Description text view
         descriptionTextView.text = selectedVariant?.product?.description
+        
+        let imageSources = NSMutableArray()
+        // Image slide show
+        for url in imageLinks {
+            imageSources.add(AlamofireSource(urlString: url as! String)!)
+        }
+        slideShow.setImageInputs(imageSources as! [InputSource])
     }
     
     // Handle button clicks
