@@ -11,8 +11,9 @@ import UIKit
 import Alamofire
 import ImageSlideshow
 
-class ProductViewController: UIViewController {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter {
     
+    var activityIndicator = UIActivityIndicatorView()
     var tag: String?
     var product: Product?
     var selectedVariant: PurpleNode?
@@ -399,7 +400,9 @@ class ProductViewController: UIViewController {
     }
     
     func checkoutSelectedVariant() {
+        self.showActivityIndicator()
         Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!) { success, error, checkout in
+            self.hideActivityIndicator()
             // Show some error if needed
             if success {
                 guard let url = URL(string: (checkout?.data?.checkoutCreate?.checkout?.webURL)!) else { return }
@@ -407,7 +410,22 @@ class ProductViewController: UIViewController {
             }
             else {
                 // Handle error
-                
+                let alert = UIAlertController(title: "", message: error?.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+                    switch action.style{
+                    case .default:
+                        print("default")
+                        
+                    case .cancel:
+                        print("cancel")
+                        
+                    case .destructive:
+                        print("destructive")
+                        
+                    @unknown default:
+                        break
+                    }}))
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
@@ -424,4 +442,5 @@ class ProductViewController: UIViewController {
             self.checkoutSelectedVariant()
         }
     }
+    
 }

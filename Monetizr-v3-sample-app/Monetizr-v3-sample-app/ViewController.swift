@@ -8,7 +8,9 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPresenter {
+    
+    var activityIndicator = UIActivityIndicatorView()
     
     @IBOutlet var firstBlock: UIView!
     @IBOutlet var secondBlock: UIView!
@@ -43,10 +45,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func buttonTap(sender: UIButton) {
         if sender == openButton {
+            self.showActivityIndicator()
             // Open product here
             textLabel.text = "Product loading..."
             Monetizr.shared.token = tokenField.text!
             Monetizr.shared.openProductForTag(tag: merchTagField.text!) { success, error in
+                self.hideActivityIndicator()
                 // Show some error if needed
                 if success {
                     self.textLabel.text = "Product was loaded"
