@@ -15,6 +15,7 @@ class Monetizr {
     static let shared = Monetizr(token: "")
     
     var token: String
+    var language: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
     
     // Initialization
@@ -23,15 +24,23 @@ class Monetizr {
         self.token = token
     }
     
+    func setLanguage(language: String) {
+        self.language = language
+    }
+    
     // Load product data
     func openProductForTag(tag: String, completionHandler: @escaping (Bool, Error?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
-        let url = URL(string: apiUrl+"products/tag/"+tag+"?size="+size)!
+        var urlString = apiUrl+"products/tag/"+tag+"?size="+size
+        if language != nil {
+            urlString = urlString+"?language="+language!
+        }
+        let url = URL(string: urlString)
         let headers: HTTPHeaders = [
             "Authorization": "Bearer "+token
         ]
         
-        Alamofire.request(url, headers: headers).responseProduct { response in
+        Alamofire.request(url!, headers: headers).responseProduct { response in
             if let retrievedProduct = response.result.value {
                 //var product: Product?
                 if retrievedProduct.data != nil {
