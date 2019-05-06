@@ -13,6 +13,7 @@ import ImageSlideshow
 
 class ProductViewController: UIViewController {
     
+    var tag: String?
     var product: Product?
     var selectedVariant: PurpleNode?
     var variantCount = 0
@@ -397,6 +398,20 @@ class ProductViewController: UIViewController {
         optionsTitleLabel.text = selectedVariant?.title
     }
     
+    func checkoutSelectedVariant() {
+        Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!) { success, error, checkout in
+            // Show some error if needed
+            if success {
+                guard let url = URL(string: (checkout?.data?.checkoutCreate?.checkout?.webURL)!) else { return }
+                UIApplication.shared.open(url)
+            }
+            else {
+                // Handle error
+                
+            }
+        }
+    }
+    
     // Handle button clicks
     @objc func buttonAction(sender:UIButton!){
         if sender == closeButton {
@@ -406,7 +421,7 @@ class ProductViewController: UIViewController {
         }
         if sender == checkoutButton {
             // Start checkout
-            
+            self.checkoutSelectedVariant()
         }
     }
 }

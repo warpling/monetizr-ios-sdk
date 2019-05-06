@@ -45,7 +45,7 @@ class Monetizr {
                 //var product: Product?
                 if retrievedProduct.data != nil {
                     let product = retrievedProduct
-                    self.openProductViewForProduct(product: product)
+                    self.openProductViewForProduct(product: product, tag: tag)
                     completionHandler(true, nil)
                 }
                 else {
@@ -65,7 +65,7 @@ class Monetizr {
     }
     
     // Open product View
-    func openProductViewForProduct(product: Product) {
+    func openProductViewForProduct(product: Product, tag: String) {
         if var topController = UIApplication.shared.keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
@@ -74,7 +74,45 @@ class Monetizr {
             let productViewController = ProductViewController()
             productViewController.modalPresentationStyle = .overCurrentContext
             productViewController.product = product
+            productViewController.tag = tag
             topController.present(productViewController, animated: true, completion: nil)
+        }
+    }
+    
+    // Checkout variant for product
+    func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+        let urlString = apiUrl+"products/checkout"
+        let url = URL(string: urlString)
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer "+token
+        ]
+        var parameters: [String: String] = [
+            "product_handle" : tag,
+            "variantId" : selectedVariant.id!,
+            "quantity" : "1",
+        ]
+        if language != nil {
+            parameters["language"] = language
+        }
+        
+        Alamofire.request(url!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
+            if let responseCheckout = response.result.value {
+                if responseCheckout.data != nil {
+                    completionHandler(true, nil, responseCheckout)
+                }
+                else {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
+                    completionHandler(false, error, nil)
+                }
+            }
+            else if let error = response.result.error as? URLError {
+                print("URLError occurred: \(error)")
+                completionHandler(false, error, nil)
+            }
+            else {
+                print("Unknown error: \(String(describing: response.result.error))")
+                completionHandler(false, response.result.error!, nil)
+            }
         }
     }
 }
