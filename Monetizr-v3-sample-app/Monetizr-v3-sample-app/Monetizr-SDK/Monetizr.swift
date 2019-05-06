@@ -29,7 +29,7 @@ class Monetizr {
     }
     
     // Load product data
-    func openProductForTag(tag: String, completionHandler: @escaping (Bool, Error?) -> Void){
+    func getProductForTag(tag: String, show: Bool, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
         if language != nil {
@@ -44,22 +44,24 @@ class Monetizr {
             if let retrievedProduct = response.result.value {
                 //var product: Product?
                 if retrievedProduct.data != nil {
-                    let product = retrievedProduct
-                    self.openProductViewForProduct(product: product, tag: tag)
-                    completionHandler(true, nil)
+                    if show == true {
+                        let product = retrievedProduct
+                        self.openProductViewForProduct(product: product, tag: tag)
+                    }
+                    completionHandler(true, nil, retrievedProduct)
                 }
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
-                    completionHandler(false, error)
+                    completionHandler(false, error, nil)
                 }
             }
             else if let error = response.result.error as? URLError {
                 print("URLError occurred: \(error)")
-                completionHandler(false, error)
+                completionHandler(false, error, nil)
             }
             else {
                 print("Unknown error: \(String(describing: response.result.error))")
-                completionHandler(false, response.result.error!)
+                completionHandler(false, response.result.error!, nil)
             }
         }
     }
