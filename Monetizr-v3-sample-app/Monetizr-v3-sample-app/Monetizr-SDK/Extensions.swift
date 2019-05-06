@@ -59,6 +59,15 @@ extension UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .black
     }
+    
+    func addBlurEffect(style: UIBlurEffect.Style)
+    {
+        let blurEffect = UIBlurEffect(style: style)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = self.bounds        
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight] // for supporting device rotation
+        self.addSubview(blurEffectView)
+    }
 }
 
 extension UIButton {

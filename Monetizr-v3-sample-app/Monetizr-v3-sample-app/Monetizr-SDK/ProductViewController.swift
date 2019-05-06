@@ -33,6 +33,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
     let slideShow = ImageSlideshow()
     let variantOptionDisclosureView = UIImageView()
     let optionsTitleLabel = UILabel()
+    var optionsTapGesture = UITapGestureRecognizer()
+    var optionsSelectorOverlayView = UIView()
+    var optionsSelectorOverlayTapGesture = UITapGestureRecognizer()
+    let optionsSelectorPlaceholderView = UIView()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -135,6 +139,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
             }
             // Checkout buttons background
             self.checkoutButtonBackgroundViewConstraint.constant = 70+self.bottomPadding
+            
+            // Resize and position option selector view
+            self.optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: self.viewWidth, height: self.viewHeight)
+            self.optionsSelectorPlaceholderView.center = self.optionsSelectorOverlayView.convert(self.optionsSelectorOverlayView.center, from:self.optionsSelectorOverlayView.superview)
+            
         }, completion: nil)
         
         self.configureConstraintsForCurrentOrietnation()
@@ -209,13 +218,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
             variantOptionDisclosureView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
             variantOptionDisclosureView.widthAnchor.constraint(equalToConstant: 40),
             
-            // Option selection stack view
+            // Variant title label
             optionsTitleLabel.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
             optionsTitleLabel.leftAnchor.constraint(equalTo: variantOptionsContainerView.leftAnchor, constant: 10),
             optionsTitleLabel.rightAnchor.constraint(equalTo: variantOptionDisclosureView.leftAnchor, constant: 10),
             optionsTitleLabel.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
-            //optionsTitleLabel.heightAnchor.constraint(equalToConstant: 40),
-            //optionsTitleLabel.centerYAnchor.constraint(equalTo: variantOptionsContainerView.centerYAnchor),
             
             // Image carousel container view
             imageCarouselContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
@@ -310,6 +317,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         variantOptionsContainerView.variantOptionsContainerViewStyle()
         self.view.addSubview(variantOptionsContainerView)
         
+        // Handle taps
+        optionsTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.viewTapped(_:)))
+        optionsTapGesture.numberOfTapsRequired = 1
+        optionsTapGesture.numberOfTouchesRequired = 1
+        variantOptionsContainerView.addGestureRecognizer(optionsTapGesture)
     }
     
     func configureVariantOptionDisclosure() {
@@ -399,6 +411,26 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         optionsTitleLabel.text = selectedVariant?.title
     }
     
+    func showOptionsSelector() {
+        // Configure option selector overlay
+        optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight)
+        optionsSelectorOverlayView.addBlurEffect(style: UIBlurEffect.Style.dark)
+        view.addSubview(optionsSelectorOverlayView);
+        
+        // Handle taps
+        optionsSelectorOverlayTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.viewTapped(_:)))
+        optionsSelectorOverlayTapGesture.numberOfTapsRequired = 1
+        optionsSelectorOverlayTapGesture.numberOfTouchesRequired = 1
+        optionsSelectorOverlayView.addGestureRecognizer(optionsSelectorOverlayTapGesture)
+        
+        // Options selector placeholder
+        optionsSelectorPlaceholderView.frame = CGRect(x: 0, y: 0, width: 280, height: 320)
+        optionsSelectorPlaceholderView.center = optionsSelectorOverlayView.convert(optionsSelectorOverlayView.center, from:optionsSelectorOverlayView.superview)
+        optionsSelectorPlaceholderView.backgroundColor = .white
+        optionsSelectorOverlayView.addSubview(optionsSelectorPlaceholderView)
+
+    }
+    
     func checkoutSelectedVariant() {
         self.showActivityIndicator()
         Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!) { success, error, checkout in
@@ -440,6 +472,17 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         if sender == checkoutButton {
             // Start checkout
             self.checkoutSelectedVariant()
+        }
+    }
+    
+    // Handle taps
+    @objc func viewTapped(_ sender: UITapGestureRecognizer) {
+        if sender == optionsTapGesture {
+            self.showOptionsSelector()
+        }
+        if sender == optionsSelectorOverlayTapGesture {
+            optionsSelectorOverlayView.removeFromSuperview()
+            optionsSelectorOverlayView = UIView()
         }
     }
     
