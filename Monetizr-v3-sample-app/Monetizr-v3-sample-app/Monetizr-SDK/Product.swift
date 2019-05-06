@@ -20,14 +20,11 @@
 import Foundation
 import Alamofire
 
-import Foundation
-import Alamofire
-
 struct Product: Codable {
-    let data: DataClass?    
+    let data: ProductDataClass?
 }
 
-struct DataClass: Codable {
+struct ProductDataClass: Codable {
     let productByHandle: ProductByHandle?
 }
 
