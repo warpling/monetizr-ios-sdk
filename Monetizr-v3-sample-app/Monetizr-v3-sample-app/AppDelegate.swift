@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Setup Monetizr
         Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1"
-        Monetizr.shared.setLanguage(language: "de_DE")
+        //Monetizr.shared.setLanguage(language: "de_DE")
         
         return true
     }

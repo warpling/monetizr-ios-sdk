@@ -18,6 +18,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
     var product: Product?
     var selectedVariant: PurpleNode?
     var variantCount = 0
+    var variants: [VariantsEdge] = []
     var imageLinks: NSMutableArray = []
     
     // Outlets
@@ -37,6 +38,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
     var optionsSelectorOverlayView = UIView()
     var optionsSelectorOverlayTapGesture = UITapGestureRecognizer()
     let optionsSelectorPlaceholderView = UIView()
+   // let variantSelectionViewController = VariantSelectionViewController()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -65,9 +67,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         
         // Variant option selection container view
         self.configureVariantOptionsContainerView()
-        
-        // Variant option disclosure
-        self.configureVariantOptionDisclosure()
         
         // Image carousel
         self.configureImageCarouselContainerView()
@@ -140,7 +139,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
             // Checkout buttons background
             self.checkoutButtonBackgroundViewConstraint.constant = 70+self.bottomPadding
             
-            // Resize and position option selector view
+            // Resize and position option selector view - do not do this if view is not in hierarchy
             self.optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: self.viewWidth, height: self.viewHeight)
             self.optionsSelectorPlaceholderView.center = self.optionsSelectorOverlayView.convert(self.optionsSelectorOverlayView.center, from:self.optionsSelectorOverlayView.superview)
             
@@ -383,11 +382,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
             imageLinks.add(link!)
         }
         
+        variants = (product?.data?.productByHandle?.variants?.edges)!
+        
         // Count variants
-        variantCount = (product?.data?.productByHandle?.variants?.edges!.count)!
+        variantCount = variants.count
         
         // Select default variant
-        selectedVariant = product?.data?.productByHandle?.variants?.edges![0].node
+        selectedVariant = variants[0].node
     }
     
     func updateViewsData() {
@@ -409,6 +410,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         
         // Selected option title
         optionsTitleLabel.text = selectedVariant?.title
+        
+        // Options selector disclosure
+        if variants.count > 1 {
+            self.configureVariantOptionDisclosure()
+        }
     }
     
     func showOptionsSelector() {
@@ -424,11 +430,25 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         optionsSelectorOverlayView.addGestureRecognizer(optionsSelectorOverlayTapGesture)
         
         // Options selector placeholder
-        optionsSelectorPlaceholderView.frame = CGRect(x: 0, y: 0, width: 280, height: 320)
+        optionsSelectorPlaceholderView.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
         optionsSelectorPlaceholderView.center = optionsSelectorOverlayView.convert(optionsSelectorOverlayView.center, from:optionsSelectorOverlayView.superview)
         optionsSelectorPlaceholderView.backgroundColor = .white
         optionsSelectorOverlayView.addSubview(optionsSelectorPlaceholderView)
-
+        
+        // Add navigation controller childview controller
+        let variantSelctionNavigationController = UINavigationController()
+        addChild(variantSelctionNavigationController)
+        variantSelctionNavigationController.view.frame.size.width = optionsSelectorPlaceholderView.frame.size.width
+        variantSelctionNavigationController.view.frame.size.height = optionsSelectorPlaceholderView.frame.size.height
+        
+        // Populate first level selection
+        let variantSelectionViewController = VariantSelectionViewController()
+        variantSelectionViewController.variants = variants
+        variantSelctionNavigationController.addChild(variantSelectionViewController)
+        
+        // Add selection to tableview
+        optionsSelectorPlaceholderView.addSubview(variantSelctionNavigationController.view)
+        variantSelctionNavigationController.didMove(toParent: self)
     }
     
     func checkoutSelectedVariant() {
@@ -478,9 +498,16 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
     // Handle taps
     @objc func viewTapped(_ sender: UITapGestureRecognizer) {
         if sender == optionsTapGesture {
-            self.showOptionsSelector()
+            if variants.count > 1 {
+                self.showOptionsSelector()
+            }
         }
         if sender == optionsSelectorOverlayTapGesture {
+            
+            // Remove child view controllers
+            self.children.forEach{$0.willMove(toParent: nil);$0.view.removeFromSuperview();$0.removeFromParent()}
+            
+            // Remove and reset optionsSelectorOverlayView
             optionsSelectorOverlayView.removeFromSuperview()
             optionsSelectorOverlayView = UIView()
         }
