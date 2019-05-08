@@ -38,7 +38,7 @@ class VariantSelectionViewController: UITableViewController {
                 }
             }
         }
-    
+        
         self.title = name
     }
 

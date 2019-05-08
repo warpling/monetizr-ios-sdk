@@ -107,12 +107,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
     }
     
     func activateInitialConstraints() {
-        if #available(iOS 11.0, *) {
-            let window = UIApplication.shared.keyWindow
+        let window = UIApplication.shared.keyWindow
+        viewHeight = view.frame.size.height
+        viewWidth = view.frame.size.width
+        
+        if #available(iOS 11.0, *) {            
             topPadding = (window?.safeAreaInsets.top)!
             bottomPadding = (window?.safeAreaInsets.bottom)!
-            viewHeight = view.frame.size.height
-            viewWidth = view.frame.size.width
         }
         // Checkout buttons background
         checkoutButtonBackgroundViewConstraint.constant = 70+bottomPadding
