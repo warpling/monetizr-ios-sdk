@@ -14,6 +14,7 @@ class VariantSelectionViewController: UITableViewController {
     var level = 0
     var name = String()
     var values: NSMutableArray = []
+    var names: NSMutableArray = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +26,21 @@ class VariantSelectionViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         tableView.delegate = self
+        tableView.allowsSelection = true
+        tableView.isUserInteractionEnabled = true
         
         // Setup name for level
-        name = (variants[0].node?.selectedOptions![level].name)!
+        if variants.count > 0 {
+            for variant in variants {
+                for option in (variant.node?.selectedOptions)! {
+                    if !names.contains(option.name!) {
+                        names.add(option.name!)
+                    }
+                }
+            }
+            //name = (variants[0].node?.selectedOptions![level].name)!
+            name = names[level] as! String
+        }
         
         for variant in variants {
             for option in (variant.node?.selectedOptions)! {
@@ -38,8 +51,8 @@ class VariantSelectionViewController: UITableViewController {
                 }
             }
         }
-        
         self.title = name
+
     }
 
     // MARK: - Table view data source
@@ -58,7 +71,9 @@ class VariantSelectionViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "Cell")
-        cell.accessoryType = .disclosureIndicator
+        if level+1 != names.count {
+            cell.accessoryType = .disclosureIndicator
+        }
         cell.textLabel!.text = values[indexPath.row] as? String
 
 
@@ -67,7 +82,13 @@ class VariantSelectionViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Some row selceted
-        print("Selected row "+indexPath.row.description)
+        
+        if level+1 < names.count {
+            let variantSelectionViewController = VariantSelectionViewController()
+            variantSelectionViewController.variants = variants
+            variantSelectionViewController.level = level+1
+            self.navigationController?.pushViewController(variantSelectionViewController, animated: true)
+        }
     }
 
     /*

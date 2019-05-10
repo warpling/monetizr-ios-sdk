@@ -11,7 +11,7 @@ import UIKit
 import Alamofire
 import ImageSlideshow
 
-class ProductViewController: UIViewController, ActivityIndicatorPresenter {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
@@ -38,7 +38,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
     var optionsSelectorOverlayView = UIView()
     var optionsSelectorOverlayTapGesture = UITapGestureRecognizer()
     let optionsSelectorPlaceholderView = UIView()
-   // let variantSelectionViewController = VariantSelectionViewController()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -407,6 +406,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         for url in imageLinks {
             imageSources.add(AlamofireSource(urlString: url as! String)!)
         }
+        slideShow.activityIndicator = DefaultActivityIndicator()
+        slideShow.preload = .fixed(offset: 1)
         slideShow.setImageInputs(imageSources as! [InputSource])
         
         // Selected option title
@@ -428,6 +429,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         optionsSelectorOverlayTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.viewTapped(_:)))
         optionsSelectorOverlayTapGesture.numberOfTapsRequired = 1
         optionsSelectorOverlayTapGesture.numberOfTouchesRequired = 1
+        optionsSelectorOverlayTapGesture.cancelsTouchesInView = false
+        optionsSelectorOverlayTapGesture.delegate = self
         optionsSelectorOverlayView.addGestureRecognizer(optionsSelectorOverlayTapGesture)
         
         // Options selector placeholder
@@ -450,6 +453,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter {
         // Add selection to tableview
         optionsSelectorPlaceholderView.addSubview(variantSelctionNavigationController.view)
         variantSelctionNavigationController.didMove(toParent: self)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return touch.view?.superview == gestureRecognizer.view
     }
     
     func checkoutSelectedVariant() {
