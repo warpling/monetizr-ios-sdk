@@ -11,7 +11,7 @@ import UIKit
 import Alamofire
 import ImageSlideshow
 
-class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, VariantSelectionDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
@@ -99,6 +99,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.configureCompatConstraints()
         self.configureRegularConstraints()
         self.activateInitialConstraints()
+        
+        // Delegates
+        //VariantSelectionViewController.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -450,7 +453,17 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Populate first level selection
         let variantSelectionViewController = VariantSelectionViewController()
         variantSelectionViewController.variants = variants
+        variantSelectionViewController.delegate = self
         variantSelctionNavigationController.pushViewController(variantSelectionViewController, animated: true)
+    }
+    
+    func closeOptionsSelector() {
+        // Remove child view controllers
+        self.children.forEach{$0.willMove(toParent: nil);$0.view.removeFromSuperview();$0.removeFromParent()}
+        
+        // Remove and reset optionsSelectorOverlayView
+        optionsSelectorOverlayView.removeFromSuperview()
+        optionsSelectorOverlayView = UIView()
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -509,14 +522,12 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             }
         }
         if sender == optionsSelectorOverlayTapGesture {
-            
-            // Remove child view controllers
-            self.children.forEach{$0.willMove(toParent: nil);$0.view.removeFromSuperview();$0.removeFromParent()}
-            
-            // Remove and reset optionsSelectorOverlayView
-            optionsSelectorOverlayView.removeFromSuperview()
-            optionsSelectorOverlayView = UIView()
+            self.closeOptionsSelector()
         }
     }
     
+    // Select variant from options selector
+    func optionValuesSelected(selectedValues: NSMutableArray) {
+        
+    }
 }

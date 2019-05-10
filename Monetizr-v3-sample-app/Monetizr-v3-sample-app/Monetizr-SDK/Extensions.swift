@@ -179,7 +179,3 @@ extension UIImage {
         return nil
     }
 }
-
-extension UILabel {
-    
-}

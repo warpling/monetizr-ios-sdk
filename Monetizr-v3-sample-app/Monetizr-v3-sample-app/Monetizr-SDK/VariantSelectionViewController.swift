@@ -8,13 +8,29 @@
 
 import UIKit
 
-class VariantSelectionViewController: UITableViewController {
+// Protocol used for sending data back to product view
+protocol VariantSelectionDelegate: class {
+    func closeOptionsSelector()
+    func optionValuesSelected(selectedValues: NSMutableArray)
+}
+
+class VariantSelectionViewController: UITableViewController, VariantSelectionDelegate {
+    func closeOptionsSelector() {
+        delegate?.closeOptionsSelector()
+    }
     
+    func optionValuesSelected(selectedValues: NSMutableArray) {
+        delegate?.closeOptionsSelector()
+    }
+    
+    
+    weak var delegate: VariantSelectionDelegate? = nil
     var variants: [VariantsEdge] = []
     var level = 0
     var name = String()
     var values: NSMutableArray = []
     var names: NSMutableArray = []
+    private var previousSelection = NSIndexPath()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +68,12 @@ class VariantSelectionViewController: UITableViewController {
             }
         }
         self.title = name
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeSelector))
 
+    }
+    
+    @objc func closeSelector() {
+        delegate?.closeOptionsSelector()
     }
 
     // MARK: - Table view data source
@@ -75,20 +96,26 @@ class VariantSelectionViewController: UITableViewController {
             cell.accessoryType = .disclosureIndicator
         }
         cell.textLabel!.text = values[indexPath.row] as? String
-
-
+        cell.selectionStyle = .none
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Some row selceted
-        
         if level+1 < names.count {
             let variantSelectionViewController = VariantSelectionViewController()
             variantSelectionViewController.variants = variants
             variantSelectionViewController.level = level+1
+            variantSelectionViewController.delegate = self
             self.navigationController?.pushViewController(variantSelectionViewController, animated: true)
         }
+        if level+1 == names.count {
+            tableView.cellForRow(at: indexPath)!.accessoryType = .checkmark
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = .none
     }
 
     /*
