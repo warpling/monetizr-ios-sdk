@@ -528,6 +528,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Select variant from options selector
     func optionValuesSelected(selectedValues: NSMutableArray) {
-        
+        let values = selectedValues
+        print(values)
     }
 }

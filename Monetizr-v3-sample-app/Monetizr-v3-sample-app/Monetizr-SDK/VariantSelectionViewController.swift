@@ -20,7 +20,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     }
     
     func optionValuesSelected(selectedValues: NSMutableArray) {
-        delegate?.closeOptionsSelector()
+        delegate?.optionValuesSelected(selectedValues: selectedValues)
     }
     
     
@@ -30,7 +30,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     var name = String()
     var values: NSMutableArray = []
     var names: NSMutableArray = []
-    private var previousSelection = NSIndexPath()
+    var selectedValues: NSMutableArray = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,15 +102,21 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Some row selceted
+        //selectedValues.add(values[indexPath.row])
+        selectedValues[level] = values[indexPath.row]
         if level+1 < names.count {
             let variantSelectionViewController = VariantSelectionViewController()
             variantSelectionViewController.variants = variants
             variantSelectionViewController.level = level+1
+            variantSelectionViewController.selectedValues = selectedValues
+            
             variantSelectionViewController.delegate = self
             self.navigationController?.pushViewController(variantSelectionViewController, animated: true)
         }
         if level+1 == names.count {
             tableView.cellForRow(at: indexPath)!.accessoryType = .checkmark
+            delegate?.optionValuesSelected(selectedValues: selectedValues)
+            delegate?.closeOptionsSelector()
         }
     }
     
