@@ -444,15 +444,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         addChild(variantSelctionNavigationController)
         variantSelctionNavigationController.view.frame.size.width = optionsSelectorPlaceholderView.frame.size.width
         variantSelctionNavigationController.view.frame.size.height = optionsSelectorPlaceholderView.frame.size.height
+        optionsSelectorPlaceholderView.addSubview(variantSelctionNavigationController.view)
+        variantSelctionNavigationController.didMove(toParent: self)
         
         // Populate first level selection
         let variantSelectionViewController = VariantSelectionViewController()
         variantSelectionViewController.variants = variants
-        variantSelctionNavigationController.addChild(variantSelectionViewController)
-        
-        // Add selection to tableview
-        optionsSelectorPlaceholderView.addSubview(variantSelctionNavigationController.view)
-        variantSelctionNavigationController.didMove(toParent: self)
+        variantSelctionNavigationController.pushViewController(variantSelectionViewController, animated: true)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
