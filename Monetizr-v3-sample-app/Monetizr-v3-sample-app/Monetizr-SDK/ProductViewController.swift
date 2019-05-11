@@ -53,6 +53,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
+    var optionsSelectorViewHeight: CGFloat = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Background configuration
@@ -66,6 +68,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Variant option selection container view
         self.configureVariantOptionsContainerView()
+        self.configureVariantOptionDisclosure()
         
         // Image carousel
         self.configureImageCarouselContainerView()
@@ -209,7 +212,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Variant option selection container view
             variantOptionsContainerView.bottomAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 0),
             variantOptionsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            variantOptionsContainerView.heightAnchor.constraint(equalToConstant: 55),
+            variantOptionsContainerView.heightAnchor.constraint(equalToConstant: optionsSelectorViewHeight),
             
             // Option disclosure view
             variantOptionDisclosureView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
@@ -414,9 +417,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Selected option title
         optionsTitleLabel.text = selectedVariant?.title
         
-        // Options selector disclosure
+        // Options selector show/hide
         if variants.count > 1 {
-            self.configureVariantOptionDisclosure()
+            //optionsContainerViewHighConstraint.constant = 55
+            optionsSelectorViewHeight = 55
+            view.setNeedsUpdateConstraints()
         }
     }
     
