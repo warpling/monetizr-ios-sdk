@@ -31,6 +31,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     var values: NSMutableArray = []
     var names: NSMutableArray = []
     var selectedValues: NSMutableArray = []
+    var availableVariants: [VariantsEdge] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +46,25 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         tableView.allowsSelection = true
         tableView.isUserInteractionEnabled = true
         
+        // Available variants
+        if selectedValues.count > 0 {
+            for variant in variants {
+                for option in (variant.node?.selectedOptions)! {
+                    for selectedValue in selectedValues {
+                        if (selectedValue as! String) == option.value {
+                            availableVariants.append(variant)
+                        }
+                        else {
+                            
+                        }
+                    }
+                }
+            }
+        }
+        if selectedValues.count == 0 {
+            availableVariants = variants
+        }
+        
         // Setup name for level
         if variants.count > 0 {
             for variant in variants {
@@ -58,7 +78,8 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
             name = names[level] as! String
         }
         
-        for variant in variants {
+        // Values for level
+        for variant in availableVariants {
             for option in (variant.node?.selectedOptions)! {
                 if option.name == name {
                     if !values.contains(option.value!) {
@@ -67,9 +88,20 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
                 }
             }
         }
+        
+        // Setup navigation bar
         self.title = name
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeSelector))
-
+    
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if selectedValues.count > 0 {
+            if selectedValues.count > level {
+                selectedValues.removeObject(at: level)
+            }
+        }
+        
     }
     
     @objc func closeSelector() {
@@ -106,7 +138,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         selectedValues[level] = values[indexPath.row]
         if level+1 < names.count {
             let variantSelectionViewController = VariantSelectionViewController()
-            variantSelectionViewController.variants = variants
+            variantSelectionViewController.variants = availableVariants
             variantSelectionViewController.level = level+1
             variantSelectionViewController.selectedValues = selectedValues
             
@@ -121,7 +153,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.accessoryType = .none
+       
     }
 
     /*
