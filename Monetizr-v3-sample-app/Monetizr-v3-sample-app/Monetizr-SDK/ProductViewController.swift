@@ -99,9 +99,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.configureCompatConstraints()
         self.configureRegularConstraints()
         self.activateInitialConstraints()
-        
-        // Delegates
-        //VariantSelectionViewController.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -157,10 +154,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             NSLayoutConstraint.activate(sharedConstraints)
         }
         if UIDevice.current.orientation.isLandscape {
-            print("Landscape")
             if regularConstraints.count > 0 && regularConstraints[0].isActive {
                 NSLayoutConstraint.deactivate(regularConstraints)
             }
+            
             // Image carousel container view
             imageCarouselContainerViewHeightConstraint.constant = viewHeight
             
@@ -169,8 +166,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // activating compact constraints
             NSLayoutConstraint.activate(compactConstraints)
-        } else {
-            print("Portrait")
+        }
+        else {
             if compactConstraints.count > 0 && compactConstraints[0].isActive {
                 NSLayoutConstraint.deactivate(compactConstraints)
             }
@@ -385,6 +382,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             imageLinks.add(link!)
         }
         
+        // Extract variants
         variants = (product?.data?.productByHandle?.variants?.edges)!
         
         // Count variants
@@ -486,13 +484,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                     switch action.style{
                     case .default:
                         print("default")
-                        
                     case .cancel:
                         print("cancel")
-                        
                     case .destructive:
                         print("destructive")
-                        
                     @unknown default:
                         break
                     }}))

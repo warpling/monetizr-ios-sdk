@@ -19,7 +19,6 @@ class Monetizr {
     let apiUrl = "https://api3.themonetizr.com/api/"
     
     // Initialization
-    
     private init(token: String) {
         self.token = token
     }

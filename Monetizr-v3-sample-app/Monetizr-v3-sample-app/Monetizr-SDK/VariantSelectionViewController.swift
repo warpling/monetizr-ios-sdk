@@ -23,7 +23,6 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         delegate?.optionValuesSelected(selectedValues: selectedValues)
     }
     
-    
     weak var delegate: VariantSelectionDelegate? = nil
     var variants: [VariantsEdge] = []
     var level = 0
@@ -35,18 +34,12 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         tableView.delegate = self
         tableView.allowsSelection = true
         tableView.isUserInteractionEnabled = true
         
-        // Available variants
+        // Available variants for level
         if selectedValues.count > 0 {
             for variant in variants {
                 let optionsValues: NSMutableArray = []
@@ -71,7 +64,6 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
                     }
                 }
             }
-            //name = (variants[0].node?.selectedOptions![level].name)!
             name = names[level] as! String
         }
         
@@ -89,16 +81,15 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         // Setup navigation bar
         self.title = name
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeSelector))
-    
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        // Deselect option value when going back lavel
         if selectedValues.count > 0 {
             if selectedValues.count > level {
                 selectedValues.removeObject(at: level)
             }
         }
-        
     }
     
     @objc func closeSelector() {
@@ -152,50 +143,4 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
        
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
