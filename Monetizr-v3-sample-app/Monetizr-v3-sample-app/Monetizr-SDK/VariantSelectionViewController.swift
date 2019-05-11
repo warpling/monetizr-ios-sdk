@@ -49,15 +49,12 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         // Available variants
         if selectedValues.count > 0 {
             for variant in variants {
+                let optionsValues: NSMutableArray = []
                 for option in (variant.node?.selectedOptions)! {
-                    for selectedValue in selectedValues {
-                        if (selectedValue as! String) == option.value {
-                            availableVariants.append(variant)
-                        }
-                        else {
-                            
-                        }
-                    }
+                    optionsValues.add(option.value!)
+                }
+                if selectedValues.allSatisfy(optionsValues.contains) {
+                    availableVariants.append(variant)
                 }
             }
         }

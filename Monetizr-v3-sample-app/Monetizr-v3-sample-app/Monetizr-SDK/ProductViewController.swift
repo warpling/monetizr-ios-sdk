@@ -528,7 +528,22 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Select variant from options selector
     func optionValuesSelected(selectedValues: NSMutableArray) {
-        let values = selectedValues
-        print(values)
+        let selectedValues = selectedValues
+        var availableVariants: [VariantsEdge] = []
+        if selectedValues.count > 0 {
+            for variant in variants {
+                let optionsValues: NSMutableArray = []
+                for option in (variant.node?.selectedOptions)! {
+                    optionsValues.add(option.value!)
+                }
+                if selectedValues.allSatisfy(optionsValues.contains) {
+                    availableVariants.append(variant)
+                }
+            }
+        }
+        if availableVariants.count > 0 {
+            selectedVariant = availableVariants[0].node
+            self.updateViewsData()
+        }
     }
 }
