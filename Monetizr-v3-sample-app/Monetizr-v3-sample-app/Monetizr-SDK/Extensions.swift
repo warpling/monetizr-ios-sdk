@@ -145,6 +145,8 @@ extension UITextView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white
+        self.isSelectable = false
+        self.isEditable = false
     }
 }
 
