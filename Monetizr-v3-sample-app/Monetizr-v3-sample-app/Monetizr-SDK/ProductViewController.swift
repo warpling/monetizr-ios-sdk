@@ -95,9 +95,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.updateViewsData()
         
         // Setup constraints
-        //self.configureSharedConstraints()
-        //self.configureCompatConstraints()
-        //self.configureRegularConstraints()
         self.activateInitialConstraints()
     }
     
