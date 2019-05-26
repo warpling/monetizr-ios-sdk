@@ -43,9 +43,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     private var compactConstraints: [NSLayoutConstraint] = []
     private var regularConstraints: [NSLayoutConstraint] = []
     private var sharedConstraints: [NSLayoutConstraint] = []
-    private var checkoutButtonBackgroundViewConstraint = NSLayoutConstraint()
-    private var imageCarouselContainerViewHeightConstraint = NSLayoutConstraint()
-    private var imageCarouselContainerViewWidthConstraint = NSLayoutConstraint()
     
     // Size values
     var bottomPadding: CGFloat = 0
@@ -98,29 +95,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.updateViewsData()
         
         // Setup constraints
-        self.configureSharedConstraints()
-        self.configureCompatConstraints()
-        self.configureRegularConstraints()
+        //self.configureSharedConstraints()
+        //self.configureCompatConstraints()
+        //self.configureRegularConstraints()
         self.activateInitialConstraints()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-    }
-    
-    func activateInitialConstraints() {
-        let window = UIApplication.shared.keyWindow
-        viewHeight = view.frame.size.height
-        viewWidth = view.frame.size.width
-        
-        if #available(iOS 11.0, *) {            
-            topPadding = (window?.safeAreaInsets.top)!
-            bottomPadding = (window?.safeAreaInsets.bottom)!
-        }
-        // Checkout buttons background
-        checkoutButtonBackgroundViewConstraint.constant = 70+bottomPadding
-        
-        self.configureConstraintsForCurrentOrietnation()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -139,8 +121,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             } else {
                 // Fallback on earlier versions
             }
-            // Checkout buttons background
-            self.checkoutButtonBackgroundViewConstraint.constant = 70+self.bottomPadding
             
             // Resize and position option selector view - do not do this if view is not in hierarchy
             self.optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: self.viewWidth, height: self.viewHeight)
@@ -151,57 +131,59 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.configureConstraintsForCurrentOrietnation()
     }
     
+    func activateInitialConstraints() {
+        let window = UIApplication.shared.keyWindow
+        viewHeight = view.frame.size.height
+        viewWidth = view.frame.size.width
+        
+        if #available(iOS 11.0, *) {
+            topPadding = (window?.safeAreaInsets.top)!
+            bottomPadding = (window?.safeAreaInsets.bottom)!
+        }
+        
+        self.configureConstraintsForCurrentOrietnation()
+    }
+    
     func configureConstraintsForCurrentOrietnation() {
+        if sharedConstraints.count < 1 {
+            // Configure initial constraints
+            self.configureSharedConstraints()
+        }
         if (!sharedConstraints[0].isActive) {
             // activating shared constraints
             NSLayoutConstraint.activate(sharedConstraints)
         }
+        
         if UIDevice.current.orientation.isLandscape {
+            if compactConstraints.count < 1 {
+                // Configure initial constraints
+                self.configureCompactConstraints()
+            }
             if regularConstraints.count > 0 && regularConstraints[0].isActive {
                 NSLayoutConstraint.deactivate(regularConstraints)
             }
-            
-            // Image carousel container view
-            imageCarouselContainerViewHeightConstraint.constant = viewHeight
-            
-            // Image carousel container view
-            imageCarouselContainerViewWidthConstraint.constant = viewWidth/100*55
-            
-            // activating compact constraints
             NSLayoutConstraint.activate(compactConstraints)
         }
         else {
+            if regularConstraints.count < 1 {
+                // Configure initial constraints
+                self.configureRegularConstraints()
+            }
             if compactConstraints.count > 0 && compactConstraints[0].isActive {
                 NSLayoutConstraint.deactivate(compactConstraints)
             }
-            // Image carousel container view
-            imageCarouselContainerViewHeightConstraint.constant = viewHeight/100*55
-            
-            // Image carousel container view
-            imageCarouselContainerViewWidthConstraint.constant = viewWidth
-            // activating regular constraints
             NSLayoutConstraint.activate(regularConstraints)
         }
     }
     
     func configureSharedConstraints() {
-        
-        // Checkout buttons background
-        checkoutButtonBackgroundViewConstraint = checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding)
-        
-        // Image carousel container view
-        imageCarouselContainerViewHeightConstraint = imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight/100*55)
-        
-        // Image carousel container view
-        imageCarouselContainerViewWidthConstraint = imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth/100*55)
-        
         // Create shared constraints array
         sharedConstraints.append(contentsOf: [
             
             // Checkout buttons background
             checkoutButtonBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             checkoutButtonBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            checkoutButtonBackgroundViewConstraint,
+            //checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: checkoutButtonBackgroundViewHeightConstant),
             
             // Checkout button
             checkoutButton.topAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 10),
@@ -229,8 +211,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Image carousel container view
             imageCarouselContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             imageCarouselContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
-            imageCarouselContainerViewWidthConstraint,
-            imageCarouselContainerViewHeightConstraint,
             
             // Image slideshow
             slideShow.topAnchor.constraint(equalTo: imageCarouselContainerView.topAnchor, constant: 0),
@@ -268,10 +248,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             ])
     }
     
-    func configureCompatConstraints() {
+    func configureCompactConstraints() {
         compactConstraints.append(contentsOf: [
             // Checkout buttons background
             checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
+            checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
             
             // Variant option selection container view
             variantOptionsContainerView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
@@ -279,6 +260,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Description container view
             descriptionContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             descriptionContainerView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
+            
+            // Image carousel container view
+            imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight),
+            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth/100*55)
             ])
     }
     
@@ -286,6 +271,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         regularConstraints.append(contentsOf: [
             // Checkout buttons background
             checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
             
             // Variant option selection container view
             variantOptionsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
@@ -293,6 +279,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Description container view
             descriptionContainerView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
             descriptionContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            
+            // Image carousel container view
+            imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight/100*55),
+            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth)
             ])
     }
     
