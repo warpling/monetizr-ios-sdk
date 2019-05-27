@@ -99,14 +99,21 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.activateInitialConstraints()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        viewWidth = size.width
-        viewHeight = size.height
+        
+        // Deactivate previous constraints
+        if regularConstraints.count > 0 && regularConstraints[0].isActive {
+            NSLayoutConstraint.deactivate(regularConstraints)
+        }
+        if compactConstraints.count > 0 && compactConstraints[0].isActive {
+            NSLayoutConstraint.deactivate(compactConstraints)
+        }
+        
+        // Update view sizes
+        self.viewWidth = size.width
+        self.viewHeight = size.height
+        
         coordinator.animate(alongsideTransition: { (context) in
             //
             if #available(iOS 11.0, *) {
@@ -124,9 +131,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             self.optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: self.viewWidth, height: self.viewHeight)
             self.optionsSelectorPlaceholderView.center = self.optionsSelectorOverlayView.convert(self.optionsSelectorOverlayView.center, from:self.optionsSelectorOverlayView.superview)
             
+            // Configure new constraints
+            self.configureConstraintsForCurrentOrietnation()
+            
         }, completion: nil)
-        
-        self.configureConstraintsForCurrentOrietnation()
     }
     
     func activateInitialConstraints() {
@@ -139,6 +147,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             bottomPadding = (window?.safeAreaInsets.bottom)!
         }
         
+        // Configure new constraints
         self.configureConstraintsForCurrentOrietnation()
     }
     
@@ -148,7 +157,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             self.configureSharedConstraints()
         }
         if (!sharedConstraints[0].isActive) {
-            // activating shared constraints
             NSLayoutConstraint.activate(sharedConstraints)
         }
         
@@ -157,18 +165,12 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 // Configure initial constraints
                 self.configureCompactConstraints()
             }
-            if regularConstraints.count > 0 && regularConstraints[0].isActive {
-                NSLayoutConstraint.deactivate(regularConstraints)
-            }
             NSLayoutConstraint.activate(compactConstraints)
         }
         else {
             if regularConstraints.count < 1 {
                 // Configure initial constraints
                 self.configureRegularConstraints()
-            }
-            if compactConstraints.count > 0 && compactConstraints[0].isActive {
-                NSLayoutConstraint.deactivate(compactConstraints)
             }
             NSLayoutConstraint.activate(regularConstraints)
         }
@@ -177,7 +179,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureSharedConstraints() {
         // Create shared constraints array
         sharedConstraints.append(contentsOf: [
-            
             // Checkout buttons background
             checkoutButtonBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             checkoutButtonBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
