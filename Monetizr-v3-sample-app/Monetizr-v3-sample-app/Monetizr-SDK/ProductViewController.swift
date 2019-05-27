@@ -54,6 +54,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Background configuration
         self.view.backgroundColor = .white
         
@@ -180,7 +181,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Checkout buttons background
             checkoutButtonBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             checkoutButtonBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            //checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: checkoutButtonBackgroundViewHeightConstant),
             
             // Checkout button
             checkoutButton.topAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 10),
