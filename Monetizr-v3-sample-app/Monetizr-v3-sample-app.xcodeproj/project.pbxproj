@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2803B6E1229C7AB9009609BB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2803B6E0229C7AB9009609BB /* Localizable.strings */; };
+		2803B6E2229C7C0F009609BB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2803B6E4229C7C0F009609BB /* Localizable.strings */; };
 		28267F012270E2190031E6C0 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28267F002270E2190031E6C0 /* Product.swift */; };
 		282A5C7A2280738900303232 /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282A5C792280738900303232 /* Checkout.swift */; };
 		282A5C7C2280916B00303232 /* ActivityIndicatorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282A5C7B2280916B00303232 /* ActivityIndicatorPresenter.swift */; };
@@ -25,7 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2803B6E0229C7AB9009609BB /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		2803B6E3229C7C0F009609BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		28267F002270E2190031E6C0 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		282A5C792280738900303232 /* Checkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
 		282A5C7B2280916B00303232 /* ActivityIndicatorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorPresenter.swift; sourceTree = "<group>"; };
@@ -69,7 +69,7 @@
 				28772050226D08B600F54AFA /* Extensions.swift */,
 				288716C0227DE073005DFE43 /* Device.swift */,
 				282A5C792280738900303232 /* Checkout.swift */,
-				2803B6E0229C7AB9009609BB /* Localizable.strings */,
+				2803B6E4229C7C0F009609BB /* Localizable.strings */,
 			);
 			name = "Monetizr-SDK";
 			path = "Monetizr-v3-sample-app/Monetizr-SDK";
@@ -186,7 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28E6B7992262109500E43C83 /* LaunchScreen.storyboard in Resources */,
-				2803B6E1229C7AB9009609BB /* Localizable.strings in Resources */,
+				2803B6E2229C7C0F009609BB /* Localizable.strings in Resources */,
 				28E6B7962262109500E43C83 /* Assets.xcassets in Resources */,
 				28E6B7942262109300E43C83 /* Main.storyboard in Resources */,
 			);
@@ -283,6 +283,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		2803B6E4229C7C0F009609BB /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2803B6E3229C7C0F009609BB /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		28E6B7922262109300E43C83 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
