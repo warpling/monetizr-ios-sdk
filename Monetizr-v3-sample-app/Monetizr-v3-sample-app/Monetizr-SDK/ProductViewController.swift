@@ -287,6 +287,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureCloseButton() {
         // Close button
         closeButton.closeProductButtonStyle()
+        closeButton.accessibilityLabel = NSLocalizedString("Close", comment: "Close")
         closeButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         self.view.addSubview(closeButton)
     }
@@ -337,6 +338,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configurePriceTagLabel() {
         // Configure price tag
         priceLabel.priceLabelStyle()
+        priceLabel.accessibilityLabel = NSLocalizedString("Price", comment: "Price")
         descriptionContainerView.addSubview(priceLabel)
     }
     
@@ -390,7 +392,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         titleLabel.accessibilityValue = selectedVariant?.product?.title
         
         // Price tagd label
-        priceLabel.text = (selectedVariant?.priceV2?.currencyCode)!+" "+(selectedVariant?.priceV2?.amount)!
+        //priceLabel.text = (selectedVariant?.priceV2?.currencyCode)!+" "+(selectedVariant?.priceV2?.amount)!
+        //priceLabel.accessibilityValue = (selectedVariant?.priceV2?.currencyCode)!+" "+(selectedVariant?.priceV2?.amount)!
+        
+        priceLabel.text = self.getCurrencyFormat(price: (selectedVariant?.priceV2?.amount)!, currency: (selectedVariant?.priceV2?.currency)!)
+        priceLabel.accessibilityValue = priceLabel.text
         
         // Description text view
         descriptionTextView.text = selectedVariant?.product?.description
@@ -535,5 +541,15 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             selectedVariant = availableVariants[0].node
             self.updateViewsData()
         }
+    }
+    
+    // Cureency string preparation
+    func getCurrencyFormat(price:String, currency:String)->String{
+        let convertPrice = NSNumber(value: Double(price)!)
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currency
+        let convertedPrice = formatter.string(from: convertPrice)
+        return convertedPrice!
     }
 }

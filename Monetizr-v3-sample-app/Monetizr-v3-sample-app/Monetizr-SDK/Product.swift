@@ -74,7 +74,7 @@ struct PurpleNode: Codable {
 }
 
 struct PriceV2: Codable {
-    let currencyCode, amount: String?
+    let currencyCode, currency, amount: String?
 }
 
 struct ProductClass: Codable {
