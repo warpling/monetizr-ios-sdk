@@ -399,7 +399,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         priceLabel.accessibilityValue = priceLabel.text
         
         // Description text view
-        descriptionTextView.text = selectedVariant?.product?.description
+        descriptionTextView.text = selectedVariant?.product?.description_ios
         
         let imageSources = NSMutableArray()
         // Image slide show
