@@ -343,6 +343,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureTitleLabel() {
         // Configure product title
         titleLabel.titleLabelStyle()
+        titleLabel.accessibilityLabel = NSLocalizedString("Product title", comment: "Product title")
         descriptionContainerView.addSubview(titleLabel)
     }
     
@@ -386,6 +387,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func updateViewsData() {
         // Title label
         titleLabel.text = selectedVariant?.product?.title
+        titleLabel.accessibilityValue = selectedVariant?.product?.title
         
         // Price tagd label
         priceLabel.text = (selectedVariant?.priceV2?.currencyCode)!+" "+(selectedVariant?.priceV2?.amount)!
