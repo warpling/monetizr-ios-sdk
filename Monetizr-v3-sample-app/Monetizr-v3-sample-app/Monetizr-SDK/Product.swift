@@ -29,14 +29,14 @@ struct ProductDataClass: Codable {
 }
 
 struct ProductByHandle: Codable {
-    let id, title, description, descriptionHTML: String?
+    let id, title, description, description_ios, descriptionHTML: String?
     let availableForSale: Bool?
     let onlineStoreURL: String?
     let images: Images?
     let variants: Variants?
     
     enum CodingKeys: String, CodingKey {
-        case id, title, description
+        case id, title, description, description_ios
         case descriptionHTML = "descriptionHtml"
         case availableForSale
         case onlineStoreURL = "onlineStoreUrl"
@@ -78,10 +78,10 @@ struct PriceV2: Codable {
 }
 
 struct ProductClass: Codable {
-    let title, description, descriptionHTML: String?
+    let title, description, description_ios, descriptionHTML: String?
     
     enum CodingKeys: String, CodingKey {
-        case title, description
+        case title, description, description_ios
         case descriptionHTML = "descriptionHtml"
     }
 }
