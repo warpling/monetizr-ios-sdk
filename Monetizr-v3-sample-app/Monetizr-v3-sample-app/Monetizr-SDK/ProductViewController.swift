@@ -287,7 +287,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureCloseButton() {
         // Close button
         closeButton.closeProductButtonStyle()
-        closeButton.accessibilityLabel = NSLocalizedString("Close", comment: "Close")
+        closeButton.accessibilityLabel = NSLocalizedString("Close product", comment: "Close product")
         closeButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         self.view.addSubview(closeButton)
     }
@@ -352,6 +352,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureDescriptionTextView() {
         // Configure description text
         descriptionTextView.descriptionTextViewStyle()
+        descriptionTextView.accessibilityLabel = NSLocalizedString("Product description", comment: "Product description")
         descriptionContainerView.addSubview(descriptionTextView)
     }
     
