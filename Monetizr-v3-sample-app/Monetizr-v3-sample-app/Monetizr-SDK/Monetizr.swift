@@ -17,13 +17,19 @@ class Monetizr {
     var token: String
     var language: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
+    var headers: HTTPHeaders = [:]
     
     // Initialization
     private init(token: String) {
         self.token = token
+        DispatchQueue.main.async { self.createHeaders() }
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         DispatchQueue.main.async { self.appMovedToForeground() }
         DispatchQueue.main.async { self.devicedataCreate() }
+    }
+    
+    func createHeaders() {
+        headers["Authorization"] = "Bearer "+token
     }
     
     func setLanguage(language: String) {
@@ -37,12 +43,7 @@ class Monetizr {
         if language != nil {
             urlString = urlString+"?language="+language!
         }
-        let url = URL(string: urlString)
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer "+token
-        ]
-        
-        Alamofire.request(url!, headers: headers).responseProduct { response in
+        Alamofire.request(URL(string: urlString)!, headers: headers).responseProduct { response in
             if let retrievedProduct = response.result.value {
                 //var product: Product?
                 if retrievedProduct.data != nil {
@@ -86,10 +87,6 @@ class Monetizr {
     // Checkout variant for product
     func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkout"
-        let url = URL(string: urlString)
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer "+token
-        ]
         var parameters: [String: String] = [
             "product_handle" : tag,
             "variantId" : selectedVariant.id!,
@@ -99,7 +96,7 @@ class Monetizr {
             parameters["language"] = language
         }
         
-        Alamofire.request(url!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
                     completionHandler(true, nil, responseCheckout)
@@ -124,11 +121,7 @@ class Monetizr {
     func devicedataCreate() {
         let data = deviceData()
         let urlString = apiUrl+"telemetric/devicedata"
-        let url = URL(string: urlString)
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer "+token
-        ]
-        Alamofire.request(url!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             print(response)
         }
     }
