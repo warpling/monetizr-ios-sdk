@@ -20,3 +20,14 @@ func screenWidthPixelsInPortraitOrientation() -> Int {
         return Int(((window?.frame.size.width)!) * UIScreen.main.scale)
     }
 }
+
+// Get Device data
+func deviceData() -> Dictionary<String, String> {
+    var dict: Dictionary<String, String> = [:]
+    dict["device_name"] = UIDevice.current.name
+    dict["os_version"] = UIDevice.current.systemVersion
+    dict["region"] = NSLocale.current.regionCode
+    dict["device_identifier"] = UIDevice.current.identifierForVendor?.uuidString
+    dict["language"] = Locale.current.languageCode
+    return dict
+}

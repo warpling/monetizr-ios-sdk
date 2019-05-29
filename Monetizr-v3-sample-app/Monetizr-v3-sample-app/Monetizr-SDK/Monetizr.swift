@@ -21,6 +21,9 @@ class Monetizr {
     // Initialization
     private init(token: String) {
         self.token = token
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        DispatchQueue.main.async { self.appMovedToForeground() }
+        DispatchQueue.main.async { self.devicedataCreate() }
     }
     
     func setLanguage(language: String) {
@@ -115,5 +118,23 @@ class Monetizr {
                 completionHandler(false, response.result.error!, nil)
             }
         }
+    }
+    
+    // Create a new entry for device data
+    func devicedataCreate() {
+        let data = deviceData()
+        let urlString = apiUrl+"telemetric/devicedata"
+        let url = URL(string: urlString)
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer "+token
+        ]
+        Alamofire.request(url!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            print(response)
+        }
+    }
+    
+    // Application become active
+    @objc func appMovedToForeground() {
+        print("App moved to ForeGround!")
     }
 }
