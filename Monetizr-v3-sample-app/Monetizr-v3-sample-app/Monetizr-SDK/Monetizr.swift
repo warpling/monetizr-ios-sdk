@@ -28,12 +28,19 @@ class Monetizr {
         DispatchQueue.main.async { self.devicedataCreate() }
     }
     
+    // Create headers
     func createHeaders() {
         headers["Authorization"] = "Bearer "+token
     }
     
+    // Set language
     func setLanguage(language: String) {
         self.language = language
+    }
+    
+    // Application become active
+    @objc func appMovedToForeground() {
+        print("App moved to ForeGround!")
     }
     
     // Load product data
@@ -124,10 +131,5 @@ class Monetizr {
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             print(response)
         }
-    }
-    
-    // Application become active
-    @objc func appMovedToForeground() {
-        print("App moved to ForeGround!")
     }
 }

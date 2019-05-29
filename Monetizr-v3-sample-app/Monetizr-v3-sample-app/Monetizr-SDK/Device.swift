@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import PassKit
 
 // Calculate screen width in Portrait
 func screenWidthPixelsInPortraitOrientation() -> Int {
@@ -22,12 +23,17 @@ func screenWidthPixelsInPortraitOrientation() -> Int {
 }
 
 // Get Device data
-func deviceData() -> Dictionary<String, String> {
-    var dict: Dictionary<String, String> = [:]
+func deviceData() -> Dictionary<String, Any> {
+    var dict: Dictionary<String, Any> = [:]
     dict["device_name"] = UIDevice.current.name
     dict["os_version"] = UIDevice.current.systemVersion
     dict["region"] = NSLocale.current.regionCode
     dict["device_identifier"] = UIDevice.current.identifierForVendor?.uuidString
     dict["language"] = Locale.current.languageCode
+    dict["apple_pay_status"] = applePaySupported()
     return dict
+}
+
+func applePaySupported() -> Bool {
+    return PKPaymentAuthorizationViewController.canMakePayments() && PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: [.amex, .visa, .masterCard])
 }
