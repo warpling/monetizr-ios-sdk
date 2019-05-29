@@ -99,6 +99,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.activateInitialConstraints()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.accessibilityViewIsModal = true
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
@@ -366,6 +371,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureOptionsTitleLabel() {
         // Configure options title label
         optionsTitleLabel.optionsTitleLabelStyle()
+        optionsTitleLabel.accessibilityLabel = NSLocalizedString("Product variant selection", comment: "Product variant selection")
         variantOptionsContainerView.addSubview(optionsTitleLabel)
     }
     
@@ -392,10 +398,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         titleLabel.text = selectedVariant?.product?.title
         titleLabel.accessibilityValue = selectedVariant?.product?.title
         
-        // Price tagd label
-        //priceLabel.text = (selectedVariant?.priceV2?.currencyCode)!+" "+(selectedVariant?.priceV2?.amount)!
-        //priceLabel.accessibilityValue = (selectedVariant?.priceV2?.currencyCode)!+" "+(selectedVariant?.priceV2?.amount)!
-        
         priceLabel.text = self.getCurrencyFormat(price: (selectedVariant?.priceV2?.amount)!, currency: (selectedVariant?.priceV2?.currency)!)
         priceLabel.accessibilityValue = priceLabel.text
         
@@ -413,6 +415,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Selected option title
         optionsTitleLabel.text = selectedVariant?.title
+        optionsTitleLabel.accessibilityValue = optionsTitleLabel.text! + "--" + NSLocalizedString("Tap to change", comment: "Tap to change")
         
         // Options selector show/hide
         if variants.count > 1 {
@@ -426,6 +429,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Configure option selector overlay
         optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight)
         optionsSelectorOverlayView.addBlurEffect(style: UIBlurEffect.Style.dark)
+        optionsSelectorOverlayView.accessibilityViewIsModal = true
         view.addSubview(optionsSelectorOverlayView);
         
         // Handle taps
