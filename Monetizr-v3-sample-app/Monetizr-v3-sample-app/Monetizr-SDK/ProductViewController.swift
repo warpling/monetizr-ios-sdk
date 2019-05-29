@@ -113,12 +113,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         super.viewWillTransition(to: size, with: coordinator)
         
         // Deactivate previous constraints
-        if regularConstraints.count > 0 && regularConstraints[0].isActive {
-            NSLayoutConstraint.deactivate(regularConstraints)
-        }
-        if compactConstraints.count > 0 && compactConstraints[0].isActive {
-            NSLayoutConstraint.deactivate(compactConstraints)
-        }
+        self.deactivateVariableConstraints()
         
         // Update view sizes
         self.viewWidth = size.width
@@ -170,6 +165,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             NSLayoutConstraint.activate(sharedConstraints)
         }
         
+        self.deactivateVariableConstraints()
+        
         if UIDevice.current.orientation.isLandscape {
             if compactConstraints.count < 1 {
                 // Configure initial constraints
@@ -183,6 +180,16 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 self.configureRegularConstraints()
             }
             NSLayoutConstraint.activate(regularConstraints)
+        }
+    }
+    
+    func deactivateVariableConstraints() {
+        // Deactivate variable constraints
+        if regularConstraints.count > 0 && regularConstraints[0].isActive {
+            NSLayoutConstraint.deactivate(regularConstraints)
+        }
+        if compactConstraints.count > 0 && compactConstraints[0].isActive {
+            NSLayoutConstraint.deactivate(compactConstraints)
         }
     }
     
