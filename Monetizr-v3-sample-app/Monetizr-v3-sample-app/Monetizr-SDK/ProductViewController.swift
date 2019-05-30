@@ -20,6 +20,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var variantCount = 0
     var variants: [VariantsEdge] = []
     var imageLinks: NSMutableArray = []
+    let dateOpened: Date = Date()
     
     // Outlets
     let closeButton = UIButton()
@@ -519,6 +520,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         if sender == closeButton {
             // Close product view
             navigationController?.popViewController(animated: true)
+            Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
             dismiss(animated: true, completion: nil)
         }
         if sender == checkoutButton {

@@ -141,4 +141,26 @@ class Monetizr {
             }
         }
     }
+    
+    // Create a new entry for impressionvisible
+    func impressionvisibleCreate(tag: String, fromDate:Date, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        let interval = Date().timeIntervalSince(fromDate)
+        let duration = Int(interval)*1000
+        var data: Dictionary<String, Any> = [:]
+        data["trigger_tag"] = tag
+        data["time_until_dismiss"] = duration
+        let urlString = apiUrl+"telemetric/impressionvisible"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
 }
