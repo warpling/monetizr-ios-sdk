@@ -585,6 +585,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         if sender.state == .ended {
             let velocity = sender.velocity(in: view)
             if velocity.y >= 300 || progress > percentThreshold {
+                Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
                 self.dismiss(animated: true) //Perform dismiss
             } else {
                 UIView.animate(withDuration: 0.2, animations: {
