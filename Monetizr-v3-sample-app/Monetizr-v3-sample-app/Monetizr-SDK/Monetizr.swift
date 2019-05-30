@@ -25,7 +25,7 @@ class Monetizr {
         DispatchQueue.main.async { self.createHeaders() }
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         DispatchQueue.main.async { self.appMovedToForeground() }
-        DispatchQueue.main.async { self.devicedataCreate() }
+        DispatchQueue.main.async { self.devicedataCreate() { success, error, value in ()} }
     }
     
     // Create headers
@@ -125,11 +125,20 @@ class Monetizr {
     }
     
     // Create a new entry for device data
-    func devicedataCreate() {
+    func devicedataCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         let data = deviceData()
         let urlString = apiUrl+"telemetric/devicedata"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
-            print(response)
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
         }
     }
 }
