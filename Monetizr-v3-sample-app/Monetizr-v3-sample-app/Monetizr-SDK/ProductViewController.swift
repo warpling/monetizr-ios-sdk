@@ -103,6 +103,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Setup constraints
         self.activateInitialConstraints()
+        
+        // Create a new entry for clickreward
+        Monetizr.shared.clickrewardCreate(tag: tag!, completionHandler: { success, error, value in ()})
     }
     
     override func viewWillAppear(_ animated: Bool) {
