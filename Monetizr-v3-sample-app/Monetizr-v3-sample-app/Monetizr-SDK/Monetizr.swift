@@ -182,4 +182,24 @@ class Monetizr {
             }
         }
     }
+    
+    // Create a new entry for design
+    func designCreate(numberOfTriggers: Int, funnelTriggerList: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["number_of_triggers"] = numberOfTriggers
+        data["funnel_trigger_list"] = funnelTriggerList
+        let urlString = apiUrl+"telemetric/design"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
 }
