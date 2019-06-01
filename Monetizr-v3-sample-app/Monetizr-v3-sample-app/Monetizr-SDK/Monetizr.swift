@@ -202,4 +202,23 @@ class Monetizr {
             }
         }
     }
+    
+    // Create a new entry for dismiss
+    func dismissCreate(tag: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["trigger_tag"] = tag
+        let urlString = apiUrl+"telemetric/dismiss"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
 }

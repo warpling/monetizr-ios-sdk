@@ -21,6 +21,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var variants: [VariantsEdge] = []
     var imageLinks: NSMutableArray = []
     let dateOpened: Date = Date()
+    var interaction: Bool = false
     
     // Outlets
     let closeButton = UIButton()
@@ -524,9 +525,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Close product view
             navigationController?.popViewController(animated: true)
             Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
+            if !interaction {
+                Monetizr.shared.dismissCreate(tag: tag!, completionHandler: { success, error, value in ()})
+            }
             dismiss(animated: true, completion: nil)
         }
         if sender == checkoutButton {
+            interaction = true
             // Start checkout
             self.checkoutSelectedVariant()
         }
@@ -535,6 +540,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     // Handle taps
     @objc func viewTapped(_ sender: UITapGestureRecognizer) {
         if sender == optionsTapGesture {
+            interaction = true
             if variants.count > 1 {
                 self.showOptionsSelector()
             }
@@ -589,6 +595,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             let velocity = sender.velocity(in: view)
             if velocity.y >= 300 || progress > percentThreshold {
                 Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
+                if !interaction {
+                    Monetizr.shared.dismissCreate(tag: tag!, completionHandler: { success, error, value in ()})
+                }
                 self.dismiss(animated: true) //Perform dismiss
             } else {
                 UIView.animate(withDuration: 0.2, animations: {
