@@ -23,6 +23,7 @@ class Monetizr {
     private init(token: String) {
         self.token = token
         DispatchQueue.main.async { self.createHeaders() }
+        DispatchQueue.main.async { self.trackAppVersion() }
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         DispatchQueue.main.async { self.appMovedToForeground() }
         DispatchQueue.main.async { self.devicedataCreate() { success, error, value in ()} }
@@ -124,6 +125,24 @@ class Monetizr {
         }
     }
     
+    // Track app version
+    func trackAppVersion() {
+        let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        let versionOfLastRun = UserDefaults.standard.object(forKey: "MonetizrAppVersionOfLastRun") as? String
+        if versionOfLastRun == nil {
+            // First start after installing the app
+            self.installCreate(deviceIdentifier: UIDevice.current.identifierForVendor!.uuidString, completionHandler: {_,_,_ in })
+        } else if versionOfLastRun != currentVersion {
+            // App was updated since last run
+            self.updateCreate(deviceIdentifier: UIDevice.current.identifierForVendor!.uuidString, bundleVersion: currentVersion!, completionHandler: {_,_,_ in })
+        } else {
+            // nothing changed
+        }
+        UserDefaults.standard.set(currentVersion, forKey: "MonetizrAppVersionOfLastRun")
+        UserDefaults.standard.synchronize()
+    }
+    
+    /* Metrics section */
     // Create a new entry for device data
     func devicedataCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         let data = deviceData()
@@ -208,6 +227,46 @@ class Monetizr {
         var data: Dictionary<String, Any> = [:]
         data["trigger_tag"] = tag
         let urlString = apiUrl+"telemetric/dismiss"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Create a new entry for install
+    func installCreate(deviceIdentifier: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["device_identifier"] = deviceIdentifier
+        data["installed"] = true
+        let urlString = apiUrl+"telemetric/install"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Create a new entry for update
+    func updateCreate(deviceIdentifier: String, bundleVersion: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["device_identifier"] = deviceIdentifier
+        data["bundle_version"] = bundleVersion
+        let urlString = apiUrl+"telemetric/update"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
             if let value = response.result.value {
