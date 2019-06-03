@@ -107,6 +107,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Create a new entry for clickreward
         Monetizr.shared.clickrewardCreate(tag: tag!, completionHandler: { success, error, value in ()})
+        
+        // Create a new entry for firstimpression
+        if Monetizr.shared.impressionCountInSession == 0 {
+            Monetizr.shared.firstimpressionCreate(completionHandler: { success, error, value in ()})
+        }
+        
+        // Increase impression count
+        Monetizr.shared.increaseImpressionCount()
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -18,6 +18,8 @@ class Monetizr {
     var language: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
     var headers: HTTPHeaders = [:]
+    var dateMovedToForeground: Date = Date()
+    var impressionCountInSession: Int = 0
     
     // Initialization
     private init(token: String) {
@@ -25,6 +27,8 @@ class Monetizr {
         DispatchQueue.main.async { self.createHeaders() }
         DispatchQueue.main.async { self.trackAppVersion() }
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appTerminated), name: UIApplication.willTerminateNotification, object: nil)
         DispatchQueue.main.async { self.appMovedToForeground() }
         DispatchQueue.main.async { self.devicedataCreate() { success, error, value in ()} }
     }
@@ -41,7 +45,22 @@ class Monetizr {
     
     // Application become active
     @objc func appMovedToForeground() {
-        print("App moved to ForeGround!")
+        dateMovedToForeground = Date()
+    }
+    
+    // Application resign active
+    @objc func appMovedToBackground() {
+        impressionCountInSession = 0
+    }
+    
+    // Application resign active
+    @objc func appTerminated() {
+        impressionCountInSession = 0
+    }
+    
+    // Update imprssion count
+    func increaseImpressionCount() {
+        impressionCountInSession = impressionCountInSession+1
     }
     
     // Load product data
@@ -267,6 +286,27 @@ class Monetizr {
         data["device_identifier"] = deviceIdentifier
         data["bundle_version"] = bundleVersion
         let urlString = apiUrl+"telemetric/update"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Create a new entry for update
+    func firstimpressionCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        let interval = Date().timeIntervalSince(dateMovedToForeground)
+        let duration = Int(interval)
+        data["first_impression_shown"] = duration
+        let urlString = apiUrl+"telemetric/firstimpression"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
             if let value = response.result.value {
