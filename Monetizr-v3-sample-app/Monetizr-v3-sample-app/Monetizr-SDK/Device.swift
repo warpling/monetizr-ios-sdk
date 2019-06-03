@@ -28,7 +28,7 @@ func deviceData() -> Dictionary<String, Any> {
     dict["device_name"] = UIDevice.current.name
     dict["os_version"] = UIDevice.current.systemVersion
     dict["region"] = NSLocale.current.regionCode
-    dict["device_identifier"] = UIDevice.current.identifierForVendor?.uuidString
+    dict["device_identifier"] = deviceIdentifier()
     dict["language"] = Locale.current.languageCode
     dict["apple_pay_status"] = applePaySupported()
     return dict
@@ -36,4 +36,8 @@ func deviceData() -> Dictionary<String, Any> {
 
 func applePaySupported() -> Bool {
     return PKPaymentAuthorizationViewController.canMakePayments() && PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: [.amex, .visa, .masterCard])
+}
+
+func deviceIdentifier() -> String {
+    return UIDevice.current.identifierForVendor!.uuidString
 }

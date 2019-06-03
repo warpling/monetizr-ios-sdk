@@ -63,6 +63,13 @@ class Monetizr {
         impressionCountInSession = impressionCountInSession+1
     }
     
+    // Session duration
+    func sessionDuration() -> Int {
+        let interval = Date().timeIntervalSince(dateMovedToForeground)
+        let duration = Int(interval)
+        return duration
+    }
+    
     // Load product data
     func getProductForTag(tag: String, show: Bool, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
@@ -150,10 +157,10 @@ class Monetizr {
         let versionOfLastRun = UserDefaults.standard.object(forKey: "MonetizrAppVersionOfLastRun") as? String
         if versionOfLastRun == nil {
             // First start after installing the app
-            self.installCreate(deviceIdentifier: UIDevice.current.identifierForVendor!.uuidString, completionHandler: {_,_,_ in })
+            self.installCreate(deviceIdentifier: deviceIdentifier(), completionHandler: {_,_,_ in })
         } else if versionOfLastRun != currentVersion {
             // App was updated since last run
-            self.updateCreate(deviceIdentifier: UIDevice.current.identifierForVendor!.uuidString, bundleVersion: currentVersion!, completionHandler: {_,_,_ in })
+            self.updateCreate(deviceIdentifier: deviceIdentifier(), bundleVersion: currentVersion!, completionHandler: {_,_,_ in })
         } else {
             // nothing changed
         }
@@ -301,12 +308,33 @@ class Monetizr {
     }
     
     // Create a new entry for update
-    func firstimpressionCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    func firstimpressionCreate(sessionDuration: Int, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
-        let interval = Date().timeIntervalSince(dateMovedToForeground)
-        let duration = Int(interval)
-        data["first_impression_shown"] = duration
+        data["first_impression_shown"] = sessionDuration
         let urlString = apiUrl+"telemetric/firstimpression"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Create a new entry for playerbehaviour
+    func playerbehaviourCreate(deviceIdentifier: String, gameProgress: Int?, sessionDuration: Int, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["device_identifier"] = deviceIdentifier
+        if (gameProgress != nil) {
+            data["game_progress"] = gameProgress
+        }
+        data["session_time"] = sessionDuration
+        let urlString = apiUrl+"telemetric/playerbehaviour"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
             if let value = response.result.value {

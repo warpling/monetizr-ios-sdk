@@ -110,8 +110,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Create a new entry for firstimpression
         if Monetizr.shared.impressionCountInSession == 0 {
-            Monetizr.shared.firstimpressionCreate(completionHandler: { success, error, value in ()})
+            Monetizr.shared.firstimpressionCreate(sessionDuration: Monetizr.shared.sessionDuration(), completionHandler: { success, error, value in ()})
         }
+        
+        // Create a new entry for playerbehaviour
+        Monetizr.shared.playerbehaviourCreate(deviceIdentifier: deviceIdentifier(), gameProgress: nil, sessionDuration: Monetizr.shared.sessionDuration(), completionHandler: { success, error, value in ()})
         
         // Increase impression count
         Monetizr.shared.increaseImpressionCount()
