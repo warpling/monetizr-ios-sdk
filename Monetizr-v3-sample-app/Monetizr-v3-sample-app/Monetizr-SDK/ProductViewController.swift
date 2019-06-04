@@ -56,7 +56,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Drag to dismiss
         let gestureRecognizer = UIPanGestureRecognizer(target: self,
                                                        action: #selector(panGestureRecognizerHandler(_:)))

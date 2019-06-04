@@ -18,7 +18,8 @@ class Monetizr {
     var language: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
     var headers: HTTPHeaders = [:]
-    var dateMovedToForeground: Date = Date()
+    var dateSessionStarted: Date = Date()
+    var dateSessionEnded: Date = Date()
     var impressionCountInSession: Int = 0
     
     // Initialization
@@ -45,17 +46,21 @@ class Monetizr {
     
     // Application become active
     @objc func appMovedToForeground() {
-        dateMovedToForeground = Date()
+        dateSessionStarted = Date()
     }
     
     // Application resign active
     @objc func appMovedToBackground() {
         impressionCountInSession = 0
+        dateSessionEnded = Date()
+        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), endDate: stringFromDate(date: dateSessionEnded), completionHandler: { success, error, value in ()})
     }
     
     // Application resign active
     @objc func appTerminated() {
         impressionCountInSession = 0
+        dateSessionEnded = Date()
+        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), endDate: stringFromDate(date: dateSessionEnded), completionHandler: { success, error, value in ()})
     }
     
     // Update imprssion count
@@ -65,7 +70,7 @@ class Monetizr {
     
     // Session duration
     func sessionDuration() -> Int {
-        let interval = Date().timeIntervalSince(dateMovedToForeground)
+        let interval = Date().timeIntervalSince(dateSessionStarted)
         let duration = Int(interval)
         return duration
     }
@@ -371,5 +376,38 @@ class Monetizr {
                 completionHandler(false, response.result.error!, nil)
             }
         }
+    }
+    
+    // Create a new entry for session end
+    func sessionEnd(deviceIdentifier: String, startDate: String?, endDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["device_identifier"] = deviceIdentifier
+        data["session_start"] = startDate
+        data["session_end"] = endDate
+        let urlString = apiUrl+"telemetric/session/session_end"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Monetizr date string
+    func stringFromDate(date: Date) -> String {
+        // MOnetizr requirements "%Y-%m-%d %H:%M:%S.%f", 2019-03-08 14:44:57.08809+02
+        let dateFormatter = DateFormatter()
+        let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.locale = enUSPosixLocale
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSX"
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        let datestring = dateFormatter.string(from: date)
+        return datestring
     }
 }
