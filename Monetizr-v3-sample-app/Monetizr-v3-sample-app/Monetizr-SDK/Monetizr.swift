@@ -336,9 +336,7 @@ class Monetizr {
     func playerbehaviourCreate(deviceIdentifier: String, gameProgress: Int?, sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
-        if (gameProgress != nil) {
-            data["game_progress"] = gameProgress
-        }
+        data["game_progress"] = gameProgress
         data["session_time"] = sessionDuration
         let urlString = apiUrl+"telemetric/playerbehaviour"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
@@ -406,6 +404,30 @@ class Monetizr {
         data["device_identifier"] = deviceIdentifier
         data["session_start"] = startDate
         let urlString = apiUrl+"telemetric/session"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Create a new entry for encounter
+    func encounterCreate(triggerType: String?, completionStatus: Int?, triggerTag: String?, levelName: String?, difficultyLevelName: String?, difficultyEstimation: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["trigger_type"] = triggerType
+        data["completion_status"] = completionStatus
+        data["trigger_tag"] = triggerTag
+        data["level_name"] = levelName
+        data["difficulty_level_name"] = difficultyLevelName
+        data["difficulty_estimation"] = difficultyEstimation
+        let urlString = apiUrl+"telemetric/encounter"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
             if let value = response.result.value {
