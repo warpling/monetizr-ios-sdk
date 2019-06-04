@@ -188,8 +188,8 @@ class Monetizr {
     }
     
     // Create a new entry for impressionvisible
-    func impressionvisibleCreate(tag: String, fromDate:Date, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
-        let interval = Date().timeIntervalSince(fromDate)
+    func impressionvisibleCreate(tag: String?, fromDate:Date?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        let interval = Date().timeIntervalSince(fromDate!)
         let duration = Int(interval*1000)
         var data: Dictionary<String, Any> = [:]
         data["trigger_tag"] = tag
@@ -210,7 +210,7 @@ class Monetizr {
     }
     
     // Create a new entry for clickreward
-    func clickrewardCreate(tag: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    func clickrewardCreate(tag: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["trigger_tag"] = tag
         let urlString = apiUrl+"telemetric/clickreward"
@@ -229,7 +229,7 @@ class Monetizr {
     }
     
     // Create a new entry for design
-    func designCreate(numberOfTriggers: Int, funnelTriggerList: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    func designCreate(numberOfTriggers: Int?, funnelTriggerList: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["number_of_triggers"] = numberOfTriggers
         data["funnel_trigger_list"] = funnelTriggerList
@@ -249,7 +249,7 @@ class Monetizr {
     }
     
     // Create a new entry for dismiss
-    func dismissCreate(tag: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    func dismissCreate(tag: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["trigger_tag"] = tag
         let urlString = apiUrl+"telemetric/dismiss"
@@ -268,7 +268,7 @@ class Monetizr {
     }
     
     // Create a new entry for install
-    func installCreate(deviceIdentifier: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    func installCreate(deviceIdentifier: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         data["installed"] = true
@@ -288,7 +288,7 @@ class Monetizr {
     }
     
     // Create a new entry for update
-    func updateCreate(deviceIdentifier: String, bundleVersion: String, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    func updateCreate(deviceIdentifier: String, bundleVersion: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         data["bundle_version"] = bundleVersion
@@ -308,7 +308,7 @@ class Monetizr {
     }
     
     // Create a new entry for update
-    func firstimpressionCreate(sessionDuration: Int, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    func firstimpressionCreate(sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_shown"] = sessionDuration
         let urlString = apiUrl+"telemetric/firstimpression"
@@ -327,7 +327,7 @@ class Monetizr {
     }
     
     // Create a new entry for playerbehaviour
-    func playerbehaviourCreate(deviceIdentifier: String, gameProgress: Int?, sessionDuration: Int, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    func playerbehaviourCreate(deviceIdentifier: String, gameProgress: Int?, sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         if (gameProgress != nil) {
@@ -335,6 +335,30 @@ class Monetizr {
         }
         data["session_time"] = sessionDuration
         let urlString = apiUrl+"telemetric/playerbehaviour"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Create a new entry for purchase
+    func purchaseCreate(deviceIdentifier: String, triggerTag: String?, productPrice: String?, currency: String?, country: String?, city: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["device_identifier"] = deviceIdentifier
+        data["trigger_tag"] = triggerTag
+        data["product_price"] = productPrice
+        data["currency"] = currency
+        data["country"] = country
+        data["city"] = city
+        let urlString = apiUrl+"telemetric/purchase"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
             if let value = response.result.value {
