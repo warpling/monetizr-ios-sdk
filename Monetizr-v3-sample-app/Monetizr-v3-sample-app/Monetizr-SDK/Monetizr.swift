@@ -47,6 +47,7 @@ class Monetizr {
     // Application become active
     @objc func appMovedToForeground() {
         dateSessionStarted = Date()
+        sessionCreate(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), completionHandler: { success, error, value in ()})
     }
     
     // Application resign active
@@ -385,6 +386,26 @@ class Monetizr {
         data["session_start"] = startDate
         data["session_end"] = endDate
         let urlString = apiUrl+"telemetric/session/session_end"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Create a new entry for session
+    func sessionCreate(deviceIdentifier: String, startDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["device_identifier"] = deviceIdentifier
+        data["session_start"] = startDate
+        let urlString = apiUrl+"telemetric/session"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
             if let value = response.result.value {
