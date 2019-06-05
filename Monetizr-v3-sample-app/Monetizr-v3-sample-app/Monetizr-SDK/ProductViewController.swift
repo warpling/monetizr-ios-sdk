@@ -545,6 +545,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             interaction = true
             // Start checkout
             self.checkoutSelectedVariant()
+            if Monetizr.shared.checkoutCountInSession < 1 {
+                Monetizr.shared.firstimpressioncheckoutCreate(firstImpressionCheckout: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
+            }
+            Monetizr.shared.increaseCheckoutCountInSession()
         }
     }
     
