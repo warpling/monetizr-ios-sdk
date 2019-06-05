@@ -30,7 +30,7 @@ class Monetizr {
         DispatchQueue.main.async { self.createHeaders() }
         DispatchQueue.main.async { self.trackAppVersion() }
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appTerminated), name: UIApplication.willTerminateNotification, object: nil)
         DispatchQueue.main.async { self.appMovedToForeground() }
         DispatchQueue.main.async { self.devicedataCreate() { success, error, value in ()} }
