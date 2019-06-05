@@ -21,6 +21,8 @@ class Monetizr {
     var dateSessionStarted: Date = Date()
     var dateSessionEnded: Date = Date()
     var impressionCountInSession: Int = 0
+    var clickCountInSession: Int = 0
+    var checkoutCountInSession: Int = 0
     
     // Initialization
     private init(token: String) {
@@ -53,6 +55,8 @@ class Monetizr {
     // Application resign active
     @objc func appMovedToBackground() {
         impressionCountInSession = 0
+        clickCountInSession = 0
+        checkoutCountInSession = 0
         dateSessionEnded = Date()
         sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), endDate: stringFromDate(date: dateSessionEnded), completionHandler: { success, error, value in ()})
     }
@@ -60,19 +64,38 @@ class Monetizr {
     // Application resign active
     @objc func appTerminated() {
         impressionCountInSession = 0
+        clickCountInSession = 0
+        checkoutCountInSession = 0
         dateSessionEnded = Date()
         sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), endDate: stringFromDate(date: dateSessionEnded), completionHandler: { success, error, value in ()})
     }
     
-    // Update imprssion count
+    // Update impression count
     func increaseImpressionCount() {
         impressionCountInSession = impressionCountInSession+1
     }
     
-    // Session duration
-    func sessionDuration() -> Int {
+    // Update click count
+    func increaseClickCountInSession() {
+        clickCountInSession = clickCountInSession+1
+    }
+    
+    // Update checkout count
+    func increaseCheckoutCountInSession() {
+        checkoutCountInSession = checkoutCountInSession+1
+    }
+    
+    // Session duration un seconds
+    func sessionDurationSeconds() -> Int {
         let interval = Date().timeIntervalSince(dateSessionStarted)
         let duration = Int(interval)
+        return duration
+    }
+    
+    // Session duration un miliseconds
+    func sessionDurationMiliseconds() -> Int {
+        let interval = Date().timeIntervalSince(dateSessionStarted)
+        let duration = Int(interval*1000)
         return duration
     }
     
@@ -442,9 +465,28 @@ class Monetizr {
         }
     }
     
+    // Create a new entry for firstimpressionclick
+    func firstimpressionclickCreate(firstImpressionClick: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        var data: Dictionary<String, Any> = [:]
+        data["first_impression_click"] = firstImpressionClick
+        let urlString = apiUrl+"telemetric/firstimpressionclick"
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.result.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
     // Monetizr date string
     func stringFromDate(date: Date) -> String {
-        // MOnetizr requirements "%Y-%m-%d %H:%M:%S.%f", 2019-03-08 14:44:57.08809+02
+        // Monetizr requirements "%Y-%m-%d %H:%M:%S.%f", 2019-03-08 14:44:57.08809+02
         let dateFormatter = DateFormatter()
         let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
         dateFormatter.locale = enUSPosixLocale

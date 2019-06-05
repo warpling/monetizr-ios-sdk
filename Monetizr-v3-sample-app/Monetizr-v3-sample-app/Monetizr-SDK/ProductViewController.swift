@@ -110,11 +110,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Create a new entry for firstimpression
         if Monetizr.shared.impressionCountInSession == 0 {
-            Monetizr.shared.firstimpressionCreate(sessionDuration: Monetizr.shared.sessionDuration(), completionHandler: { success, error, value in ()})
+            Monetizr.shared.firstimpressionCreate(sessionDuration: Monetizr.shared.sessionDurationSeconds(), completionHandler: { success, error, value in ()})
         }
         
         // Create a new entry for playerbehaviour
-        Monetizr.shared.playerbehaviourCreate(deviceIdentifier: deviceIdentifier(), gameProgress: nil, sessionDuration: Monetizr.shared.sessionDuration(), completionHandler: { success, error, value in ()})
+        Monetizr.shared.playerbehaviourCreate(deviceIdentifier: deviceIdentifier(), gameProgress: nil, sessionDuration: Monetizr.shared.sessionDurationSeconds(), completionHandler: { success, error, value in ()})
         
         // Increase impression count
         Monetizr.shared.increaseImpressionCount()
@@ -554,6 +554,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             interaction = true
             if variants.count > 1 {
                 self.showOptionsSelector()
+                if Monetizr.shared.clickCountInSession < 1 {
+                    Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
+                }
+                Monetizr.shared.increaseClickCountInSession()
             }
         }
         if sender == optionsSelectorOverlayTapGesture {
