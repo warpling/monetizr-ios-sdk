@@ -1,14 +1,26 @@
-# TheMonetizr SDK v3 Development
+![GitHub release](https://img.shields.io/badge/release-3.0.1-blue.svg)
+# TheMonetizr SDK
 ### Useful links
 
 * [API reference] (https://api3.themonetizr.com/docs)
-* [Functioanlity] (https://paper.dropbox.com/doc/Monetizr-APISDK-functionality--AbJY04w5fW963V668CcpoqA7Ag-6NZ3RXy18lhXwV8t7PFB4)
-* [Metrics] (https://docs.google.com/spreadsheets/d/1LRCGWtfhk3DAov_GiKWMa26Gv1YTaWeJMnQFlzY9SYQ/edit#gid=0)
 * [Integration guide] (https://docs.themonetizr.com/api/index.html)
 
-### Test data
-```objc
-- Example token, can be used for testing: 4D2E54389EB489966658DDD83E2D1
-- Example merchandise id: 1794883780674
-- Example merchandise tags: 30-credits, monetizr-sample-t-shirt
+### Usage
+
+In applicationDidFinishLaunching(_:) do the initialization with token provided to you
+
+```
+Monetizr.shared.token = ""
+```
+
+Optionally you can set languge - might not be availeble, check with Monetizr team
+
+```
+Monetizr.shared.setLanguage(language: "en_EN")
+```
+
+To show product or to get product data and show in your custom view
+
+```
+Monetizr.shared.getProductForTag(tag: merchTagField.text!, show: true) { success, error, product in ()}
 ```
