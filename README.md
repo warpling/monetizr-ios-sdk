@@ -22,5 +22,5 @@ Monetizr.shared.setLanguage(language: "en_EN")
 To show product or to get product data and show in your custom view
 
 ```
-Monetizr.shared.getProductForTag(tag: merchTagField.text!, show: true) { success, error, product in ()}
+Monetizr.shared.getProductForTag(tag: "", show: true) { success, error, product in ()}
 ```
