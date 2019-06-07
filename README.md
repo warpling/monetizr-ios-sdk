@@ -11,7 +11,7 @@
 * [ImageSlideshow - Swift image slideshow] (https://github.com/zvonicek/ImageSlideshow)
 
 ### Usage
-Copy *Monetizr-SDK* folder to your project
+Copy **Monetizr-SDK** folder to your project
 
 In applicationDidFinishLaunching(_:) do the initialization with token provided to you
 
