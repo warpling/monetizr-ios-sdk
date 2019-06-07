@@ -85,14 +85,14 @@ class Monetizr {
         checkoutCountInSession = checkoutCountInSession+1
     }
     
-    // Session duration un seconds
+    // Session duration in seconds
     func sessionDurationSeconds() -> Int {
         let interval = Date().timeIntervalSince(dateSessionStarted)
         let duration = Int(interval)
         return duration
     }
     
-    // Session duration un miliseconds
+    // Session duration in miliseconds
     func sessionDurationMiliseconds() -> Int {
         let interval = Date().timeIntervalSince(dateSessionStarted)
         let duration = Int(interval*1000)
