@@ -5,6 +5,11 @@
 * [API reference] (https://api3.themonetizr.com/docs)
 * [Integration guide] (https://docs.themonetizr.com/api/index.html)
 
+### Dependencies
+* [Alamofire - Elegant HTTP Networking in Swift] (https://github.com/Alamofire/Alamofire)
+* [AlamofireImage - an image component library for Alamofire] (https://github.com/Alamofire/AlamofireImage)
+* [ImageSlideshow - Swift image slideshow] (https://github.com/zvonicek/ImageSlideshow)
+
 ### Usage
 
 In applicationDidFinishLaunching(_:) do the initialization with token provided to you
