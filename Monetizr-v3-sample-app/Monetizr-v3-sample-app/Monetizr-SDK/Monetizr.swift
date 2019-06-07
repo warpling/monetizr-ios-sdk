@@ -336,7 +336,7 @@ class Monetizr {
         }
     }
     
-    // Create a new entry for update
+    // Create a new entry for firstimpression
     func firstimpressionCreate(sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_shown"] = sessionDuration
@@ -421,7 +421,7 @@ class Monetizr {
         }
     }
     
-    // Create a new entry for session
+    // Create a new entry for session start
     func sessionCreate(deviceIdentifier: String, startDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
