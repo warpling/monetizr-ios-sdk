@@ -3,7 +3,7 @@
 ### Useful links
 
 * [API reference] (https://api3.themonetizr.com/docs)
-* [Integration guide] (https://docs.themonetizr.com/api/index.html)
+* [API Integration guide] (https://docs.themonetizr.com/api/index.html)
 
 ### Dependencies
 * [Alamofire - Elegant HTTP Networking in Swift] (https://github.com/Alamofire/Alamofire)
@@ -11,7 +11,7 @@
 * [ImageSlideshow - Swift image slideshow] (https://github.com/zvonicek/ImageSlideshow)
 
 ### Usage
-Copy **Monetizr-SDK** folder to your project
+Copy **Monetizr-SDK** folder to your project and resolve dependencies
 
 In applicationDidFinishLaunching(_:) do the initialization with token provided to you
 
