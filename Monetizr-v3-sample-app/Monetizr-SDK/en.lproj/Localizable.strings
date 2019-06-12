@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  Monetizr-v3-sample-app
+
+  Created by Armands Avotins on 27/05/2019.
+  Copyright © 2019 Monetizr. All rights reserved.
+*/
+
+"Close" = "Close";
+"Close product" = "Close product";
+"Checkout" = "Checkout";
+"Product title" = "Product title";
+"Price" = "Price";
+"Product description" = "Product description";
+"Product variant selection" = "Product variant selection";
