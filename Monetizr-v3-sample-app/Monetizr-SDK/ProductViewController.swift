@@ -393,6 +393,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Configure image slider
         slideShow.translatesAutoresizingMaskIntoConstraints = false
         slideShow.contentScaleMode = .scaleAspectFill
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.slideShowTap))
+        slideShow.addGestureRecognizer(gestureRecognizer)
         imageCarouselContainerView.addSubview(slideShow)
     }
     
@@ -637,5 +639,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     func ensureRange<T>(value: T, minimum: T, maximum: T) -> T where T : Comparable {
         return min(max(value, minimum), maximum)
+    }
+    
+    // Slideshow fullscreen
+    @objc func slideShowTap() {
+        slideShow.presentFullScreenController(from: self)
+        if Monetizr.shared.clickCountInSession < 1 {
+            Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
+        }
+        Monetizr.shared.increaseClickCountInSession()
     }
 }
