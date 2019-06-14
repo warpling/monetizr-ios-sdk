@@ -149,9 +149,6 @@ extension UITextView {
         self.isSelectable = false
         self.isEditable = false
     }
-    func increaseFontSizeBy(points: CGFloat) {
-        self.font =  UIFont(name: self.font!.fontName, size: self.font!.pointSize+points)!
-    }
 }
 
 extension UIStackView {
