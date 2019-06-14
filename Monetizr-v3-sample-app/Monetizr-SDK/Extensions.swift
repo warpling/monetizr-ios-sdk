@@ -145,8 +145,12 @@ extension UITextView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white
+        self.font = .systemFont(ofSize: 16)
         self.isSelectable = false
         self.isEditable = false
+    }
+    func increaseFontSizeBy(points: CGFloat) {
+        self.font =  UIFont(name: self.font!.fontName, size: self.font!.pointSize+points)!
     }
 }
 
