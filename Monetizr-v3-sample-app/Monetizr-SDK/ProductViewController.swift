@@ -35,11 +35,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     let descriptionTextView = UITextView()
     let slideShow = ImageSlideshow()
     let variantOptionDisclosureView = UIImageView()
-    let optionsTitleLabel = UILabel()
     var optionsTapGesture = UITapGestureRecognizer()
     var optionsSelectorOverlayView = UIView()
     var optionsSelectorOverlayTapGesture = UITapGestureRecognizer()
     let optionsSelectorPlaceholderView = UIView()
+    let stackView = UIStackView()
     
     // Constraints
     private var compactConstraints: [NSLayoutConstraint] = []
@@ -95,9 +95,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Configure image slider
         self.configureImageSlider()
-        
-        // Configure options selector
-        self.configureOptionsTitleLabel()
         
         // Update views data
         self.updateViewsData()
@@ -233,11 +230,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             variantOptionDisclosureView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
             variantOptionDisclosureView.widthAnchor.constraint(equalToConstant: 40),
             
-            // Variant title label
-            optionsTitleLabel.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
-            optionsTitleLabel.leftAnchor.constraint(equalTo: variantOptionsContainerView.leftAnchor, constant: 10),
-            optionsTitleLabel.rightAnchor.constraint(equalTo: variantOptionDisclosureView.leftAnchor, constant: 10),
-            optionsTitleLabel.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
+            // Variant stack view
+            stackView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 10),
+            stackView.leftAnchor.constraint(equalTo: variantOptionsContainerView.leftAnchor, constant: 10),
+            stackView.rightAnchor.constraint(equalTo: variantOptionDisclosureView.leftAnchor, constant: 10),
+            stackView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 10),
             
             // Image carousel container view
             imageCarouselContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
@@ -341,6 +338,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         variantOptionsContainerView.variantOptionsContainerViewStyle()
         self.view.addSubview(variantOptionsContainerView)
         
+        // Configure option stack
+        stackView.axis = NSLayoutConstraint.Axis.horizontal
+        stackView.distribution = UIStackView.Distribution.fillProportionally
+        stackView.alignment = UIStackView.Alignment.leading
+        stackView.spacing = 10.0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        variantOptionsContainerView.addSubview(stackView)
+        
         // Handle taps
         optionsTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.viewTapped(_:)))
         optionsTapGesture.numberOfTapsRequired = 1
@@ -398,13 +403,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         imageCarouselContainerView.addSubview(slideShow)
     }
     
-    func configureOptionsTitleLabel() {
-        // Configure options title label
-        optionsTitleLabel.optionsTitleLabelStyle()
-        optionsTitleLabel.accessibilityLabel = NSLocalizedString("Product variant selection", comment: "Product variant selection")
-        variantOptionsContainerView.addSubview(optionsTitleLabel)
-    }
-    
     func loadProductData() {
         // Prepare image links Array
         let images = self.product?.data?.productByHandle?.images?.edges
@@ -443,15 +441,35 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         slideShow.preload = .fixed(offset: 1)
         slideShow.setImageInputs(imageSources as! [InputSource])
         
-        // Selected option title
-        optionsTitleLabel.text = selectedVariant?.title
-        optionsTitleLabel.accessibilityValue = optionsTitleLabel.text! + "--" + NSLocalizedString("Tap to change", comment: "Tap to change")
+        //optionsTitleLabel.accessibilityValue = optionsTitleLabel.text! + "--" + NSLocalizedString("Tap to change", comment: "Tap to change")
+        
+        stackView.removeAllSubviews()
         
         // Options selector show/hide
         if variants.count > 1 {
             //optionsContainerViewHighConstraint.constant = 55
             optionsSelectorViewHeight = 55
             view.setNeedsUpdateConstraints()
+            
+            for option in (selectedVariant?.selectedOptions)! {
+                let optionView = UIStackView()
+                optionView.axis = NSLayoutConstraint.Axis.vertical
+                optionView.spacing = 3.0
+                optionView.translatesAutoresizingMaskIntoConstraints = false
+                
+                let nameLabel = UILabel()
+                nameLabel.text = option.name
+                nameLabel.optionNameStyle()
+                
+                let valueLabel = UILabel()
+                valueLabel.text = option.value
+                valueLabel.optionValueStyle()
+                
+                optionView.addArrangedSubview(nameLabel)
+                optionView.addArrangedSubview(valueLabel)
+                
+                stackView.addArrangedSubview(optionView)
+            }
         }
     }
     
