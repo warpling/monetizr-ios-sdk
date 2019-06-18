@@ -441,8 +441,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         slideShow.preload = .fixed(offset: 1)
         slideShow.setImageInputs(imageSources as! [InputSource])
         
-        //optionsTitleLabel.accessibilityValue = optionsTitleLabel.text! + "--" + NSLocalizedString("Tap to change", comment: "Tap to change")
-        
         stackView.removeAllSubviews()
         
         // Options selector show/hide
