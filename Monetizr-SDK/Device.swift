@@ -11,14 +11,18 @@ import UIKit
 import PassKit
 
 // Calculate screen width in Portrait
-func screenWidthPixelsInPortraitOrientation() -> Int {
-    let window = UIApplication.shared.keyWindow
+public func screenWidthPixelsInPortraitOrientation() -> Int {
+    let screenRect = UIScreen.main.bounds
+    let screenWidth = screenRect.size.width
+    let screenHeight = screenRect.size.height
+    //let window = UIApplication.shared.keyWindow
+    
     if UIDevice.current.orientation.isLandscape {
         // Landscape
-        return Int(((window?.frame.size.height)!) * UIScreen.main.scale)
+        return Int(((screenHeight)) * UIScreen.main.scale)
     } else {
         // Portrait
-        return Int(((window?.frame.size.width)!) * UIScreen.main.scale)
+        return Int(((screenWidth)) * UIScreen.main.scale)
     }
 }
 

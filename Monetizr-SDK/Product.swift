@@ -20,15 +20,15 @@
 import Foundation
 import Alamofire
 
-struct Product: Codable {
+public struct Product: Codable {
     let data: ProductDataClass?
 }
 
-struct ProductDataClass: Codable {
+public struct ProductDataClass: Codable {
     let productByHandle: ProductByHandle?
 }
 
-struct ProductByHandle: Codable {
+public struct ProductByHandle: Codable {
     let id, title, description, description_ios, descriptionHTML: String?
     let availableForSale: Bool?
     let onlineStoreURL: String?
@@ -44,27 +44,27 @@ struct ProductByHandle: Codable {
     }
 }
 
-struct Images: Codable {
+public struct Images: Codable {
     let edges: [ImagesEdge]?
 }
 
-struct ImagesEdge: Codable {
+public struct ImagesEdge: Codable {
     let node: ImageClass?
 }
 
-struct ImageClass: Codable {
+public struct ImageClass: Codable {
     let transformedSrc: String?
 }
 
-struct Variants: Codable {
+public struct Variants: Codable {
     let edges: [VariantsEdge]?
 }
 
-struct VariantsEdge: Codable {
+public struct VariantsEdge: Codable {
     let node: PurpleNode?
 }
 
-struct PurpleNode: Codable {
+public struct PurpleNode: Codable {
     let id: String?
     let product: ProductClass?
     let title: String?
@@ -73,11 +73,11 @@ struct PurpleNode: Codable {
     let image: ImageClass?
 }
 
-struct PriceV2: Codable {
+public struct PriceV2: Codable {
     let currencyCode, currency, amount: String?
 }
 
-struct ProductClass: Codable {
+public struct ProductClass: Codable {
     let title, description, description_ios, descriptionHTML: String?
     
     enum CodingKeys: String, CodingKey {
@@ -86,7 +86,7 @@ struct ProductClass: Codable {
     }
 }
 
-struct SelectedOption: Codable {
+public struct SelectedOption: Codable {
     let name, value: String?
 }
 

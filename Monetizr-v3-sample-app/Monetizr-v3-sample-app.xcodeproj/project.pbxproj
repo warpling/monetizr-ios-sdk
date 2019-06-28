@@ -3,28 +3,37 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28AE865522C6D279005F2D2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 28AE864B22C6D279005F2D2D /* Localizable.strings */; };
+		28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE864D22C6D279005F2D2D /* ProductViewController.swift */; };
+		28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */; };
+		28AE865822C6D279005F2D2D /* VariantSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE864F22C6D279005F2D2D /* VariantSelectionViewController.swift */; };
+		28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865022C6D279005F2D2D /* Monetizr.swift */; };
+		28AE865A22C6D279005F2D2D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865122C6D279005F2D2D /* Extensions.swift */; };
+		28AE865B22C6D279005F2D2D /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865222C6D279005F2D2D /* Product.swift */; };
+		28AE865C22C6D279005F2D2D /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865322C6D279005F2D2D /* Checkout.swift */; };
+		28AE865D22C6D279005F2D2D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865422C6D279005F2D2D /* Device.swift */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
 		28E6B7942262109300E43C83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7922262109300E43C83 /* Main.storyboard */; };
 		28E6B7962262109500E43C83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7952262109500E43C83 /* Assets.xcassets */; };
 		28E6B7992262109500E43C83 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7972262109500E43C83 /* LaunchScreen.storyboard */; };
-		28EE99B922B128EB0011999F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 28EE99AF22B128EB0011999F /* Localizable.strings */; };
-		28EE99BA22B128EB0011999F /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EE99B122B128EB0011999F /* ProductViewController.swift */; };
-		28EE99BB22B128EB0011999F /* ActivityIndicatorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EE99B222B128EB0011999F /* ActivityIndicatorPresenter.swift */; };
-		28EE99BC22B128EB0011999F /* VariantSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EE99B322B128EB0011999F /* VariantSelectionViewController.swift */; };
-		28EE99BD22B128EB0011999F /* Monetizr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EE99B422B128EB0011999F /* Monetizr.swift */; };
-		28EE99BE22B128EB0011999F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EE99B522B128EB0011999F /* Extensions.swift */; };
-		28EE99BF22B128EB0011999F /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EE99B622B128EB0011999F /* Product.swift */; };
-		28EE99C022B128EB0011999F /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EE99B722B128EB0011999F /* Checkout.swift */; };
-		28EE99C122B128EB0011999F /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28EE99B822B128EB0011999F /* Device.swift */; };
 		F17B7801DCFCEB8AFD9A8583 /* Pods_Monetizr_v3_sample_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		28AE864C22C6D279005F2D2D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		28AE864D22C6D279005F2D2D /* ProductViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
+		28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorPresenter.swift; sourceTree = "<group>"; };
+		28AE864F22C6D279005F2D2D /* VariantSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariantSelectionViewController.swift; sourceTree = "<group>"; };
+		28AE865022C6D279005F2D2D /* Monetizr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Monetizr.swift; sourceTree = "<group>"; };
+		28AE865122C6D279005F2D2D /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		28AE865222C6D279005F2D2D /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
+		28AE865322C6D279005F2D2D /* Checkout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
+		28AE865422C6D279005F2D2D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28E6B7902262109300E43C83 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -32,15 +41,6 @@
 		28E6B7952262109500E43C83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		28E6B7982262109500E43C83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		28E6B79A2262109500E43C83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		28EE99B022B128EB0011999F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		28EE99B122B128EB0011999F /* ProductViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
-		28EE99B222B128EB0011999F /* ActivityIndicatorPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorPresenter.swift; sourceTree = "<group>"; };
-		28EE99B322B128EB0011999F /* VariantSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariantSelectionViewController.swift; sourceTree = "<group>"; };
-		28EE99B422B128EB0011999F /* Monetizr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Monetizr.swift; sourceTree = "<group>"; };
-		28EE99B522B128EB0011999F /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		28EE99B622B128EB0011999F /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
-		28EE99B722B128EB0011999F /* Checkout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
-		28EE99B822B128EB0011999F /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		36BF1201E621B75EEE391125 /* Pods-Monetizr-v3-sample-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.debug.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.debug.xcconfig"; sourceTree = "<group>"; };
 		65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Monetizr_v3_sample_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77A3F60495AE31152A231C31 /* Pods-Monetizr-v3-sample-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.release.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.release.xcconfig"; sourceTree = "<group>"; };
@@ -58,10 +58,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28AE864A22C6D279005F2D2D /* Monetizr-SDK */ = {
+			isa = PBXGroup;
+			children = (
+				28AE864B22C6D279005F2D2D /* Localizable.strings */,
+				28AE864D22C6D279005F2D2D /* ProductViewController.swift */,
+				28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */,
+				28AE864F22C6D279005F2D2D /* VariantSelectionViewController.swift */,
+				28AE865022C6D279005F2D2D /* Monetizr.swift */,
+				28AE865122C6D279005F2D2D /* Extensions.swift */,
+				28AE865222C6D279005F2D2D /* Product.swift */,
+				28AE865322C6D279005F2D2D /* Checkout.swift */,
+				28AE865422C6D279005F2D2D /* Device.swift */,
+			);
+			name = "Monetizr-SDK";
+			path = "../Monetizr-SDK";
+			sourceTree = "<group>";
+		};
 		28E6B7822262109300E43C83 = {
 			isa = PBXGroup;
 			children = (
-				28EE99AE22B128EB0011999F /* Monetizr-SDK */,
+				28AE864A22C6D279005F2D2D /* Monetizr-SDK */,
 				28E6B78D2262109300E43C83 /* Monetizr-v3-sample-app */,
 				28E6B78C2262109300E43C83 /* Products */,
 				B17220C86D22AF95575764A2 /* Pods */,
@@ -88,22 +105,6 @@
 				28E6B79A2262109500E43C83 /* Info.plist */,
 			);
 			path = "Monetizr-v3-sample-app";
-			sourceTree = "<group>";
-		};
-		28EE99AE22B128EB0011999F /* Monetizr-SDK */ = {
-			isa = PBXGroup;
-			children = (
-				28EE99AF22B128EB0011999F /* Localizable.strings */,
-				28EE99B122B128EB0011999F /* ProductViewController.swift */,
-				28EE99B222B128EB0011999F /* ActivityIndicatorPresenter.swift */,
-				28EE99B322B128EB0011999F /* VariantSelectionViewController.swift */,
-				28EE99B422B128EB0011999F /* Monetizr.swift */,
-				28EE99B522B128EB0011999F /* Extensions.swift */,
-				28EE99B622B128EB0011999F /* Product.swift */,
-				28EE99B722B128EB0011999F /* Checkout.swift */,
-				28EE99B822B128EB0011999F /* Device.swift */,
-			);
-			path = "Monetizr-SDK";
 			sourceTree = "<group>";
 		};
 		B17220C86D22AF95575764A2 /* Pods */ = {
@@ -185,7 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28E6B7992262109500E43C83 /* LaunchScreen.storyboard in Resources */,
-				28EE99B922B128EB0011999F /* Localizable.strings in Resources */,
+				28AE865522C6D279005F2D2D /* Localizable.strings in Resources */,
 				28E6B7962262109500E43C83 /* Assets.xcassets in Resources */,
 				28E6B7942262109300E43C83 /* Main.storyboard in Resources */,
 			);
@@ -257,22 +258,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28EE99BA22B128EB0011999F /* ProductViewController.swift in Sources */,
-				28EE99BF22B128EB0011999F /* Product.swift in Sources */,
-				28EE99BD22B128EB0011999F /* Monetizr.swift in Sources */,
-				28EE99C022B128EB0011999F /* Checkout.swift in Sources */,
+				28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */,
+				28AE865B22C6D279005F2D2D /* Product.swift in Sources */,
+				28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */,
+				28AE865C22C6D279005F2D2D /* Checkout.swift in Sources */,
 				28E6B7912262109300E43C83 /* ViewController.swift in Sources */,
-				28EE99BB22B128EB0011999F /* ActivityIndicatorPresenter.swift in Sources */,
+				28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */,
 				28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */,
-				28EE99BC22B128EB0011999F /* VariantSelectionViewController.swift in Sources */,
-				28EE99BE22B128EB0011999F /* Extensions.swift in Sources */,
-				28EE99C122B128EB0011999F /* Device.swift in Sources */,
+				28AE865822C6D279005F2D2D /* VariantSelectionViewController.swift in Sources */,
+				28AE865A22C6D279005F2D2D /* Extensions.swift in Sources */,
+				28AE865D22C6D279005F2D2D /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		28AE864B22C6D279005F2D2D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				28AE864C22C6D279005F2D2D /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		28E6B7922262109300E43C83 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -287,14 +296,6 @@
 				28E6B7982262109500E43C83 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		28EE99AF22B128EB0011999F /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				28EE99B022B128EB0011999F /* en */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

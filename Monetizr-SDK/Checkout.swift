@@ -21,7 +21,7 @@
 import Foundation
 import Alamofire
 
-struct Checkout: Codable {
+public struct Checkout: Codable {
     let data: DataClass?
 }
 

@@ -68,6 +68,12 @@ extension UIView {
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight] // for supporting device rotation
         self.addSubview(blurEffectView)
     }
+    
+    func removeAllSubviews() {
+        for subview in subviews {
+            subview.removeFromSuperview()
+        }
+    }
 }
 
 extension UIButton {
@@ -106,6 +112,29 @@ extension UIColor {
 }
 
 extension UILabel {
+    func optionNameStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
+        self.textColor = .lightGray
+        self.font = .systemFont(ofSize: 12, weight: UIFont.Weight.semibold)
+        self.text = self.text?.uppercased()
+        self.numberOfLines = 1
+        self.textAlignment = .left
+        self.adjustsFontSizeToFitWidth = true
+        self.minimumScaleFactor = 0.7
+    }
+    
+    func optionValueStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
+        self.textColor = UIColor(hex: 0x007aff)
+        self.font = .systemFont(ofSize: 18, weight: UIFont.Weight.medium)
+        self.numberOfLines = 1
+        self.textAlignment = .left
+        self.adjustsFontSizeToFitWidth = true
+        self.minimumScaleFactor = 0.7
+    }
+    
     func priceLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
@@ -127,17 +156,6 @@ extension UILabel {
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
     }
-    
-    func optionsTitleLabelStyle() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .clear
-        self.textColor = .lightGray
-        self.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)
-        self.numberOfLines = 1
-        self.textAlignment = .left
-        self.adjustsFontSizeToFitWidth = true
-        self.minimumScaleFactor = 0.7
-    }
 }
 
 extension UITextView {
@@ -145,6 +163,7 @@ extension UITextView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white
+        self.font = .systemFont(ofSize: 15)
         self.isSelectable = false
         self.isEditable = false
     }

@@ -10,14 +10,18 @@ import Foundation
 import UIKit
 import Alamofire
 
-class Monetizr {
+public class Monetizr {
     
-    static let shared = Monetizr(token: "")
+    public static let shared = Monetizr(token: "")
     
-    var token: String
+    public var token: String {
+        didSet {
+            self.createHeaders()
+        }
+    }
+    var headers: HTTPHeaders = [:]
     var language: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
-    var headers: HTTPHeaders = [:]
     var dateSessionStarted: Date = Date()
     var dateSessionEnded: Date = Date()
     var impressionCountInSession: Int = 0
@@ -27,7 +31,6 @@ class Monetizr {
     // Initialization
     private init(token: String) {
         self.token = token
-        DispatchQueue.main.async { self.createHeaders() }
         DispatchQueue.main.async { self.trackAppVersion() }
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -42,7 +45,7 @@ class Monetizr {
     }
     
     // Set language
-    func setLanguage(language: String) {
+    public func setLanguage(language: String) {
         self.language = language
     }
     
@@ -71,12 +74,12 @@ class Monetizr {
     }
     
     // Update impression count
-    func increaseImpressionCount() {
+    public func increaseImpressionCount() {
         impressionCountInSession = impressionCountInSession+1
     }
     
     // Update click count
-    func increaseClickCountInSession() {
+    public func increaseClickCountInSession() {
         clickCountInSession = clickCountInSession+1
     }
     
@@ -86,29 +89,30 @@ class Monetizr {
     }
     
     // Session duration in seconds
-    func sessionDurationSeconds() -> Int {
+    public func sessionDurationSeconds() -> Int {
         let interval = Date().timeIntervalSince(dateSessionStarted)
         let duration = Int(interval)
         return duration
     }
     
     // Session duration in miliseconds
-    func sessionDurationMiliseconds() -> Int {
+    public func sessionDurationMiliseconds() -> Int {
         let interval = Date().timeIntervalSince(dateSessionStarted)
         let duration = Int(interval*1000)
         return duration
     }
     
     // Load product data
-    func getProductForTag(tag: String, show: Bool, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
+    public func getProductForTag(tag: String, show: Bool, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
         if language != nil {
             urlString = urlString+"?language="+language!
+            
         }
+                
         Alamofire.request(URL(string: urlString)!, headers: headers).responseProduct { response in
             if let retrievedProduct = response.result.value {
-                //var product: Product?
                 if retrievedProduct.data != nil {
                     if show == true {
                         let product = retrievedProduct
@@ -148,7 +152,7 @@ class Monetizr {
     }
     
     // Checkout variant for product
-    func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkout"
         var parameters: [String: String] = [
             "product_handle" : tag,
@@ -181,7 +185,7 @@ class Monetizr {
     }
     
     // Track app version
-    func trackAppVersion() {
+    public func trackAppVersion() {
         let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         let versionOfLastRun = UserDefaults.standard.object(forKey: "MonetizrAppVersionOfLastRun") as? String
         if versionOfLastRun == nil {
@@ -199,7 +203,7 @@ class Monetizr {
     
     /* Metrics section */
     // Create a new entry for device data
-    func devicedataCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func devicedataCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         let data = deviceData()
         let urlString = apiUrl+"telemetric/devicedata"
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
@@ -217,7 +221,7 @@ class Monetizr {
     }
     
     // Create a new entry for impressionvisible
-    func impressionvisibleCreate(tag: String?, fromDate:Date?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func impressionvisibleCreate(tag: String?, fromDate:Date?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         let interval = Date().timeIntervalSince(fromDate!)
         let duration = Int(interval*1000)
         var data: Dictionary<String, Any> = [:]
@@ -239,7 +243,7 @@ class Monetizr {
     }
     
     // Create a new entry for clickreward
-    func clickrewardCreate(tag: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func clickrewardCreate(tag: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["trigger_tag"] = tag
         let urlString = apiUrl+"telemetric/clickreward"
@@ -258,7 +262,7 @@ class Monetizr {
     }
     
     // Create a new entry for design
-    func designCreate(numberOfTriggers: Int?, funnelTriggerList: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func designCreate(numberOfTriggers: Int?, funnelTriggerList: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["number_of_triggers"] = numberOfTriggers
         data["funnel_trigger_list"] = funnelTriggerList
@@ -278,7 +282,7 @@ class Monetizr {
     }
     
     // Create a new entry for dismiss
-    func dismissCreate(tag: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func dismissCreate(tag: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["trigger_tag"] = tag
         let urlString = apiUrl+"telemetric/dismiss"
@@ -297,7 +301,7 @@ class Monetizr {
     }
     
     // Create a new entry for install
-    func installCreate(deviceIdentifier: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func installCreate(deviceIdentifier: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         data["installed"] = true
@@ -317,7 +321,7 @@ class Monetizr {
     }
     
     // Create a new entry for update
-    func updateCreate(deviceIdentifier: String, bundleVersion: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func updateCreate(deviceIdentifier: String, bundleVersion: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         data["bundle_version"] = bundleVersion
@@ -337,7 +341,7 @@ class Monetizr {
     }
     
     // Create a new entry for firstimpression
-    func firstimpressionCreate(sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func firstimpressionCreate(sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_shown"] = sessionDuration
         let urlString = apiUrl+"telemetric/firstimpression"
@@ -356,7 +360,7 @@ class Monetizr {
     }
     
     // Create a new entry for playerbehaviour
-    func playerbehaviourCreate(deviceIdentifier: String, gameProgress: Int?, sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func playerbehaviourCreate(deviceIdentifier: String, gameProgress: Int?, sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         data["game_progress"] = gameProgress
@@ -377,7 +381,7 @@ class Monetizr {
     }
     
     // Create a new entry for purchase
-    func purchaseCreate(deviceIdentifier: String, triggerTag: String?, productPrice: String?, currency: String?, country: String?, city: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func purchaseCreate(deviceIdentifier: String, triggerTag: String?, productPrice: String?, currency: String?, country: String?, city: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         data["trigger_tag"] = triggerTag
@@ -401,7 +405,7 @@ class Monetizr {
     }
     
     // Create a new entry for session end
-    func sessionEnd(deviceIdentifier: String, startDate: String?, endDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func sessionEnd(deviceIdentifier: String, startDate: String?, endDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         data["session_start"] = startDate
@@ -422,7 +426,7 @@ class Monetizr {
     }
     
     // Create a new entry for session start
-    func sessionCreate(deviceIdentifier: String, startDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func sessionCreate(deviceIdentifier: String, startDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["device_identifier"] = deviceIdentifier
         data["session_start"] = startDate
@@ -442,7 +446,7 @@ class Monetizr {
     }
     
     // Create a new entry for encounter
-    func encounterCreate(triggerType: String?, completionStatus: Int?, triggerTag: String?, levelName: String?, difficultyLevelName: String?, difficultyEstimation: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func encounterCreate(triggerType: String?, completionStatus: Int?, triggerTag: String?, levelName: String?, difficultyLevelName: String?, difficultyEstimation: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["trigger_type"] = triggerType
         data["completion_status"] = completionStatus
@@ -466,7 +470,7 @@ class Monetizr {
     }
     
     // Create a new entry for firstimpressionclick
-    func firstimpressionclickCreate(firstImpressionClick: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func firstimpressionclickCreate(firstImpressionClick: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_click"] = firstImpressionClick
         let urlString = apiUrl+"telemetric/firstimpressionclick"
@@ -485,7 +489,7 @@ class Monetizr {
     }
     
     // Create a new entry for firstimpressioncheckout
-    func firstimpressioncheckoutCreate(firstImpressionCheckout: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func firstimpressioncheckoutCreate(firstImpressionCheckout: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_checkout"] = firstImpressionCheckout
         let urlString = apiUrl+"telemetric/firstimpressioncheckout"
@@ -504,7 +508,7 @@ class Monetizr {
     }
     
     // Create a new entry for firstimpressionpurchase
-    func firstimpressionpurchaseCreate(firstImpressionPurchase: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func firstimpressionpurchaseCreate(firstImpressionPurchase: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_purchase"] = firstImpressionPurchase
         let urlString = apiUrl+"telemetric/firstimpressionpurchase"
