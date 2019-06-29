@@ -1,4 +1,6 @@
-![GitHub release](https://img.shields.io/badge/release-3.0.2-blue.svg)
+[![Version](https://img.shields.io/cocoapods/v/Monetizr.svg?style=flat)](http://cocoapods.org/pods/Monetizr)
+[![License](https://img.shields.io/cocoapods/l/Monetizr.svg?style=flat)](http://cocoapods.org/pods/Monetizr)
+[![Platform](https://img.shields.io/cocoapods/p/Monetizr.svg?style=flat)](http://cocoapods.org/pods/Monetizr)
 # TheMonetizr SDK
 ### Useful links
 
@@ -10,8 +12,21 @@
 * [AlamofireImage - an image component library for Alamofire] (https://github.com/Alamofire/AlamofireImage)
 * [ImageSlideshow - Swift image slideshow] (https://github.com/zvonicek/ImageSlideshow)
 
+### Installation
+Requires iOS 10.0+
+
+#### CocoaPods
+
+```swift
+pod 'Monetizr', '~> 3.0'
+```
+
+#### Manual
+```swift
+Copy "Monetizr-SDK" folder to your project and resolve dependencies
+```
+
 ### Usage
-Copy **Monetizr-SDK** folder to your project and resolve dependencies
 
 In applicationDidFinishLaunching(_:) do the initialization with token provided to you
 
@@ -23,6 +38,11 @@ Optionally you can set languge - might not be availeble, check with Monetizr tea
 
 ```swift
 Monetizr.shared.setLanguage(language: "en_EN")
+```
+Import "Monetizr" to your project
+
+```swift
+import Monetizr
 ```
 
 To show product or to get product data and show in your custom view
