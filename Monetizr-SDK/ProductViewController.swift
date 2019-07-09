@@ -618,7 +618,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         return convertedPrice!
     }
     
-    // Drag to dismiss
+    // Drag to dismiss and enlarge description view
     @IBAction func panGestureRecognizerHandler(_ sender: UIPanGestureRecognizer) {
         let percentThreshold:CGFloat = 0.3
         let translation = sender.translation(in: view)
@@ -626,7 +626,22 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         let newY = ensureRange(value: view.frame.minY + translation.y, minimum: 0, maximum: view.frame.maxY)
         let progress = progressAlongAxis(newY, view.bounds.height)
         
-        view.frame.origin.y = newY //Move view to new position
+        if view.frame.origin.y == CGFloat(0.0) {
+            if UIDevice.current.orientation.isPortrait {
+                for constraint in imageCarouselContainerView.constraints {
+                    if constraint.firstAttribute == .height {
+                        if imageCarouselContainerView.frame.size.height < viewHeight/100*56 {
+                            let newH = ensureRange(value: constraint.constant + translation.y, minimum: viewHeight/100*30, maximum: viewHeight/100*55)
+                            constraint.constant = newH
+                        }
+                    }
+                }
+            }
+        }
+        
+        if imageCarouselContainerView.frame.size.height >= viewHeight/100*55 {
+            view.frame.origin.y = newY //Move view to new position
+        }
         
         if sender.state == .ended {
             let velocity = sender.velocity(in: view)
