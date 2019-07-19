@@ -181,6 +181,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.deactivateVariableConstraints()
         
         if UIDevice.current.orientation.isLandscape {
+            descriptionTextView.isScrollEnabled = true
             if compactConstraints.count < 1 {
                 // Configure initial constraints
                 self.configureCompactConstraints()
@@ -188,6 +189,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             NSLayoutConstraint.activate(compactConstraints)
         }
         else {
+            descriptionTextView.isScrollEnabled = false
             if regularConstraints.count < 1 {
                 // Configure initial constraints
                 self.configureRegularConstraints()
@@ -631,7 +633,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 for constraint in imageCarouselContainerView.constraints {
                     if constraint.firstAttribute == .height {
                         if imageCarouselContainerView.frame.size.height < viewHeight/100*56 {
-                            let newH = ensureRange(value: constraint.constant + translation.y, minimum: viewHeight/100*30, maximum: viewHeight/100*55)
+                            let newH = ensureRange(value: constraint.constant + translation.y, minimum: viewHeight/100*20, maximum: viewHeight/100*55)
                             constraint.constant = newH
                         }
                     }
@@ -679,5 +681,15 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }
         Monetizr.shared.increaseClickCountInSession()
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        print("saveAreaInsetsDidChange")
+        print("top:    " + String(describing: view.safeAreaInsets.top))
+        print("right:  " + String(describing: view.safeAreaInsets.right))
+        print("bottom: " + String(describing: view.safeAreaInsets.bottom))
+        print("left:   " + String(describing: view.safeAreaInsets.left))
     }
 }
