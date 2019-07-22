@@ -49,6 +49,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     // Size values
     var bottomPadding: CGFloat = 0
     var topPadding: CGFloat = 0
+    var leftPadding: CGFloat = 0
+    var rightPadding: CGFloat = 0
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
@@ -133,16 +135,12 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.viewHeight = size.height
         
         coordinator.animate(alongsideTransition: { (context) in
-            //
+            // Configure safe area insets
             if #available(iOS 11.0, *) {
                 self.topPadding = self.view.safeAreaInsets.top
-            } else {
-                // Fallback on earlier versions
-            }
-            if #available(iOS 11.0, *) {
                 self.bottomPadding = self.view.safeAreaInsets.bottom
-            } else {
-                // Fallback on earlier versions
+                self.leftPadding = self.view.safeAreaInsets.left
+                self.rightPadding = self.view.safeAreaInsets.right
             }
             
             // Resize and position option selector view - do not do this if view is not in hierarchy
@@ -163,6 +161,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         if #available(iOS 11.0, *) {
             topPadding = (window?.safeAreaInsets.top)!
             bottomPadding = (window?.safeAreaInsets.bottom)!
+            leftPadding = (window?.safeAreaInsets.left)!
+            rightPadding = (window?.safeAreaInsets.right)!
         }
         
         // Configure new constraints
@@ -202,9 +202,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Deactivate variable constraints
         if regularConstraints.count > 0 && regularConstraints[0].isActive {
             NSLayoutConstraint.deactivate(regularConstraints)
+            regularConstraints = []
         }
         if compactConstraints.count > 0 && compactConstraints[0].isActive {
             NSLayoutConstraint.deactivate(compactConstraints)
+            compactConstraints = []
         }
     }
     
@@ -271,8 +273,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             descriptionTextView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: 0),
             
             // Close button
-            closeButton.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
-            closeButton.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
             closeButton.widthAnchor.constraint(equalToConstant: 44),
             closeButton.heightAnchor.constraint(equalToConstant: 44)
             ])
@@ -293,8 +293,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Image carousel container view
             imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight),
-            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth/100*55)
+            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth/100*55),
+            
+            // Close button
+            closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
+            closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding)
             ])
+        print("left compact padding" + String(describing: leftPadding))
     }
     
     func configureRegularConstraints() {
@@ -312,8 +317,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Image carousel container view
             imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight/100*55),
-            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth)
+            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth),
+            
+            // Close button
+            closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
+            closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding)
             ])
+        print("left  regular padding" + String(describing: leftPadding))
     }
     
     func configureCloseButton() {
