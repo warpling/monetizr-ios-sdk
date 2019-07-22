@@ -219,8 +219,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Checkout button
             checkoutButton.topAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 10),
-            checkoutButton.leftAnchor.constraint(equalTo: checkoutButtonBackgroundView.safeLeftAnchor, constant: 10),
-            checkoutButton.rightAnchor.constraint(equalTo: checkoutButtonBackgroundView.safeRightAnchor, constant: -10),
             checkoutButton.heightAnchor.constraint(equalToConstant: 50),
             
             // Variant option selection container view
@@ -230,7 +228,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Option disclosure view
             variantOptionDisclosureView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
-            variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.safeRightAnchor, constant: 0),
             variantOptionDisclosureView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
             variantOptionDisclosureView.widthAnchor.constraint(equalToConstant: 40),
             
@@ -256,7 +253,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Price tag
             priceLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
-            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.safeRightAnchor, constant: -10),
             priceLabel.heightAnchor.constraint(equalToConstant: 30),
             priceLabel.widthAnchor.constraint(equalToConstant: 120),
             
@@ -269,7 +265,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Description text
             descriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             descriptionTextView.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
-            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.safeRightAnchor, constant: -10),
             descriptionTextView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: 0),
             
             // Close button
@@ -297,9 +292,21 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
-            closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding)
+            closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding),
+            
+            // Option disclosure view
+            variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
+            
+            // Checkout button
+            checkoutButton.leftAnchor.constraint(equalTo: checkoutButtonBackgroundView.leftAnchor, constant: 10),
+            checkoutButton.rightAnchor.constraint(equalTo: checkoutButtonBackgroundView.rightAnchor, constant: -10-rightPadding),
+            
+            // Description text
+            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding),
+            
+            // Price tag
+            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding)
             ])
-        print("left compact padding" + String(describing: leftPadding))
     }
     
     func configureRegularConstraints() {
@@ -321,9 +328,21 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
-            closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding)
+            closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding),
+            
+            // Option disclosure view
+            variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
+            
+            // Checkout button
+            checkoutButton.leftAnchor.constraint(equalTo: checkoutButtonBackgroundView.leftAnchor, constant: 10+leftPadding),
+            checkoutButton.rightAnchor.constraint(equalTo: checkoutButtonBackgroundView.rightAnchor, constant: -10-rightPadding),
+            
+            // Description text
+            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding),
+            
+            // Price tag
+            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding)
             ])
-        print("left  regular padding" + String(describing: leftPadding))
     }
     
     func configureCloseButton() {
@@ -696,10 +715,12 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
+        #if DEBUG
         print("saveAreaInsetsDidChange")
         print("top:    " + String(describing: view.safeAreaInsets.top))
         print("right:  " + String(describing: view.safeAreaInsets.right))
         print("bottom: " + String(describing: view.safeAreaInsets.bottom))
         print("left:   " + String(describing: view.safeAreaInsets.left))
+        #endif
     }
 }
