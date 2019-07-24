@@ -53,6 +53,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var rightPadding: CGFloat = 0
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
+    let maxImageCarouselHeightProportion: CGFloat = 0.55
+    let minImageCarouselHeightProportion: CGFloat = 0.20
     
     var optionsSelectorViewHeight: CGFloat = 0
     
@@ -181,7 +183,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.deactivateVariableConstraints()
         
         if UIDevice.current.orientation.isLandscape {
-            descriptionTextView.isScrollEnabled = true
             if compactConstraints.count < 1 {
                 // Configure initial constraints
                 self.configureCompactConstraints()
@@ -189,7 +190,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             NSLayoutConstraint.activate(compactConstraints)
         }
         else {
-            descriptionTextView.isScrollEnabled = false
             if regularConstraints.count < 1 {
                 // Configure initial constraints
                 self.configureRegularConstraints()
@@ -323,7 +323,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             descriptionContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             
             // Image carousel container view
-            imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight/100*55),
+            imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight*maxImageCarouselHeightProportion),
             imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth),
             
             // Close button
@@ -476,7 +476,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Options selector show/hide
         if variants.count > 1 {
-            //optionsContainerViewHighConstraint.constant = 55
             optionsSelectorViewHeight = 55
             view.setNeedsUpdateConstraints()
             
@@ -657,26 +656,28 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         let newY = ensureRange(value: view.frame.minY + translation.y, minimum: 0, maximum: view.frame.maxY)
         let progress = progressAlongAxis(newY, view.bounds.height)
         
-        if view.frame.origin.y == CGFloat(0.0) {
+        if view.frame.origin.y == CGFloat(0.0)  {
             if UIDevice.current.orientation.isPortrait {
                 for constraint in imageCarouselContainerView.constraints {
                     if constraint.firstAttribute == .height {
-                        if imageCarouselContainerView.frame.size.height < viewHeight/100*56 {
-                            let newH = ensureRange(value: constraint.constant + translation.y, minimum: viewHeight/100*20, maximum: viewHeight/100*55)
-                            constraint.constant = newH
+                        if imageCarouselContainerView.frame.size.height <= viewHeight*maxImageCarouselHeightProportion+1 {
+                            if textExceedBoundsOf(descriptionTextView) || translation.y > 0 {
+                                let newH = ensureRange(value: constraint.constant + translation.y, minimum: viewHeight*minImageCarouselHeightProportion, maximum: viewHeight*maxImageCarouselHeightProportion)
+                                constraint.constant = newH
+                            }
                         }
                     }
                 }
             }
         }
         
-        if imageCarouselContainerView.frame.size.height >= viewHeight/100*55 {
+        if imageCarouselContainerView.frame.size.height >= viewHeight*maxImageCarouselHeightProportion {
             view.frame.origin.y = newY //Move view to new position
         }
         
         if sender.state == .ended {
             let velocity = sender.velocity(in: view)
-            if velocity.y >= 300 || progress > percentThreshold {
+            if imageCarouselContainerView.frame.size.height >= viewHeight*maxImageCarouselHeightProportion && velocity.y >= 300 || progress > percentThreshold {
                 Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
                 if !interaction {
                     Monetizr.shared.dismissCreate(tag: tag!, completionHandler: { success, error, value in ()})
@@ -722,5 +723,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         print("bottom: " + String(describing: view.safeAreaInsets.bottom))
         print("left:   " + String(describing: view.safeAreaInsets.left))
         #endif
+    }
+    
+    func textExceedBoundsOf(_ textView: UITextView) -> Bool {
+        let textHeight = textView.contentSize.height
+        return textHeight > textView.bounds.height
     }
 }
