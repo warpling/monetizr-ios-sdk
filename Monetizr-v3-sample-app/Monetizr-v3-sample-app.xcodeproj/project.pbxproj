@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2897E1712302072200C4A2DE /* ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2897E1702302072200C4A2DE /* ApplePay.swift */; };
 		28AE865522C6D279005F2D2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 28AE864B22C6D279005F2D2D /* Localizable.strings */; };
 		28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE864D22C6D279005F2D2D /* ProductViewController.swift */; };
 		28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		2897E16F2301DACB00C4A2DE /* Monetizr-v3-sample-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Monetizr-v3-sample-app.entitlements"; sourceTree = "<group>"; };
+		2897E1702302072200C4A2DE /* ApplePay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePay.swift; sourceTree = "<group>"; };
 		28AE864C22C6D279005F2D2D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		28AE864D22C6D279005F2D2D /* ProductViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
 		28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorPresenter.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				28AE865222C6D279005F2D2D /* Product.swift */,
 				28AE865322C6D279005F2D2D /* Checkout.swift */,
 				28AE865422C6D279005F2D2D /* Device.swift */,
+				2897E1702302072200C4A2DE /* ApplePay.swift */,
 			);
 			name = "Monetizr-SDK";
 			path = "../Monetizr-SDK";
@@ -274,6 +277,7 @@
 				28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */,
 				28AE865822C6D279005F2D2D /* VariantSelectionViewController.swift in Sources */,
 				28AE865A22C6D279005F2D2D /* Extensions.swift in Sources */,
+				2897E1712302072200C4A2DE /* ApplePay.swift in Sources */,
 				28AE865D22C6D279005F2D2D /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
