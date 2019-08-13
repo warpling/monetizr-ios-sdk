@@ -11,6 +11,7 @@ import UIKit
 
 extension UIView {
     
+    // Safe area
     var safeTopAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.topAnchor
@@ -39,12 +40,38 @@ extension UIView {
         return self.bottomAnchor
     }
     
-    // Styles
-    func checkoutButtonBackgroundViewStyle() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .white
+    // Size
+    
+    func height(constant: CGFloat) {
+        setConstraint(value: constant, attribute: .height)
     }
     
+    func width(constant: CGFloat) {
+        setConstraint(value: constant, attribute: .width)
+    }
+    
+    func removeConstraint(attribute: NSLayoutConstraint.Attribute) {
+        constraints.forEach {
+            if $0.firstAttribute == attribute {
+                removeConstraint($0)
+            }
+        }
+    }
+    
+    func setConstraint(value: CGFloat, attribute: NSLayoutConstraint.Attribute) {
+        removeConstraint(attribute: attribute)
+        let constraint =
+            NSLayoutConstraint(item: self,
+                               attribute: attribute,
+                               relatedBy: NSLayoutConstraint.Relation.equal,
+                               toItem: nil,
+                               attribute: NSLayoutConstraint.Attribute.notAnAttribute,
+                               multiplier: 1,
+                               constant: value)
+        self.addConstraint(constraint)
+    }
+    
+    // Styles
     func variantOptionsContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = UIColor(hex: 0x231f20)
@@ -76,10 +103,22 @@ extension UIView {
     }
 }
 
+extension UIStackView {
+    // Styles
+    func checkoutButtonBackgroundViewStyle() {
+        self.axis = NSLayoutConstraint.Axis.horizontal
+        self.distribution = UIStackView.Distribution.fillEqually
+        self.alignment = UIStackView.Alignment.leading
+        self.spacing = 10.0
+        self.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        self.isLayoutMarginsRelativeArrangement = true
+        self.translatesAutoresizingMaskIntoConstraints = false
+    }
+}
+
 extension UIButton {
     
     // Styles
-    
     func closeProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
@@ -94,6 +133,7 @@ extension UIButton {
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
         self.setTitleColor(UIColor.white, for: .normal)
         self.setTitleColor(UIColor.lightGray, for: .highlighted)
+        self.height(constant: 50)
         self.layer.cornerRadius = 5
     }
 }

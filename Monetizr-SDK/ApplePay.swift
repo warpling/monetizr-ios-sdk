@@ -11,11 +11,9 @@ import PassKit
 
 // Check if Apple pay is available
 public func applePayAvailable() -> Bool{
-    let paymentNetworks = [PKPaymentNetwork.amex, PKPaymentNetwork.masterCard,  PKPaymentNetwork.visa]
-    if   PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: paymentNetworks) {
-        // Pay is available!
-        return true
-    } else {
-        return false
-    }
+    return PKPaymentAuthorizationViewController.canMakePayments()
+}
+
+public func applePayCanMakePayments() -> Bool {
+    return PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: [.amex, .visa, .masterCard])
 }

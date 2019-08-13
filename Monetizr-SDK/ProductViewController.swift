@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Alamofire
 import ImageSlideshow
+import PassKit
 
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, VariantSelectionDelegate {
     
@@ -25,8 +26,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Outlets
     let closeButton = UIButton()
-    let checkoutButtonBackgroundView = UIView()
-    let checkoutButton = UIButton()
+    let checkoutBackgroundView = UIStackView()
+    let applePayButtonContainerView = UIView()
     let variantOptionsContainerView = UIView()
     let imageCarouselContainerView = UIView()
     let descriptionContainerView = UIView()
@@ -73,7 +74,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.loadProductData()
         
         // Checkout button
-        self.configureCheckOutButton()
+        self.configureCheckOutButtons()
         
         // Variant option selection container view
         self.configureVariantOptionsContainerView()
@@ -124,6 +125,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.accessibilityViewIsModal = true
+        updateCheckoutButtons()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -214,15 +216,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Create shared constraints array
         sharedConstraints.append(contentsOf: [
             // Checkout buttons background
-            checkoutButtonBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
-            checkoutButtonBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            
-            // Checkout button
-            checkoutButton.topAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 10),
-            checkoutButton.heightAnchor.constraint(equalToConstant: 50),
+            checkoutBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            checkoutBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             
             // Variant option selection container view
-            variantOptionsContainerView.bottomAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 0),
+            variantOptionsContainerView.bottomAnchor.constraint(equalTo: checkoutBackgroundView.topAnchor, constant: 0),
             variantOptionsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             variantOptionsContainerView.heightAnchor.constraint(equalToConstant: optionsSelectorViewHeight),
             
@@ -276,8 +274,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureCompactConstraints() {
         compactConstraints.append(contentsOf: [
             // Checkout buttons background
-            checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
-            checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
+            checkoutBackgroundView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
+            checkoutBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
             
             // Variant option selection container view
             variantOptionsContainerView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
@@ -297,10 +295,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Option disclosure view
             variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
             
-            // Checkout button
-            checkoutButton.leftAnchor.constraint(equalTo: checkoutButtonBackgroundView.leftAnchor, constant: 10),
-            checkoutButton.rightAnchor.constraint(equalTo: checkoutButtonBackgroundView.rightAnchor, constant: -10-rightPadding),
-            
             // Description text
             descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding),
             
@@ -312,8 +306,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureRegularConstraints() {
         regularConstraints.append(contentsOf: [
             // Checkout buttons background
-            checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
-            checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
+            checkoutBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            checkoutBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
             
             // Variant option selection container view
             variantOptionsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
@@ -333,10 +327,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Option disclosure view
             variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
             
-            // Checkout button
-            checkoutButton.leftAnchor.constraint(equalTo: checkoutButtonBackgroundView.leftAnchor, constant: 10+leftPadding),
-            checkoutButton.rightAnchor.constraint(equalTo: checkoutButtonBackgroundView.rightAnchor, constant: -10-rightPadding),
-            
             // Description text
             descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding),
             
@@ -353,15 +343,38 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.view.addSubview(closeButton)
     }
     
-    func configureCheckOutButton() {
-        // Checkout buttons background
-        checkoutButtonBackgroundView.checkoutButtonBackgroundViewStyle()
-        self.view.addSubview(checkoutButtonBackgroundView)
+    func configureCheckOutButtons() {
+        // Configure container view
+        checkoutBackgroundView.checkoutButtonBackgroundViewStyle()
+        self.view.addSubview(checkoutBackgroundView)
         
-        // Checkout button
+        // Update buttons
+        updateCheckoutButtons()
+    }
+    
+    func updateCheckoutButtons() {
+        // Remove all buttons
+        checkoutBackgroundView.removeAllArrangedSubviews()
+        
+        // Add checkout button
+        let checkoutButton = UIButton()
+        // Configure checkout button
         checkoutButton.checkoutProductButtonStyle()
-        checkoutButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        self.view.addSubview(checkoutButton)
+        checkoutButton.addTarget(self, action: #selector(checkoutButtonAction), for: .touchUpInside)
+        checkoutBackgroundView.addArrangedSubview(checkoutButton)
+        
+        // Add Apple Pay button
+        if applePayAvailable() && applePayCanMakePayments() {
+            let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
+            applePayButton.height(constant: 50)
+            checkoutBackgroundView.addArrangedSubview(applePayButton)
+        }
+        if applePayAvailable() && !applePayCanMakePayments() {
+            let applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
+            applePayButton.height(constant: 50)
+            applePayButton.addTarget(self, action: #selector(setupApplePayButtonAction), for: .touchUpInside)
+            checkoutBackgroundView.addArrangedSubview(applePayButton)
+        }
     }
     
     func configureVariantOptionsContainerView() {
@@ -589,15 +602,21 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             }
             dismiss(animated: true, completion: nil)
         }
-        if sender == checkoutButton {
-            interaction = true
-            // Start checkout
-            self.checkoutSelectedVariant()
-            if Monetizr.shared.checkoutCountInSession < 1 {
-                Monetizr.shared.firstimpressioncheckoutCreate(firstImpressionCheckout: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
-            }
-            Monetizr.shared.increaseCheckoutCountInSession()
+    }
+    
+    @objc func checkoutButtonAction() {
+        interaction = true
+        // Start checkout
+        self.checkoutSelectedVariant()
+        if Monetizr.shared.checkoutCountInSession < 1 {
+            Monetizr.shared.firstimpressioncheckoutCreate(firstImpressionCheckout: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }
+        Monetizr.shared.increaseCheckoutCountInSession()
+    }
+    
+    @objc func setupApplePayButtonAction() {
+        let passLibrary = PKPassLibrary()
+        passLibrary.openPaymentSetup()
     }
     
     // Handle taps
