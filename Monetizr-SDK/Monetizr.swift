@@ -184,6 +184,12 @@ public class Monetizr {
         }
     }
     
+    // Buy product-variant with Apple Pay
+    public func buyWithApplePay(selectedVariant: PurpleNode, completionHandler: @escaping (Bool, Error?) -> Void) {
+        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Apple pay not configured"])
+        completionHandler(false, error)
+    }
+    
     // Track app version
     public func trackAppVersion() {
         let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String

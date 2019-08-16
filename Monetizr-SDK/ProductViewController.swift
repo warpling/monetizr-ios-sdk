@@ -367,6 +367,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         if applePayAvailable() && applePayCanMakePayments() {
             let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
             applePayButton.height(constant: 50)
+            applePayButton.addTarget(self, action: #selector(buyApplePayButtonAction), for: .touchUpInside)
             checkoutBackgroundView.addArrangedSubview(applePayButton)
         }
         if applePayAvailable() && !applePayCanMakePayments() {
@@ -617,6 +618,18 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     @objc func setupApplePayButtonAction() {
         let passLibrary = PKPassLibrary()
         passLibrary.openPaymentSetup()
+    }
+    
+    @objc func buyApplePayButtonAction() {
+        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!) { success, error in
+            // Show some error if needed
+            if success {
+                // Success
+            }
+            else {
+                // Handle error
+            }
+        }
     }
     
     // Handle taps
