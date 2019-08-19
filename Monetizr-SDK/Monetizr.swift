@@ -20,6 +20,7 @@ public class Monetizr {
         }
     }
     var headers: HTTPHeaders = [:]
+    var applePayMerchantID: String?
     var language: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
     var dateSessionStarted: Date = Date()
@@ -42,6 +43,11 @@ public class Monetizr {
     // Create headers
     func createHeaders() {
         headers["Authorization"] = "Bearer "+token
+    }
+    
+    // Set Apple Pay MerchantID
+    public func setApplePayMerchantID(id: String) {
+        self.applePayMerchantID = id
     }
     
     // Set language
@@ -186,8 +192,22 @@ public class Monetizr {
     
     // Buy product-variant with Apple Pay
     public func buyWithApplePay(selectedVariant: PurpleNode, completionHandler: @escaping (Bool, Error?) -> Void) {
-        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Apple pay not configured"])
-        completionHandler(false, error)
+        if applePayCanMakePayments() && applePayMerchantID != nil {
+            if var topController = UIApplication.shared.keyWindow?.rootViewController {
+                while let presentedViewController = topController.presentedViewController {
+                    topController = presentedViewController
+                }
+                
+                let applePayViewController = ApplePayViewController()
+                applePayViewController.modalPresentationStyle = .overCurrentContext
+                applePayViewController.selectedVariant = selectedVariant
+                topController.present(applePayViewController, animated: true, completion: nil)
+            }
+        }
+        else {
+            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Apple pay not configured"])
+            completionHandler(false, error)
+        }
     }
     
     // Track app version

@@ -34,14 +34,27 @@ func deviceData() -> Dictionary<String, Any> {
     dict["region"] = NSLocale.current.regionCode
     dict["device_identifier"] = deviceIdentifier()
     dict["language"] = Locale.current.languageCode
-    dict["apple_pay_status"] = applePaySupported()
+    dict["apple_pay_status"] = applePayAvailable()
     return dict
 }
 
-func applePaySupported() -> Bool {
-    return PKPaymentAuthorizationViewController.canMakePayments() && PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: [.amex, .visa, .masterCard])
+func regionCode() -> String? {
+    return NSLocale.current.regionCode
 }
 
 func deviceIdentifier() -> String {
     return UIDevice.current.identifierForVendor!.uuidString
+}
+
+// Check if Apple pay is available
+public func applePayAvailable() -> Bool{
+    return PKPaymentAuthorizationViewController.canMakePayments()
+}
+
+public func applePaySupportedPaymentNetworks() -> Array<PKPaymentNetwork> {
+    return [.amex, .visa, .masterCard]
+}
+
+public func applePayCanMakePayments() -> Bool {
+    return PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: applePaySupportedPaymentNetworks())
 }
