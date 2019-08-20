@@ -21,6 +21,7 @@ public class Monetizr {
     }
     var headers: HTTPHeaders = [:]
     var applePayMerchantID: String?
+    var companyName: String?
     var language: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
     var dateSessionStarted: Date = Date()
@@ -48,6 +49,11 @@ public class Monetizr {
     // Set Apple Pay MerchantID
     public func setApplePayMerchantID(id: String) {
         self.applePayMerchantID = id
+    }
+    
+    // Set Company Name
+    public func setCompanyName(name: String) {
+        self.companyName = name
     }
     
     // Set language

@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1"
         //Monetizr.shared.setLanguage(language: "de_DE")
         Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdkv3")
+        Monetizr.shared.setCompanyName(name: "Monetizing Solutions")
         
         return true
     }

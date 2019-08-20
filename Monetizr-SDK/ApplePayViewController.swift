@@ -9,7 +9,16 @@
 import UIKit
 import PassKit
 
-class ApplePayViewController: UIViewController {
+class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
+    
+    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
+        controller.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
+        completion(PKPaymentAuthorizationStatus.success)
+    }
     
     var selectedVariant: PurpleNode?
 
@@ -28,6 +37,9 @@ class ApplePayViewController: UIViewController {
         let priceString = selectedVariant?.priceV2?.amount ?? "0"
         let amount = NSDecimalNumber(string: priceString)
         let currencyCode = selectedVariant?.priceV2?.currency ?? "USD"
+        let productTitle = selectedVariant?.product?.title ?? ""
+        let variantTitle = selectedVariant?.title ?? ""
+        let productName = productTitle + " " + variantTitle
         let request = PKPaymentRequest()
         request.merchantIdentifier = Monetizr.shared.applePayMerchantID!
         request.supportedNetworks = applePaySupportedPaymentNetworks()
@@ -35,10 +47,11 @@ class ApplePayViewController: UIViewController {
         request.countryCode = regionCode() ?? "US"
         request.currencyCode = currencyCode
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: selectedVariant?.product?.title ?? "Item", amount: amount)
+            PKPaymentSummaryItem(label: productName, amount: amount), PKPaymentSummaryItem(label: Monetizr.shared.companyName ?? "Company", amount: amount)
         ]
         
         let applePayController = PKPaymentAuthorizationViewController(paymentRequest: request)
+        applePayController?.delegate = self
         self.present(applePayController!, animated: true, completion: nil)
     }
     
