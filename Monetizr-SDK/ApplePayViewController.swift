@@ -11,15 +11,6 @@ import PassKit
 
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
     
-    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
-        controller.dismiss(animated: true, completion: nil)
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
-        completion(PKPaymentAuthorizationStatus.success)
-    }
-    
     var selectedVariant: PurpleNode?
 
     override func viewDidLoad() {
@@ -33,13 +24,31 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         self.purchase()
     }
     
+    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
+        controller.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
+        completion(PKPaymentAuthorizationStatus.success)
+    }
+    
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
+        // handle the PKContact on iOS 9 and later
+        completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
+    }
+    
     func purchase() {
+        // Prepare data for request
         let priceString = selectedVariant?.priceV2?.amount ?? "0"
         let amount = NSDecimalNumber(string: priceString)
         let currencyCode = selectedVariant?.priceV2?.currency ?? "USD"
         let productTitle = selectedVariant?.product?.title ?? ""
         let variantTitle = selectedVariant?.title ?? ""
         let productName = productTitle + " " + variantTitle
+        let companyName = Monetizr.shared.companyName ?? "Company"
+        
+        // Create and configure request
         let request = PKPaymentRequest()
         request.merchantIdentifier = Monetizr.shared.applePayMerchantID!
         request.supportedNetworks = applePaySupportedPaymentNetworks()
@@ -47,8 +56,9 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         request.countryCode = regionCode() ?? "US"
         request.currencyCode = currencyCode
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: productName, amount: amount), PKPaymentSummaryItem(label: Monetizr.shared.companyName ?? "Company", amount: amount)
+            PKPaymentSummaryItem(label: productName, amount: amount), PKPaymentSummaryItem(label: companyName, amount: amount)
         ]
+        request.requiredShippingAddressFields = [PKAddressField.postalAddress, PKAddressField.name, PKAddressField.phone]
         
         let applePayController = PKPaymentAuthorizationViewController(paymentRequest: request)
         applePayController?.delegate = self
