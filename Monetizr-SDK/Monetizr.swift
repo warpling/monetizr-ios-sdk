@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Alamofire
+import PassKit
 
 public class Monetizr {
     
@@ -164,15 +165,22 @@ public class Monetizr {
     }
     
     // Checkout variant for product
-    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, shippingAddress: CNPostalAddress? = nil, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkout"
-        var parameters: [String: String] = [
+        var parameters: [String: Any] = [
             "product_handle" : tag,
             "variantId" : selectedVariant.id!,
             "quantity" : "1",
         ]
         if language != nil {
             parameters["language"] = language
+        }
+        let shippingParameters: [String: String] = [
+            "city" : shippingAddress?.city ?? "",
+            "country" : shippingAddress?.country ?? "",
+        ]
+        if shippingAddress != nil {
+            parameters["shippingAddress"] = shippingParameters
         }
         
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
@@ -197,17 +205,18 @@ public class Monetizr {
     }
     
     // Buy product-variant with Apple Pay
-    public func buyWithApplePay(selectedVariant: PurpleNode, completionHandler: @escaping (Bool, Error?) -> Void) {
+    public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?) -> Void) {
         if applePayCanMakePayments() && applePayMerchantID != nil {
             if var topController = UIApplication.shared.keyWindow?.rootViewController {
                 while let presentedViewController = topController.presentedViewController {
                     topController = presentedViewController
-                }
-                
+                }                
                 let applePayViewController = ApplePayViewController()
                 applePayViewController.modalPresentationStyle = .overCurrentContext
                 applePayViewController.selectedVariant = selectedVariant
+                applePayViewController.tag = tag
                 topController.present(applePayViewController, animated: true, completion: nil)
+                completionHandler(true, nil)
             }
         }
         else {

@@ -621,7 +621,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     @objc func buyApplePayButtonAction() {
-        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!) { success, error in
+        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!) { success, error in
             // Show some error if needed
             if success {
                 // Success

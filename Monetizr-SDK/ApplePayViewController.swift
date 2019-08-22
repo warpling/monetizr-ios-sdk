@@ -12,6 +12,7 @@ import PassKit
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
     
     var selectedVariant: PurpleNode?
+    var tag: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,8 +35,29 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
-        // handle the PKContact on iOS 9 and later
-        completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
+        let shippingAddress = contact.postalAddress
+        switch (shippingAddress?.city, shippingAddress?.country) {
+        case (.some, .some):
+            if shippingAddress?.city != "" && shippingAddress?.country != "" {
+                completion(PKPaymentAuthorizationStatus.success, [], [])
+                // Address OK, validate against checkout
+                Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: shippingAddress) { success, error, checkout in
+                    if success {
+                        // Handle success
+                    }
+                    else {
+                        // Handle error
+                        completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
+                    }
+                }
+            }
+            else {
+                completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
+            }
+        default:
+            completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
+
+        }
     }
     
     func purchase() {
