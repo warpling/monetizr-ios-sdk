@@ -43,7 +43,14 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                 // Address OK, validate against checkout
                 Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: shippingAddress) { success, error, checkout in
                     if success {
-                        // Handle success
+                        // Handle success response
+                        if checkout?.data?.checkoutCreate?.checkoutUserErrors?.count ?? 0 > 0 {
+                            completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
+                        }
+                        else {
+                            // No errors update price etc.
+                            completion(PKPaymentAuthorizationStatus.success, [], [])
+                        }
                     }
                     else {
                         // Handle error
@@ -67,7 +74,6 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         let currencyCode = selectedVariant?.priceV2?.currency ?? "USD"
         let productTitle = selectedVariant?.product?.title ?? ""
         let variantTitle = selectedVariant?.title ?? ""
-        let productName = productTitle + " " + variantTitle
         let companyName = Monetizr.shared.companyName ?? "Company"
         
         // Create and configure request
@@ -78,7 +84,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         request.countryCode = regionCode() ?? "US"
         request.currencyCode = currencyCode
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: productName, amount: amount), PKPaymentSummaryItem(label: companyName, amount: amount)
+            PKPaymentSummaryItem(label: productTitle, amount: amount), PKPaymentSummaryItem(label: variantTitle, amount: 0, type: .pending), PKPaymentSummaryItem(label: companyName, amount: amount)
         ]
         request.requiredShippingAddressFields = [PKAddressField.postalAddress, PKAddressField.name, PKAddressField.phone]
         
