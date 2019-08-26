@@ -187,7 +187,7 @@ public class Monetizr {
         let country = shippingAddress?.country ?? ""
         let state = shippingAddress?.state ?? ""
         
-        let shippingParameters = "{\"city\": \""+city+"\", \"country\": \""+country+"\", \"province\": \""+state+"}" as String
+        let shippingParameters = "{\"city\": \""+city+"\", \"country\": \""+country+"\", \"province\": \""+state+"\"}"
 
         if shippingAddress != nil {
             parameters["shippingAddress"] = shippingParameters
