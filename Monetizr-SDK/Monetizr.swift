@@ -187,7 +187,7 @@ public class Monetizr {
         let country = shippingAddress?.country ?? ""
         let state = shippingAddress?.state ?? ""
         
-        let shippingParameters = "{\"city\": \""+city+"\", \"country\": \""+country+"\", \"province\": \""+state+"}"
+        let shippingParameters = "{\"city\": \""+city+"\", \"country\": \""+country+"\", \"province\": \""+state+"}" as String
 
         if shippingAddress != nil {
             parameters["shippingAddress"] = shippingParameters
@@ -201,6 +201,12 @@ public class Monetizr {
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
                     completionHandler(false, error, nil)
+                    
+                    #if DEBUG
+                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                        print("Data: \(utf8Text)")
+                    }
+                    #endif
                 }
             }
             else if let error = response.result.error as? URLError {
