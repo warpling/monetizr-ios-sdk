@@ -175,14 +175,24 @@ public class Monetizr {
         if language != nil {
             parameters["language"] = language
         }
+        /*
         let shippingParameters: [String: String] = [
             "city" : shippingAddress?.city ?? "",
             "country" : shippingAddress?.country ?? "",
         ]
+         */
+        
+        // Custom shipping params string
+        let city = shippingAddress?.city ?? ""
+        let country = shippingAddress?.country ?? ""
+        let state = shippingAddress?.state ?? ""
+        
+        let shippingParameters = "{\"city\": \""+city+"\", \"country\": \""+country+"\", \"province\": \""+state+"}"
+
         if shippingAddress != nil {
             parameters["shippingAddress"] = shippingParameters
         }
-        
+ 
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
