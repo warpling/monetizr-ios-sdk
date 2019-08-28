@@ -210,11 +210,18 @@ public class Monetizr {
                 }
             }
             else if let error = response.result.error as? URLError {
+                #if DEBUG
                 print("URLError occurred: \(error)")
+                #endif
                 completionHandler(false, error, nil)
             }
             else {
+                #if DEBUG
                 print("Unknown error: \(String(describing: response.result.error))")
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                    print("Data: \(utf8Text)")
+                }
+                #endif
                 completionHandler(false, response.result.error!, nil)
             }
         }

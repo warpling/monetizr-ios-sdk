@@ -49,7 +49,26 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                         }
                         else {
                             // No errors update price etc.
-                            completion(PKPaymentAuthorizationStatus.success, [], [])
+                            // Product title
+                            let productTitle = self.selectedVariant?.product?.title ?? ""
+                            let subTotalPriceString = checkout?.data?.checkoutCreate?.checkout?.subtotalPriceV2?.amount ?? "0"
+                            let subTotalAmount = NSDecimalNumber(string: subTotalPriceString)
+                            
+                            // Tax info
+                            let taxTitle = NSLocalizedString("Tax", comment: "TAX")
+                            let taxPriceString = checkout?.data?.checkoutCreate?.checkout?.totalTaxV2?.amount ?? "0"
+                            let taxAmount = NSDecimalNumber(string: taxPriceString)
+                            
+                            // Total price
+                            let companyName = Monetizr.shared.companyName ?? "Company"
+                            let totalPriceString = checkout?.data?.checkoutCreate?.checkout?.totalPriceV2?.amount ?? "0"
+                            let totalAmount = NSDecimalNumber(string: totalPriceString)
+                            
+                            // Payment items
+                            let paymentSummaryItems = [PKPaymentSummaryItem(label: productTitle, amount: subTotalAmount), PKPaymentSummaryItem(label: taxTitle, amount: taxAmount), PKPaymentSummaryItem(label: companyName, amount: totalAmount)
+                            ]
+                            
+                            completion(PKPaymentAuthorizationStatus.success, [], paymentSummaryItems)
                         }
                     }
                     else {
@@ -73,7 +92,6 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         let amount = NSDecimalNumber(string: priceString)
         let currencyCode = selectedVariant?.priceV2?.currency ?? "USD"
         let productTitle = selectedVariant?.product?.title ?? ""
-        let variantTitle = selectedVariant?.title ?? ""
         let companyName = Monetizr.shared.companyName ?? "Company"
         
         // Create and configure request
@@ -84,7 +102,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         request.countryCode = regionCode() ?? "US"
         request.currencyCode = currencyCode
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: productTitle, amount: amount), PKPaymentSummaryItem(label: variantTitle, amount: 0, type: .pending), PKPaymentSummaryItem(label: companyName, amount: amount)
+            PKPaymentSummaryItem(label: productTitle, amount: amount), PKPaymentSummaryItem(label: companyName, amount: amount)
         ]
         request.requiredShippingAddressFields = [PKAddressField.postalAddress, PKAddressField.name, PKAddressField.phone]
         
