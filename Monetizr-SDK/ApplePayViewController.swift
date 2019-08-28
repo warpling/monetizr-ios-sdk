@@ -49,6 +49,22 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                         }
                         else {
                             // No errors update price etc.
+                            // Update shipping options
+                            var shippingOptions = [PKShippingMethod]()
+                            
+                            if checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates?.count ?? 0 > 0 {
+                                for rate in (checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates)! {
+                                    let shippingOptionTitle = rate.title ?? NSLocalizedString("Unknown", comment: "Unknown")
+                                    let shippingPriceString = rate.priceV2?.amount ?? "0"
+                                    let shippingPrice = NSDecimalNumber(string: shippingPriceString)
+                                    let shippingIdentifier = rate.handle ?? "Default"
+                                    let shippingOption = PKShippingMethod(label: shippingOptionTitle, amount: shippingPrice)
+                                    shippingOption.detail = ""
+                                    shippingOption.identifier = shippingIdentifier
+                                    shippingOptions.append(shippingOption)
+                                }
+                            }
+                            // Update summary items
                             // Product title
                             let productTitle = self.selectedVariant?.product?.title ?? ""
                             let subTotalPriceString = checkout?.data?.checkoutCreate?.checkout?.subtotalPriceV2?.amount ?? "0"
@@ -65,10 +81,9 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                             let totalAmount = NSDecimalNumber(string: totalPriceString)
                             
                             // Payment items
-                            let paymentSummaryItems = [PKPaymentSummaryItem(label: productTitle, amount: subTotalAmount), PKPaymentSummaryItem(label: taxTitle, amount: taxAmount), PKPaymentSummaryItem(label: companyName, amount: totalAmount)
-                            ]
+                            let paymentSummaryItems = [PKPaymentSummaryItem(label: productTitle, amount: subTotalAmount), PKPaymentSummaryItem(label: taxTitle, amount: taxAmount), PKPaymentSummaryItem(label: companyName, amount: totalAmount)]
                             
-                            completion(PKPaymentAuthorizationStatus.success, [], paymentSummaryItems)
+                            completion(PKPaymentAuthorizationStatus.success, shippingOptions, paymentSummaryItems)
                         }
                     }
                     else {
