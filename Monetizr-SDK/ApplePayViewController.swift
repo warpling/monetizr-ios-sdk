@@ -97,8 +97,11 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
             }
         default:
             completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
-
         }
+    }
+    
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelect shippingMethod: PKShippingMethod, completion: @escaping (PKPaymentAuthorizationStatus, [PKPaymentSummaryItem]) -> Void) {
+        completion(PKPaymentAuthorizationStatus.success, [])
     }
     
     func purchase() {
