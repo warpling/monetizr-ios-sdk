@@ -179,6 +179,7 @@ public class Monetizr {
         let shippingParameters: [String: String] = [
             "city" : shippingAddress?.city ?? "",
             "country" : shippingAddress?.country ?? "",
+            "province" : shippingAddress?.state ?? ""
         ]
  
         /*

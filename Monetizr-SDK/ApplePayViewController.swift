@@ -12,6 +12,7 @@ import PassKit
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
     
     var selectedVariant: PurpleNode?
+    var checkout: Checkout?
     var tag: String?
 
     override func viewDidLoad() {
@@ -44,46 +45,13 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                 Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: shippingAddress) { success, error, checkout in
                     if success {
                         // Handle success response
-                        if checkout?.data?.checkoutCreate?.checkoutUserErrors?.count ?? 0 > 0 {
+                        self.checkout = checkout
+                        if self.checkout?.data?.checkoutCreate?.checkoutUserErrors?.count ?? 0 > 0 {
                             completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
                         }
                         else {
                             // No errors update price etc.
-                            // Update shipping options
-                            var shippingOptions = [PKShippingMethod]()
-                            
-                            if checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates?.count ?? 0 > 0 {
-                                for rate in (checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates)! {
-                                    let shippingOptionTitle = rate.title ?? NSLocalizedString("Unknown", comment: "Unknown")
-                                    let shippingPriceString = rate.priceV2?.amount ?? "0"
-                                    let shippingPrice = NSDecimalNumber(string: shippingPriceString)
-                                    let shippingIdentifier = rate.handle ?? "Default"
-                                    let shippingOption = PKShippingMethod(label: shippingOptionTitle, amount: shippingPrice)
-                                    shippingOption.detail = ""
-                                    shippingOption.identifier = shippingIdentifier
-                                    shippingOptions.append(shippingOption)
-                                }
-                            }
-                            // Update summary items
-                            // Product title
-                            let productTitle = self.selectedVariant?.product?.title ?? ""
-                            let subTotalPriceString = checkout?.data?.checkoutCreate?.checkout?.subtotalPriceV2?.amount ?? "0"
-                            let subTotalAmount = NSDecimalNumber(string: subTotalPriceString)
-                            
-                            // Tax info
-                            let taxTitle = NSLocalizedString("Tax", comment: "TAX")
-                            let taxPriceString = checkout?.data?.checkoutCreate?.checkout?.totalTaxV2?.amount ?? "0"
-                            let taxAmount = NSDecimalNumber(string: taxPriceString)
-                            
-                            // Total price
-                            let companyName = Monetizr.shared.companyName ?? "Company"
-                            let totalPriceString = checkout?.data?.checkoutCreate?.checkout?.totalPriceV2?.amount ?? "0"
-                            let totalAmount = NSDecimalNumber(string: totalPriceString)
-                            
-                            // Payment items
-                            let paymentSummaryItems = [PKPaymentSummaryItem(label: productTitle, amount: subTotalAmount), PKPaymentSummaryItem(label: taxTitle, amount: taxAmount), PKPaymentSummaryItem(label: companyName, amount: totalAmount)]
-                            
-                            completion(PKPaymentAuthorizationStatus.success, shippingOptions, paymentSummaryItems)
+                            completion(PKPaymentAuthorizationStatus.success, self.shippingMethods(), self.paymentSummaryItems())
                         }
                     }
                     else {
@@ -101,7 +69,8 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelect shippingMethod: PKShippingMethod, completion: @escaping (PKPaymentAuthorizationStatus, [PKPaymentSummaryItem]) -> Void) {
-        completion(PKPaymentAuthorizationStatus.success, [])
+        
+        completion(PKPaymentAuthorizationStatus.success, self.paymentSummaryItems(shippingMethodIdentifier: shippingMethod.identifier))
     }
     
     func purchase() {
@@ -127,6 +96,62 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         let applePayController = PKPaymentAuthorizationViewController(paymentRequest: request)
         applePayController?.delegate = self
         self.present(applePayController!, animated: true, completion: nil)
+    }
+    
+    func shippingMethods() -> [PKShippingMethod] {
+        // Shipping options
+        var shippingOptions = [PKShippingMethod]()
+        
+        if self.checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates?.count ?? 0 > 0 {
+            for rate in (self.checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates)! {
+                let shippingOptionTitle = rate.title ?? NSLocalizedString("Unknown", comment: "Unknown")
+                let shippingPriceString = rate.priceV2?.amount ?? "0"
+                let shippingPrice = NSDecimalNumber(string: shippingPriceString)
+                let shippingIdentifier = rate.handle ?? "Default"
+                let shippingOption = PKShippingMethod(label: shippingOptionTitle, amount: shippingPrice)
+                shippingOption.detail = ""
+                shippingOption.identifier = shippingIdentifier
+                shippingOptions.append(shippingOption)
+            }
+        }
+        return shippingOptions
+    }
+    
+    func paymentSummaryItems(shippingMethodIdentifier: String? = "") -> [PKPaymentSummaryItem] {
+        // Shipping Options
+        let shippingTitle = NSLocalizedString("Shipping", comment: "Shipping")
+        var shippingPrice = 0 as NSDecimalNumber
+        if shippingMethodIdentifier == "" {
+            let firstShippingPriceString = self.checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates?.first?.priceV2?.amount ?? "0"
+            shippingPrice = NSDecimalNumber(string: firstShippingPriceString)
+        }
+        if shippingMethodIdentifier != "" {
+            let shippingRates = self.checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates
+            if let index = shippingRates?.firstIndex(where: { $0.handle == shippingMethodIdentifier }) {
+                let shippingPriceString = shippingRates?[index].priceV2?.amount
+                shippingPrice = NSDecimalNumber(string: shippingPriceString)
+            }
+        }
+        // Product info
+        let productTitle = self.selectedVariant?.product?.title ?? ""
+        let subTotalPriceString = self.checkout?.data?.checkoutCreate?.checkout?.subtotalPriceV2?.amount ?? "0"
+        let subTotalAmount = NSDecimalNumber(string: subTotalPriceString)
+        
+        // Tax info
+        let taxTitle = NSLocalizedString("Tax", comment: "TAX")
+        let taxPriceString = self.checkout?.data?.checkoutCreate?.checkout?.totalTaxV2?.amount ?? "0"
+        let taxAmount = NSDecimalNumber(string: taxPriceString)
+        
+        // Total
+        let companyName = Monetizr.shared.companyName ?? "Company"
+        let totalPriceString = self.checkout?.data?.checkoutCreate?.checkout?.totalPriceV2?.amount ?? "0"
+        var totalAmount = NSDecimalNumber(string: totalPriceString)
+        totalAmount = totalAmount.adding(shippingPrice)
+        
+        // Payment items
+        let paymentSummaryItems = [PKPaymentSummaryItem(label: productTitle, amount: subTotalAmount), PKPaymentSummaryItem(label: taxTitle, amount: taxAmount), PKPaymentSummaryItem(label: shippingTitle, amount: shippingPrice), PKPaymentSummaryItem(label: companyName, amount: totalAmount)]
+        
+        return paymentSummaryItems
     }
     
 
