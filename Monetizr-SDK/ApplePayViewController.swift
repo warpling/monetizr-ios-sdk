@@ -32,7 +32,20 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
-        completion(PKPaymentAuthorizationStatus.success)
+        let token = payment.token
+        print(token)
+        let paymentData=String(data: payment.token.paymentData.base64EncodedData(), encoding: .utf8)
+        print (paymentData ?? "No data")
+        let shippingContactName = payment.shippingContact?.name
+        print(shippingContactName ?? "No data")
+        let shippingContactPhone = payment.shippingContact?.phoneNumber
+        print(shippingContactPhone ?? "No data")
+        let shippingContactAdress = payment.shippingContact?.postalAddress
+        print(shippingContactAdress ?? "No data")
+        let shippingMethodIdentifier = payment.shippingMethod?.identifier
+        print(shippingMethodIdentifier ?? "No data")
+        
+        completion(PKPaymentAuthorizationStatus.failure)
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
