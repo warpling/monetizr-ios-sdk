@@ -229,6 +229,95 @@ public class Monetizr {
         }
     }
     
+    // Checkout with payment
+    public func checkoutVarinatWithPayment(selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?) -> Void) {
+        let urlString = apiUrl+"products/checkoutwithpayment"
+        
+        let paymentAmount: [String: Any] = [
+            "amount": String(describing: amount),
+            "currencyCode": selectedVariant.priceV2?.currency ?? "USD"
+        ]
+        
+        let street = payment.shippingContact?.postalAddress?.street ?? ""
+        var subLocality = ""
+        if #available(iOS 10.3, *) {
+            subLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
+        } else {
+            // Fallback on earlier versions
+        }
+        var subAdministrativeArea = ""
+        if #available(iOS 10.3, *) {
+            subAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        var test = false
+        #if DEBUG
+        test = true
+        #endif
+        
+        let shippingAddress: [String: Any] = [
+            "firstName" : payment.shippingContact?.name?.givenName ?? "",
+            "lastName" : payment.shippingContact?.name?.familyName ?? "",
+            "address1" : street + subLocality + subAdministrativeArea,
+            "city" : payment.shippingContact?.postalAddress?.city ?? "",
+            "country" : payment.shippingContact?.postalAddress?.country ?? "",
+            "zip" : payment.shippingContact?.postalAddress?.postalCode ?? "",
+            "phone" : payment.shippingContact?.phoneNumber?.stringValue ?? "",
+            "province" : payment.shippingContact?.postalAddress?.state ?? "",
+            "email" : payment.shippingContact?.emailAddress ?? "",
+            "test" : test
+        ]
+        
+        let billingAddress = shippingAddress
+        
+        let parameters: [String: Any] = [
+            "checkoutId":selectedVariant.id as Any,
+            "product_handle" : tag,
+            "type" : "apple_pay",
+            "idempotencyKey" : payment.token.transactionIdentifier,
+            "paymentData" : String(data: payment.token.paymentData.base64EncodedData(), encoding: .utf8) ?? "",
+            "paymentAmount" : paymentAmount,
+            "shippingAddress" : shippingAddress,
+            "billingAddress" : billingAddress
+        ]
+        print(parameters)
+        
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
+            if let responseCheckout = response.result.value {
+                if responseCheckout.data != nil {
+                    completionHandler(true, nil)
+                }
+                else {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
+                    completionHandler(false, error)
+                    
+                    #if DEBUG
+                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                        print("Data: \(utf8Text)")
+                    }
+                    #endif
+                }
+            }
+            else if let error = response.result.error as? URLError {
+                #if DEBUG
+                print("URLError occurred: \(error)")
+                #endif
+                completionHandler(false, error)
+            }
+            else {
+                #if DEBUG
+                print("Unknown error: \(String(describing: response.result.error))")
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                    print("Data: \(utf8Text)")
+                }
+                #endif
+                completionHandler(false, response.result.error!)
+            }
+        }
+    }
+    
     // Buy product-variant with Apple Pay
     public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?) -> Void) {
         if applePayCanMakePayments() && applePayMerchantID != nil {

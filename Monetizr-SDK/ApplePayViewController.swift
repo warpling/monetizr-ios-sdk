@@ -31,21 +31,18 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         self.dismiss(animated: true, completion: nil)
     }
     
-    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
-        let token = payment.token
-        print(token)
-        let paymentData=String(data: payment.token.paymentData.base64EncodedData(), encoding: .utf8)
-        print (paymentData ?? "No data")
-        let shippingContactName = payment.shippingContact?.name
-        print(shippingContactName ?? "No data")
-        let shippingContactPhone = payment.shippingContact?.phoneNumber
-        print(shippingContactPhone ?? "No data")
-        let shippingContactAdress = payment.shippingContact?.postalAddress
-        print(shippingContactAdress ?? "No data")
-        let shippingMethodIdentifier = payment.shippingMethod?.identifier
-        print(shippingMethodIdentifier ?? "No data")
-        
-        completion(PKPaymentAuthorizationStatus.failure)
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
+        let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
+        Monetizr.shared.checkoutVarinatWithPayment(selectedVariant: selectedVariant!, payment: payment, tag: tag ?? "", amount: amount) { success, error in
+            if success {
+                // Handle success response
+                completion(PKPaymentAuthorizationStatus.success)
+            }
+            else {
+                // Handle error
+                completion(PKPaymentAuthorizationStatus.failure)
+            }
+        }
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
