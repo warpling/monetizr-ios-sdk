@@ -267,7 +267,6 @@ public class Monetizr {
             "phone" : payment.shippingContact?.phoneNumber?.stringValue ?? "",
             "province" : payment.shippingContact?.postalAddress?.state ?? "",
             "email" : payment.shippingContact?.emailAddress ?? "",
-            "test" : test
         ]
         
         let billingAddress = shippingAddress
@@ -280,7 +279,9 @@ public class Monetizr {
             "paymentData" : String(data: payment.token.paymentData.base64EncodedData(), encoding: .utf8) ?? "",
             "paymentAmount" : paymentAmount,
             "shippingAddress" : shippingAddress,
-            "billingAddress" : billingAddress
+            "billingAddress" : billingAddress,
+            "test" : test,
+            "shippingMethod" : payment.shippingMethod?.identifier ?? ""
         ]
         print(parameters)
         
