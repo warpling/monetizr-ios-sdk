@@ -238,16 +238,21 @@ public class Monetizr {
             "currencyCode": selectedVariant.priceV2?.currency ?? "USD"
         ]
         
-        let street = payment.shippingContact?.postalAddress?.street ?? ""
-        var subLocality = ""
+        let shippingStreet = payment.shippingContact?.postalAddress?.street ?? ""
+        let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
+        var shippingSubLocality = ""
+        var billingSubLocality = ""
         if #available(iOS 10.3, *) {
-            subLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
+            shippingSubLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
+            billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
         } else {
             // Fallback on earlier versions
         }
-        var subAdministrativeArea = ""
+        var shippingSubAdministrativeArea = ""
+        var billingSubAdministrativeArea = ""
         if #available(iOS 10.3, *) {
-            subAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+            shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+            billingSubAdministrativeArea = payment.billingContact?.postalAddress?.subAdministrativeArea ?? ""
         } else {
             // Fallback on earlier versions
         }
@@ -260,16 +265,24 @@ public class Monetizr {
         let shippingAddress: [String: Any] = [
             "firstName" : payment.shippingContact?.name?.givenName ?? "",
             "lastName" : payment.shippingContact?.name?.familyName ?? "",
-            "address1" : street + subLocality + subAdministrativeArea,
+            "address1" : shippingStreet + shippingSubLocality + shippingSubAdministrativeArea,
             "city" : payment.shippingContact?.postalAddress?.city ?? "",
             "country" : payment.shippingContact?.postalAddress?.country ?? "",
             "zip" : payment.shippingContact?.postalAddress?.postalCode ?? "",
             "phone" : payment.shippingContact?.phoneNumber?.stringValue ?? "",
             "province" : payment.shippingContact?.postalAddress?.state ?? "",
-            "email" : payment.shippingContact?.emailAddress ?? "",
         ]
         
-        let billingAddress = shippingAddress
+        let billingAddress: [String: Any] = [
+            "firstName" : payment.billingContact?.name?.givenName ?? "",
+            "lastName" : payment.billingContact?.name?.familyName ?? "",
+            "address1" : billingStreet + billingSubLocality + billingSubAdministrativeArea,
+            "city" : payment.billingContact?.postalAddress?.city ?? "",
+            "country" : payment.billingContact?.postalAddress?.country ?? "",
+            "zip" : payment.billingContact?.postalAddress?.postalCode ?? "",
+            "phone" : payment.billingContact?.phoneNumber?.stringValue ?? "",
+            "province" : payment.billingContact?.postalAddress?.state ?? "",
+        ]
         
         let parameters: [String: Any] = [
             "checkoutId":selectedVariant.id as Any,
@@ -281,13 +294,19 @@ public class Monetizr {
             "shippingAddress" : shippingAddress,
             "billingAddress" : billingAddress,
             "test" : test,
-            "shippingMethod" : payment.shippingMethod?.identifier ?? ""
+            "shippingRateHandle" : payment.shippingMethod?.identifier ?? "",
+            "email" : payment.shippingContact?.emailAddress ?? ""
         ]
         print(parameters)
         
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
+                    #if DEBUG
+                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                        print("Success Data: \(utf8Text)")
+                    }
+                    #endif
                     completionHandler(true, nil)
                 }
                 else {
@@ -296,7 +315,7 @@ public class Monetizr {
                     
                     #if DEBUG
                     if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                        print("Data: \(utf8Text)")
+                        print("Error Data: \(utf8Text)")
                     }
                     #endif
                 }
@@ -311,7 +330,7 @@ public class Monetizr {
                 #if DEBUG
                 print("Unknown error: \(String(describing: response.result.error))")
                 if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                    print("Data: \(utf8Text)")
+                    print("Error Data: \(utf8Text)")
                 }
                 #endif
                 completionHandler(false, response.result.error!)

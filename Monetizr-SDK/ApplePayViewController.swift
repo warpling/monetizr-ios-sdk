@@ -101,7 +101,14 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         request.paymentSummaryItems = [
             PKPaymentSummaryItem(label: productTitle, amount: amount), PKPaymentSummaryItem(label: companyName, amount: amount)
         ]
-        request.requiredShippingAddressFields = [PKAddressField.postalAddress, PKAddressField.name, PKAddressField.phone]
+        if #available(iOS 11.0, *) {
+            request.requiredShippingContactFields = [PKContactField.postalAddress, PKContactField.emailAddress]
+            request.requiredBillingContactFields = [PKContactField.postalAddress, PKContactField.name]
+        } else {
+            // Fallback on earlier versions
+            request.requiredShippingAddressFields = [PKAddressField.postalAddress, PKAddressField.email]
+            request.requiredBillingAddressFields = [PKAddressField.postalAddress, PKAddressField.name]
+        }
         
         let applePayController = PKPaymentAuthorizationViewController(paymentRequest: request)
         applePayController?.delegate = self
