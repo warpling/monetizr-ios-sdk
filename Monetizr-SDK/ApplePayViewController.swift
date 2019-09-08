@@ -8,6 +8,7 @@
 
 import UIKit
 import PassKit
+import Stripe
 
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
     
@@ -32,6 +33,25 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
+        
+        // Get Stripe token
+        STPAPIClient.shared().createToken(with: payment) {
+            (token, error) -> Void in
+            
+            if (error != nil) {
+                print(error as Any)
+                completion(PKPaymentAuthorizationStatus.failure)
+                // return
+            }
+            else {
+                let some = token
+                print(some as Any)
+                completion(PKPaymentAuthorizationStatus.success)
+            }
+        }
+            
+        // Pass data to Monetizr
+        /*
         let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
         Monetizr.shared.checkoutVarinatWithPayment(selectedVariant: selectedVariant!, payment: payment, tag: tag ?? "", amount: amount) { success, error in
             if success {
@@ -43,6 +63,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                 completion(PKPaymentAuthorizationStatus.failure)
             }
         }
+        */
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {

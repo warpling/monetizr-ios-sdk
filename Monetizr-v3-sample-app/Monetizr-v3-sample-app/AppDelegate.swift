@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Stripe
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Monetizr.shared.setLanguage(language: "de_DE")
         Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdkv3")
         Monetizr.shared.setCompanyName(name: "Monetizing Solutions")
+        
+        Stripe.setDefaultPublishableKey("pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu")
         
         return true
     }
