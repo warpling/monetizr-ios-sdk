@@ -290,13 +290,16 @@ public class Monetizr {
             "province" : payment.billingContact?.postalAddress?.state ?? "",
         ]
         
+        let stripeTokenfields = token.allResponseFields
+        let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: stripeTokenfields, options: [])
+        let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
+        
         let parameters: [String: Any] = [
             "checkoutId":selectedVariant.id?.description ?? "",
             "product_handle" : tag,
             "type" : "apple_pay",
             "idempotencyKey" : payment.token.transactionIdentifier,
-            "paymentData" : token.tokenId,
-            //String(data: payment.token.paymentData.base64EncodedData(), encoding: .utf8) ?? "",
+            "paymentData" : tokenFieldsJsonString as Any,
             "paymentAmount" : paymentAmount,
             "shippingAddress" : shippingAddress,
             "billingAddress" : billingAddress,
