@@ -21,10 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Setup Monetizr
         Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1"
         //Monetizr.shared.setLanguage(language: "de_DE")
-        Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdkv3")
+        //Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdkv3")
+        Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.elifetest")
         Monetizr.shared.setCompanyName(name: "Monetizing Solutions")
-        
-        Stripe.setDefaultPublishableKey("pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu")
+        Monetizr.shared.setStripeToken(token: "")
+        // pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu
         
         return true
     }

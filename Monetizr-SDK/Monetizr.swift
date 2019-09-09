@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Alamofire
 import PassKit
+import Stripe
 
 public class Monetizr {
     
@@ -60,6 +61,11 @@ public class Monetizr {
     // Set language
     public func setLanguage(language: String) {
         self.language = language
+    }
+    
+    // Set stripe token
+    public func setStripeToken(token: String) {
+        Stripe.setDefaultPublishableKey(token)
     }
     
     // Application become active
@@ -230,7 +236,7 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVarinatWithPayment(selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?) -> Void) {
+    public func checkoutVarinatWithPayment(selectedVariant: PurpleNode, payment: PKPayment, token: STPToken, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkoutwithpayment"
         
         let paymentAmount: [String: Any] = [
@@ -285,11 +291,12 @@ public class Monetizr {
         ]
         
         let parameters: [String: Any] = [
-            "checkoutId":selectedVariant.id as Any,
+            "checkoutId":selectedVariant.id?.description ?? "",
             "product_handle" : tag,
             "type" : "apple_pay",
             "idempotencyKey" : payment.token.transactionIdentifier,
-            "paymentData" : String(data: payment.token.paymentData.base64EncodedData(), encoding: .utf8) ?? "",
+            "paymentData" : token.tokenId,
+            //String(data: payment.token.paymentData.base64EncodedData(), encoding: .utf8) ?? "",
             "paymentAmount" : paymentAmount,
             "shippingAddress" : shippingAddress,
             "billingAddress" : billingAddress,
@@ -297,6 +304,7 @@ public class Monetizr {
             "shippingRateHandle" : payment.shippingMethod?.identifier ?? "",
             "email" : payment.shippingContact?.emailAddress ?? ""
         ]
+        
         print(parameters)
         
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
@@ -307,11 +315,11 @@ public class Monetizr {
                         print("Success Data: \(utf8Text)")
                     }
                     #endif
-                    completionHandler(true, nil)
+                    completionHandler(true, nil, responseCheckout)
                 }
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
-                    completionHandler(false, error)
+                    completionHandler(false, error, responseCheckout)
                     
                     #if DEBUG
                     if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
@@ -324,7 +332,7 @@ public class Monetizr {
                 #if DEBUG
                 print("URLError occurred: \(error)")
                 #endif
-                completionHandler(false, error)
+                completionHandler(false, error, nil)
             }
             else {
                 #if DEBUG
@@ -333,7 +341,7 @@ public class Monetizr {
                     print("Error Data: \(utf8Text)")
                 }
                 #endif
-                completionHandler(false, response.result.error!)
+                completionHandler(false, response.result.error!, nil)
             }
         }
     }
