@@ -31,6 +31,7 @@ public class Monetizr {
     var impressionCountInSession: Int = 0
     var clickCountInSession: Int = 0
     var checkoutCountInSession: Int = 0
+    var haveStripeToken: Bool = false
     
     // Initialization
     private init(token: String) {
@@ -65,6 +66,7 @@ public class Monetizr {
     
     // Set stripe token
     public func setStripeToken(token: String) {
+        haveStripeToken = true
         Stripe.setDefaultPublishableKey(token)
     }
     
@@ -187,15 +189,6 @@ public class Monetizr {
             "country" : shippingAddress?.country ?? "",
             "province" : shippingAddress?.state ?? ""
         ]
- 
-        /*
-        // Custom shipping params string
-        let city = shippingAddress?.city ?? ""
-        let country = shippingAddress?.country ?? ""
-        let state = shippingAddress?.state ?? ""
-        
-        let shippingParameters = "{\"city\": \""+city+"\", \"country\": \""+country+"\", \"province\": \""+state+"\"}"
-        */
  
         if shippingAddress != nil {
             parameters["shippingAddress"] = shippingParameters
@@ -351,7 +344,7 @@ public class Monetizr {
     
     // Buy product-variant with Apple Pay
     public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?) -> Void) {
-        if applePayCanMakePayments() && applePayMerchantID != nil {
+        if applePayCanMakePayments() && applePayMerchantID != nil && haveStripeToken == true {
             if var topController = UIApplication.shared.keyWindow?.rootViewController {
                 while let presentedViewController = topController.presentedViewController {
                     topController = presentedViewController
