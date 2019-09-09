@@ -45,7 +45,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
             else {
                 // Pass data to Monetizr
                  let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
-                Monetizr.shared.checkoutVarinatWithPayment(selectedVariant: self.selectedVariant!, payment: payment, token: token!, tag: self.tag ?? "", amount: amount) {success, error, checkout  in
+                Monetizr.shared.checkoutVarinatWithPayment(checkout: self.checkout!, selectedVariant: self.selectedVariant!, payment: payment, token: token!, tag: self.tag ?? "", amount: amount) {success, error, checkout  in
                  if success {
                  // Handle success response
                     print(checkout?.data?.checkoutCreate?.checkoutUserErrors as Any)
@@ -76,6 +76,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                         }
                         else {
                             // No errors update price etc.
+                            //let some = checkout?.data?.checkoutCreate?.checkout
                             completion(PKPaymentAuthorizationStatus.success, self.shippingMethods(), self.paymentSummaryItems())
                         }
                     }
@@ -117,11 +118,11 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
             PKPaymentSummaryItem(label: productTitle, amount: amount), PKPaymentSummaryItem(label: companyName, amount: amount)
         ]
         if #available(iOS 11.0, *) {
-            request.requiredShippingContactFields = [PKContactField.postalAddress, PKContactField.emailAddress]
+            request.requiredShippingContactFields = [PKContactField.postalAddress, PKContactField.name, PKContactField.emailAddress]
             request.requiredBillingContactFields = [PKContactField.postalAddress, PKContactField.name]
         } else {
             // Fallback on earlier versions
-            request.requiredShippingAddressFields = [PKAddressField.postalAddress, PKAddressField.email]
+            request.requiredShippingAddressFields = [PKAddressField.postalAddress, PKAddressField.name, PKAddressField.email]
             request.requiredBillingAddressFields = [PKAddressField.postalAddress, PKAddressField.name]
         }
         

@@ -236,7 +236,7 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVarinatWithPayment(selectedVariant: PurpleNode, payment: PKPayment, token: STPToken, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, token: STPToken, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkoutwithpayment"
         
         let paymentAmount: [String: Any] = [
@@ -295,7 +295,7 @@ public class Monetizr {
         let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
         
         let parameters: [String: Any] = [
-            "checkoutId":selectedVariant.id?.description ?? "",
+            "checkoutId": checkout.data?.checkoutCreate?.checkout?.id ?? "",
             "product_handle" : tag,
             "type" : "apple_pay",
             "idempotencyKey" : payment.token.transactionIdentifier,
