@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Monetizr.shared.setLanguage(language: "de_DE")
         Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdkv3test")
         Monetizr.shared.setCompanyName(name: "Monetizing Solutions")
-        Monetizr.shared.setStripeToken(token: "pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu")
-        
+        Monetizr.shared.setStripeToken(token: "pk_live_CWmQoXocvis3aEFufn7R1CKf")
+        // pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu
         return true
     }
 
