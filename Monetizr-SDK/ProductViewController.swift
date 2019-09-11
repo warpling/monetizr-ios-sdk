@@ -364,13 +364,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         checkoutBackgroundView.addArrangedSubview(checkoutButton)
         
         // Add Apple Pay button
-        if applePayAvailable() && applePayCanMakePayments() {
+        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
             let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(buyApplePayButtonAction), for: .touchUpInside)
             checkoutBackgroundView.addArrangedSubview(applePayButton)
         }
-        if applePayAvailable() && !applePayCanMakePayments() {
+        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
             let applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(setupApplePayButtonAction), for: .touchUpInside)
@@ -621,7 +621,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     @objc func buyApplePayButtonAction() {
-        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!) { success, error in
+        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!) {success, error in
             // Show some error if needed
             if success {
                 // Success

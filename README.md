@@ -18,7 +18,7 @@ Requires iOS 10.0+
 #### CocoaPods
 
 ```swift
-pod 'Monetizr', '~> 3.0'
+pod 'Monetizr', '~> 3.1'
 ```
 
 #### Manual
@@ -32,6 +32,14 @@ In applicationDidFinishLaunching(_:) do the initialization with token provided t
 
 ```swift
 Monetizr.shared.token = String
+```
+
+If Apple Pay support is planned in applicationDidFinishLaunching(_:) do the configuration
+
+```swift
+Monetizr.shared.setApplePayMerchantID(id: String)
+Monetizr.shared.setCompanyName(name: String)
+Monetizr.shared.setStripeToken(token: String)
 ```
 
 Optionally you can set languge - might not be availeble, check with Monetizr team
@@ -49,6 +57,12 @@ To show product or to get product data and show in your custom view
 
 ```swift
 Monetizr.shared.getProductForTag(tag: String, show: Bool) { success, error, product in ()}
+```
+
+If custom product view is used to start checkout with Apple Pay
+
+```swift
+Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!) { success, error in ()}
 ```
 
 ### Manual usage of *Monetizr.shared* with custom product views

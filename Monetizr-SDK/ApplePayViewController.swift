@@ -48,6 +48,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                 Monetizr.shared.checkoutVarinatWithPayment(checkout: self.checkout!, selectedVariant: self.selectedVariant!, payment: payment, token: token!, tag: self.tag ?? "", amount: amount) {success, error, checkout  in
                  if success {
                  // Handle success response
+                    self.checkout = checkout
                     print(checkout?.data?.checkoutCreate?.checkoutUserErrors as Any)
                     completion(PKPaymentAuthorizationStatus.success)
                  }
