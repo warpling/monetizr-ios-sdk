@@ -301,16 +301,9 @@ public class Monetizr {
             "email" : payment.shippingContact?.emailAddress ?? ""
         ]
         
-        print(parameters)
-        
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
-                    #if DEBUG
-                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                        print("Success Data: \(utf8Text)")
-                    }
-                    #endif
                     completionHandler(true, nil, responseCheckout)
                 }
                 else {
