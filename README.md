@@ -56,13 +56,13 @@ import Monetizr
 To show product or to get product data and show in your custom view
 
 ```swift
-Monetizr.shared.getProductForTag(tag: String, show: Bool) { success, error, product in ()}
+Monetizr.shared.getProductForTag(tag: String, presenter: UIViewController?) { success, error, product in ()}
 ```
 
 If custom product view is used to start checkout with Apple Pay
 
 ```swift
-Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!) { success, error in ()}
+Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: UIViewController) { success, error in ()}
 ```
 
 ### Manual usage of *Monetizr.shared* with custom product views

@@ -28,7 +28,10 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     }
     
     func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
-        controller.dismiss(animated: true, completion: nil)
+        controller.dismiss(animated: true, completion: self.dismiss)
+    }
+    
+    func dismiss() {
         self.dismiss(animated: true, completion: nil)
     }
     

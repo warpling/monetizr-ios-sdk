@@ -158,7 +158,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func activateInitialConstraints() {
-        let window = UIApplication.shared.keyWindow
+        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
         viewHeight = view.frame.size.height
         viewWidth = view.frame.size.width
         
@@ -621,7 +621,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     @objc func buyApplePayButtonAction() {
-        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!) {success, error in
+        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: self) {success, error in
             // Show some error if needed
             if success {
                 // Success

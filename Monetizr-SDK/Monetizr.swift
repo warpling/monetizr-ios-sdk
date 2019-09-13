@@ -124,7 +124,7 @@ public class Monetizr {
     }
     
     // Load product data
-    public func getProductForTag(tag: String, show: Bool, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
+    public func getProductForTag(tag: String, presenter: UIViewController? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
         if language != nil {
@@ -135,9 +135,9 @@ public class Monetizr {
         Alamofire.request(URL(string: urlString)!, headers: headers).responseProduct { response in
             if let retrievedProduct = response.result.value {
                 if retrievedProduct.data != nil {
-                    if show == true {
+                    if (presenter != nil) {
                         let product = retrievedProduct
-                        self.openProductViewForProduct(product: product, tag: tag)
+                        self.openProductViewForProduct(product: product, tag: tag, presenter: presenter!)
                     }
                     completionHandler(true, nil, retrievedProduct)
                 }
@@ -158,18 +158,12 @@ public class Monetizr {
     }
     
     // Open product View
-    func openProductViewForProduct(product: Product, tag: String) {
-        if var topController = UIApplication.shared.keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            
-            let productViewController = ProductViewController()
-            productViewController.modalPresentationStyle = .overCurrentContext
-            productViewController.product = product
-            productViewController.tag = tag
-            topController.present(productViewController, animated: true, completion: nil)
-        }
+    func openProductViewForProduct(product: Product, tag: String, presenter: UIViewController) {
+        let productViewController = ProductViewController()
+        productViewController.modalPresentationStyle = .overCurrentContext
+        productViewController.product = product
+        productViewController.tag = tag
+        presenter.present(productViewController, animated: true, completion: nil)
     }
     
     // Checkout variant for product
@@ -336,8 +330,9 @@ public class Monetizr {
     }
     
     // Buy product-variant with Apple Pay
-    public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?) -> Void) {
+    public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
         if applePayCanMakePayments() && applePayMerchantID != nil && haveStripeToken == true {
+            /*
             if var topController = UIApplication.shared.keyWindow?.rootViewController {
                 while let presentedViewController = topController.presentedViewController {
                     topController = presentedViewController
@@ -349,6 +344,13 @@ public class Monetizr {
                 topController.present(applePayViewController, animated: true, completion: nil)
                 completionHandler(true, nil)
             }
+            */
+            let applePayViewController = ApplePayViewController()
+            applePayViewController.modalPresentationStyle = .overCurrentContext
+            applePayViewController.selectedVariant = selectedVariant
+            applePayViewController.tag = tag
+            presenter.present(applePayViewController, animated: true, completion: nil)
+            completionHandler(true, nil)
         }
         else {
             let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Apple pay not configured"])
