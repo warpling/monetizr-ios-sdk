@@ -50,9 +50,23 @@ public struct DataClass: Codable {
 
 // MARK: - CheckoutCreate
 public struct CheckoutCreate: Codable {
-    let checkoutUserErrors: [JSONAny]?
+    let checkoutUserErrors: [CheckoutUserError]?
     let payment: Payment?
     let checkout: CheckoutClass?
+}
+
+// To parse values from Alamofire responses:
+//
+//   Alamofire.request(url).responseCheckoutUserError { response in
+//     if let checkoutUserError = response.result.value {
+//       ...
+//     }
+//   }
+
+// MARK: - CheckoutUserError
+struct CheckoutUserError: Codable {
+    let field: [String]?
+    let message: String?
 }
 
 //

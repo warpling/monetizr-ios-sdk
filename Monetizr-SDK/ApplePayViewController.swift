@@ -69,19 +69,21 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         }
     }
     
+    @available(iOS, deprecated:11.0, message:"Use PKPaymentRequestShippingContactUpdate")
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
         let shippingAddress = contact.postalAddress
         switch (shippingAddress?.city, shippingAddress?.country) {
         case (.some, .some):
             if shippingAddress?.city != "" && shippingAddress?.country != "" {
-                completion(PKPaymentAuthorizationStatus.success, [], [])
                 // Address OK, validate against checkout
                 Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: shippingAddress) { success, error, checkout in
                     if success {
                         // Handle success response
                         self.checkout = checkout
+                        
                         if self.checkout?.data?.checkoutCreate?.checkoutUserErrors?.count ?? 0 > 0 {
                             completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
+                            
                         }
                         else {
                             // No errors update price etc.
@@ -100,6 +102,49 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
             }
         default:
             completion(PKPaymentAuthorizationStatus.invalidShippingPostalAddress, [], [])
+        }
+    }
+    
+    @available(iOS, introduced: 11.0)
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, handler completion: @escaping (PKPaymentRequestShippingContactUpdate) -> Void) {
+        
+        // Create shipping address error
+        let shippingAddressError = NSError.init(domain: PKPaymentErrorDomain,
+                                                code: PKPaymentError.shippingAddressUnserviceableError.hashValue,
+        userInfo: [NSLocalizedDescriptionKey:"Invalid address"])
+        
+        // Create shipping error update
+        let shippingContactErrorUpdate = PKPaymentRequestShippingContactUpdate.init(errors: [shippingAddressError], paymentSummaryItems: [], shippingMethods: [])
+        
+        let shippingAddress = contact.postalAddress
+        switch (shippingAddress?.city, shippingAddress?.country) {
+        case (.some, .some):
+            if shippingAddress?.city != "" && shippingAddress?.country != "" {
+                // Address OK, validate against checkout
+                Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: shippingAddress) { success, error, checkout in
+                    if success {
+                        // Handle success response
+                        self.checkout = checkout
+                        if self.checkout?.data?.checkoutCreate?.checkoutUserErrors?.count ?? 0 > 0 {
+                            completion(shippingContactErrorUpdate)
+                        }
+                        else {
+                            // No errors update price etc.
+                             let shippingContactSuccessUpdate = PKPaymentRequestShippingContactUpdate.init(errors: [], paymentSummaryItems: self.paymentSummaryItems(), shippingMethods: self.shippingMethods())
+                            completion(shippingContactSuccessUpdate)
+                        }
+                    }
+                    else {
+                        // Handle error
+                       completion(shippingContactErrorUpdate)
+                    }
+                }
+            }
+            else {
+                completion(shippingContactErrorUpdate)
+            }
+        default:
+            completion(shippingContactErrorUpdate)
         }
     }
     
