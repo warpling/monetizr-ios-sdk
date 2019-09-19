@@ -35,6 +35,11 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Enforce dark mode for variant selector
+        if #available(iOS 13, *) {
+            overrideUserInterfaceStyle = .dark
+        }
+        
         tableView.delegate = self
         tableView.allowsSelection = true
         tableView.isUserInteractionEnabled = true
