@@ -75,7 +75,7 @@ extension UIView {
     func variantOptionsContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear //UIColor(hex: 0x231f20)
-        self.addBlurEffect(style: .prominent)
+        //self.addBlurEffect(style: .prominent)
     }
     
     func imageCarouselContainerViewStyle() {

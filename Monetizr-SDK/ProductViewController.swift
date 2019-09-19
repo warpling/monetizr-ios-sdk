@@ -471,7 +471,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         titleLabel.text = selectedVariant?.product?.title
         titleLabel.accessibilityValue = selectedVariant?.product?.title
         
-        priceLabel.text = self.getCurrencyFormat(price: (selectedVariant?.priceV2?.amount)!, currency: (selectedVariant?.priceV2?.currency)!)
+        priceLabel.text = self.getCurrencyFormat(price: (selectedVariant?.priceV2?.amount ?? "0")!, currency: (selectedVariant?.priceV2?.currency ?? "USD")!)
         priceLabel.accessibilityValue = priceLabel.text
         
         // Description text view
@@ -739,7 +739,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Slideshow fullscreen
     @objc func slideShowTap() {
-        slideShow.presentFullScreenController(from: self)
+        if #available(iOS 13.0, *) {
+            
+        }
+        else {
+            slideShow.presentFullScreenController(from: self)
+        }
+        
         if Monetizr.shared.clickCountInSession < 1 {
             Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }
