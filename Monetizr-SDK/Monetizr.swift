@@ -124,7 +124,7 @@ public class Monetizr {
     }
     
     // Load product data
-    public func getProductForTag(tag: String, presenter: UIViewController? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
+    public func getProductForTag(tag: String, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
         if language != nil {
@@ -137,7 +137,8 @@ public class Monetizr {
                 if retrievedProduct.data != nil {
                     if (presenter != nil) {
                         let product = retrievedProduct
-                        self.openProductViewForProduct(product: product, tag: tag, presenter: presenter!)
+                        let targetStyle = presentationStyle ?? UIModalPresentationStyle.overCurrentContext  
+                        self.openProductViewForProduct(product: product, tag: tag, presenter: presenter!, presentationStyle: targetStyle)
                     }
                     completionHandler(true, nil, retrievedProduct)
                 }
@@ -158,9 +159,9 @@ public class Monetizr {
     }
     
     // Open product View
-    func openProductViewForProduct(product: Product, tag: String, presenter: UIViewController) {
+    func openProductViewForProduct(product: Product, tag: String, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
         let productViewController = ProductViewController()
-        productViewController.modalPresentationStyle = .overCurrentContext
+        productViewController.modalPresentationStyle = presentationStyle
         productViewController.product = product
         productViewController.tag = tag
         presenter.present(productViewController, animated: true, completion: nil)

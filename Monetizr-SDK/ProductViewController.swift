@@ -104,9 +104,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Update views data
         self.updateViewsData()
         
-        // Setup constraints
-        self.activateInitialConstraints()
-        
         // Create a new entry for clickreward
         Monetizr.shared.clickrewardCreate(tag: tag!, completionHandler: { success, error, value in ()})
         
@@ -125,6 +122,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.accessibilityViewIsModal = true
+        // Setup constraints
+        self.activateInitialConstraints()
+        
+        // Update buttons
         updateCheckoutButtons()
     }
     

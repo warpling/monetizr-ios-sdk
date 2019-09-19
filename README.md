@@ -53,17 +53,13 @@ Import "Monetizr" to your project
 import Monetizr
 ```
 
-To show product or to get product data and show in your custom view
+#### Show product or get product data and show in your custom view. 
 
 ```swift
-Monetizr.shared.getProductForTag(tag: String, presenter: UIViewController?) { success, error, product in ()}
+Monetizr.shared.getProductForTag(tag: String, presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
 ```
 
-If custom product view is used to start checkout with Apple Pay
-
-```swift
-Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: UIViewController) { success, error in ()}
-```
+If you choose to show product in a view provided in SDK you should provide presenter view and presentation style. If presentation style not provided it will be `UIModalPresentationStyle.overCurrentContext`
 
 ### Manual usage of *Monetizr.shared* with custom product views
 
@@ -77,6 +73,12 @@ Checkout variant for product with tag
 
 ```swift
 func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void)
+```
+
+Checkout with Apple Pay
+
+```swift
+Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: UIViewController) { success, error in ()}
 ```
 
 Increase impression count for session
