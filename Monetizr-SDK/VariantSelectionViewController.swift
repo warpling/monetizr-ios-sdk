@@ -38,6 +38,10 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         tableView.delegate = self
         tableView.allowsSelection = true
         tableView.isUserInteractionEnabled = true
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+        tableView.showsVerticalScrollIndicator = false
+        
+        self.view.backgroundColor = .clear
         
         // Available variants for level
         if selectedValues.count > 0 {
@@ -79,6 +83,12 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         }
         
         // Setup navigation bar
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.backgroundColor = .clear
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.barTintColor = .clear
+        self.navigationController?.navigationBar.tintColor = UIColor(hex: 0xE0093B)
         self.title = name
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeSelector))
     }
@@ -112,8 +122,9 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "Cell")
+        cell.backgroundColor = .clear
         if level+1 != names.count {
-            cell.accessoryType = .disclosureIndicator
+            // cell.accessoryType = .disclosureIndicator
         }
         cell.textLabel!.text = values[indexPath.row] as? String
         cell.selectionStyle = .none

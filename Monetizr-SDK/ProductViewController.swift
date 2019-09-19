@@ -68,7 +68,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         view.addGestureRecognizer(gestureRecognizer)
         
         // Background configuration
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = .black
         
         // Load product
         self.loadProductData()
@@ -365,7 +365,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Add Apple Pay button
         if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
-            let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
+            let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .whiteOutline)
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(buyApplePayButtonAction), for: .touchUpInside)
             checkoutBackgroundView.addArrangedSubview(applePayButton)
@@ -533,7 +533,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Options selector placeholder
         optionsSelectorPlaceholderView.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
         optionsSelectorPlaceholderView.center = optionsSelectorOverlayView.convert(optionsSelectorOverlayView.center, from:optionsSelectorOverlayView.superview)
-        optionsSelectorPlaceholderView.backgroundColor = .white
+        optionsSelectorPlaceholderView.backgroundColor = .clear
         optionsSelectorOverlayView.addSubview(optionsSelectorPlaceholderView)
         
         // Add navigation controller childview controller
@@ -681,6 +681,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     // Drag to dismiss and enlarge description view
+    
     @IBAction func panGestureRecognizerHandler(_ sender: UIPanGestureRecognizer) {
         let percentThreshold:CGFloat = 0.3
         let translation = sender.translation(in: view)
@@ -704,7 +705,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
         
         if imageCarouselContainerView.frame.size.height >= viewHeight*maxImageCarouselHeightProportion {
-            view.frame.origin.y = newY //Move view to new position
+            //view.frame.origin.y = newY //Move view to new position
         }
         
         if sender.state == .ended {

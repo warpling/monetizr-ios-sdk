@@ -74,7 +74,8 @@ extension UIView {
     // Styles
     func variantOptionsContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(hex: 0x231f20)
+        self.backgroundColor = .clear //UIColor(hex: 0x231f20)
+        self.addBlurEffect(style: .prominent)
     }
     
     func imageCarouselContainerViewStyle() {
@@ -124,17 +125,19 @@ extension UIButton {
         self.backgroundColor = .clear
         self.setTitle("✕", for: .normal)
         self.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: UIFont.Weight.light)
-        self.setTitleColor(UIColor.black, for: .normal)
+        self.setTitleColor(UIColor.white, for: .normal)
     }
     
     func checkoutProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(hex: 0x007aff)
+        self.backgroundColor = .black //UIColor(hex: 0x007aff)
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
         self.setTitleColor(UIColor.white, for: .normal)
         self.setTitleColor(UIColor.lightGray, for: .highlighted)
         self.height(constant: 50)
         self.layer.cornerRadius = 5
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor.white.cgColor
     }
 }
 
@@ -167,7 +170,7 @@ extension UILabel {
     func optionValueStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = UIColor(hex: 0x007aff)
+        self.textColor = .white //UIColor(hex: 0x007aff)
         self.font = .systemFont(ofSize: 18, weight: UIFont.Weight.medium)
         self.numberOfLines = 1
         self.textAlignment = .left
@@ -178,7 +181,7 @@ extension UILabel {
     func priceLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = UIColor(hex: 0x007aff)
+        self.textColor = UIColor(hex: 0xE0093B) //UIColor(hex: 0x007aff)
         self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
         self.numberOfLines = 1
         self.textAlignment = .right
@@ -202,8 +205,8 @@ extension UITextView {
     func descriptionTextViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = .white
-        self.font = .systemFont(ofSize: 15)
+        self.textColor = UIColor(hex: 0xFFFDFD) //.white
+        self.font = .systemFont(ofSize: 16)
         self.isSelectable = false
         self.isEditable = false
     }
