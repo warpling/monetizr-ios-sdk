@@ -12,7 +12,7 @@ import Alamofire
 import ImageSlideshow
 import PassKit
 
-class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, VariantSelectionDelegate {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
@@ -30,7 +30,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     let applePayButtonContainerView = UIView()
     let variantOptionsContainerView = UIView()
     let imageCarouselContainerView = UIView()
-    let descriptionContainerView = UIView()
+    let descriptionContainerView = UIScrollView()
     let priceLabel = UILabel()
     let titleLabel = UILabel()
     let descriptionTextView = UITextView()
@@ -66,6 +66,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         let gestureRecognizer = UIPanGestureRecognizer(target: self,
                                                        action: #selector(panGestureRecognizerHandler(_:)))
         view.addGestureRecognizer(gestureRecognizer)
+        
+        // ScrollViewDelegate
+        descriptionContainerView.delegate = self
         
         // Background configuration
         self.view.backgroundColor = .black
@@ -254,17 +257,18 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             priceLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
             priceLabel.heightAnchor.constraint(equalToConstant: 30),
             priceLabel.widthAnchor.constraint(equalToConstant: 120),
+            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
             
             // Product title
             titleLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
             titleLabel.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
             titleLabel.rightAnchor.constraint(equalTo: priceLabel.leftAnchor, constant: -10),
-            titleLabel.heightAnchor.constraint(equalToConstant: 30),
             
             // Description text
             descriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             descriptionTextView.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
             descriptionTextView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: 0),
+            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
             
             // Close button
             closeButton.widthAnchor.constraint(equalToConstant: 44),
@@ -272,6 +276,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             ])
     }
     
+    // Landscape
     func configureCompactConstraints() {
         compactConstraints.append(contentsOf: [
             // Checkout buttons background
@@ -287,7 +292,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Image carousel container view
             imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight),
-            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth/100*55),
+            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth/100*45),
             
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
@@ -297,13 +302,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
             
             // Description text
-            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding),
-            
-            // Price tag
-            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding)
+            descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth/100*55-20-rightPadding)
+        
             ])
+        descriptionContainerView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
+    // Portrait
     func configureRegularConstraints() {
         regularConstraints.append(contentsOf: [
             // Checkout buttons background
@@ -314,7 +319,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             variantOptionsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             
             // Description container view
-            descriptionContainerView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
+            descriptionContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            //descriptionContainerView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
             descriptionContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             
             // Image carousel container view
@@ -329,11 +335,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
             
             // Description text
-            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding),
+            descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth-20)
             
-            // Price tag
-            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding)
             ])
+        descriptionContainerView.contentInset = UIEdgeInsets(top: viewHeight*maxImageCarouselHeightProportion, left: 0, bottom: 0, right: 0)
     }
     
     func configureCloseButton() {
@@ -416,6 +421,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureDescriptionContainerView() {
         // Description container view
         descriptionContainerView.descriptionContainerViewStyle()
+        descriptionContainerView.showsVerticalScrollIndicator = false
         view.addSubview(descriptionContainerView)
     }
     
@@ -690,25 +696,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         let newY = ensureRange(value: view.frame.minY + translation.y, minimum: 0, maximum: view.frame.maxY)
         let progress = progressAlongAxis(newY, view.bounds.height)
         
-        if view.frame.origin.y == CGFloat(0.0)  {
-            if UIDevice.current.orientation.isPortrait {
-                for constraint in imageCarouselContainerView.constraints {
-                    if constraint.firstAttribute == .height {
-                        if imageCarouselContainerView.frame.size.height <= viewHeight*maxImageCarouselHeightProportion+1 {
-                            if textExceedBoundsOf(descriptionTextView) || translation.y > 0 {
-                                let newH = ensureRange(value: constraint.constant + translation.y, minimum: viewHeight*minImageCarouselHeightProportion, maximum: viewHeight*maxImageCarouselHeightProportion)
-                                constraint.constant = newH
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        if imageCarouselContainerView.frame.size.height >= viewHeight*maxImageCarouselHeightProportion {
-            //view.frame.origin.y = newY //Move view to new position
-        }
-        
         if sender.state == .ended {
             let velocity = sender.velocity(in: view)
             if imageCarouselContainerView.frame.size.height >= viewHeight*maxImageCarouselHeightProportion && velocity.y >= 300 || progress > percentThreshold {
@@ -723,7 +710,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 })
             }
         }
-        
         sender.setTranslation(.zero, in: view)
     }
     
@@ -768,5 +754,20 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func textExceedBoundsOf(_ textView: UITextView) -> Bool {
         let textHeight = textView.contentSize.height
         return textHeight > textView.bounds.height
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if UIDevice.current.orientation.isPortrait {
+            let offset = scrollView.contentOffset.y
+            var height = abs(offset)
+            if offset > 0 {
+                height = 0
+            }
+            for constraint in imageCarouselContainerView.constraints {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = height
+                }
+            }
+        }
     }
 }

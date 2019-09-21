@@ -85,7 +85,7 @@ extension UIView {
     
     func descriptionContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .black
+        self.backgroundColor = .clear
     }
     
     func addBlurEffect(style: UIBlurEffect.Style)
@@ -194,7 +194,7 @@ extension UILabel {
         self.backgroundColor = .clear
         self.textColor = .white
         self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
-        self.numberOfLines = 1
+        self.numberOfLines = 0
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
@@ -205,10 +205,11 @@ extension UITextView {
     func descriptionTextViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = UIColor(hex: 0xFFFDFD) //.white
+        self.textColor = .white
         self.font = .systemFont(ofSize: 16)
         self.isSelectable = false
         self.isEditable = false
+        self.isScrollEnabled = false
     }
 }
 
