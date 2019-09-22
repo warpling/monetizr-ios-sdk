@@ -333,19 +333,6 @@ public class Monetizr {
     // Buy product-variant with Apple Pay
     public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
         if applePayCanMakePayments() && applePayMerchantID != nil && haveStripeToken == true {
-            /*
-            if var topController = UIApplication.shared.keyWindow?.rootViewController {
-                while let presentedViewController = topController.presentedViewController {
-                    topController = presentedViewController
-                }                
-                let applePayViewController = ApplePayViewController()
-                applePayViewController.modalPresentationStyle = .overCurrentContext
-                applePayViewController.selectedVariant = selectedVariant
-                applePayViewController.tag = tag
-                topController.present(applePayViewController, animated: true, completion: nil)
-                completionHandler(true, nil)
-            }
-            */
             let applePayViewController = ApplePayViewController()
             applePayViewController.modalPresentationStyle = .overCurrentContext
             applePayViewController.selectedVariant = selectedVariant

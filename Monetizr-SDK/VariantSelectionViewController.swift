@@ -120,12 +120,10 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return values.count
     }
     
@@ -163,7 +161,6 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "Cell")
         cell.backgroundColor = backgroundColor
         if level+1 != names.count {
@@ -177,7 +174,6 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Some row selceted
-        //selectedValues.add(values[indexPath.row])
         selectedValues[level] = values[indexPath.row]
         if level+1 < names.count {
             let variantSelectionViewController = VariantSelectionViewController()
