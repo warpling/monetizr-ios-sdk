@@ -130,6 +130,16 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     }
     
     override func tableView(_ tableView: UITableView,
+                   heightForHeaderInSection section: Int) -> CGFloat {
+        if selectedValues.count > 0 {
+            return 30
+        }
+        else {
+            return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView,
             viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier:
                    "sectionHeader") as! VariantSelectionHeaderView
@@ -146,11 +156,10 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
                 }
             }
             view.title.text = titleText
+            return view
         }
         
-        
-
-        return view
+        return nil
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
