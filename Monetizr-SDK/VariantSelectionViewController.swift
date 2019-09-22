@@ -31,6 +31,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     var names: NSMutableArray = []
     var selectedValues: NSMutableArray = []
     var availableVariants: [VariantsEdge] = []
+    let backgroundColor = UIColor.init(white: 0.15, alpha: 1)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,8 +47,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.showsVerticalScrollIndicator = false
         
-       // self.view.backgroundColor = .clear
-        
+        self.view.backgroundColor = backgroundColor
         // Available variants for level
         if selectedValues.count > 0 {
             for variant in variants {
@@ -88,16 +88,20 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         }
         
         // Setup navigation bar
-        /*
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.backgroundColor = .clear
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.barTintColor = .clear
-        */
+        self.navigationController?.navigationBar.backgroundColor = backgroundColor
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.barTintColor = backgroundColor
         self.navigationController?.navigationBar.tintColor = UIColor(hex: 0xE0093B)
+        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
         self.title = name
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeSelector))
+        
+        // Register cusotm headers
+        tableView.register(VariantSelectionHeaderView.self,
+        forHeaderFooterViewReuseIdentifier: "sectionHeader")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -124,12 +128,35 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         // #warning Incomplete implementation, return the number of rows
         return values.count
     }
+    
+    override func tableView(_ tableView: UITableView,
+            viewForHeaderInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier:
+                   "sectionHeader") as! VariantSelectionHeaderView
+        if selectedValues.count > 0 {
+            var titleText = NSLocalizedString("Selected", comment: "Selected") + ":"
+            for value in selectedValues {
+                let valueString = value as! String
+                let index = selectedValues.index(of: value)
+                if index == 0 {
+                    titleText = titleText + " " + valueString
+                }
+                else {
+                    titleText = titleText + " " + "•" + " " + valueString
+                }
+            }
+            view.title.text = titleText
+        }
+        
+        
 
+        return view
+    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "Cell")
-        //cell.backgroundColor = .clear
+        cell.backgroundColor = backgroundColor
         if level+1 != names.count {
             cell.accessoryType = .disclosureIndicator
         }

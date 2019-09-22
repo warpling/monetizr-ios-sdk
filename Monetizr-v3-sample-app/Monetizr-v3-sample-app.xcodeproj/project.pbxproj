@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */; };
+		28A32D082337FD22004F1A5E /* VariantSelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */; };
 		28AE865522C6D279005F2D2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 28AE864B22C6D279005F2D2D /* Localizable.strings */; };
 		28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE864D22C6D279005F2D2D /* ProductViewController.swift */; };
 		28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		2897E16F2301DACB00C4A2DE /* Monetizr-v3-sample-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Monetizr-v3-sample-app.entitlements"; sourceTree = "<group>"; };
 		28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDescriptionScrollView.swift; sourceTree = "<group>"; };
+		28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantSelectionHeaderView.swift; sourceTree = "<group>"; };
 		28AE864C22C6D279005F2D2D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		28AE864D22C6D279005F2D2D /* ProductViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
 		28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorPresenter.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				28AE865422C6D279005F2D2D /* Device.swift */,
 				28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */,
 				28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */,
+				28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */,
 			);
 			name = "Monetizr-SDK";
 			path = "../Monetizr-SDK";
@@ -280,6 +283,7 @@
 				28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */,
 				28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */,
 				28AE865822C6D279005F2D2D /* VariantSelectionViewController.swift in Sources */,
+				28A32D082337FD22004F1A5E /* VariantSelectionHeaderView.swift in Sources */,
 				28AE865A22C6D279005F2D2D /* Extensions.swift in Sources */,
 				28F1AAA5230B11D30039FF7E /* ApplePayViewController.swift in Sources */,
 				28AE865D22C6D279005F2D2D /* Device.swift in Sources */,
