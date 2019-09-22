@@ -30,7 +30,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     let applePayButtonContainerView = UIView()
     let variantOptionsContainerView = UIView()
     let imageCarouselContainerView = UIView()
-    let descriptionContainerView = UIScrollView()
+    let descriptionContainerView = ProductDescriptionScrollView()
     let priceLabel = UILabel()
     let titleLabel = UILabel()
     let descriptionTextView = UITextView()
@@ -55,17 +55,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     let maxImageCarouselHeightProportion: CGFloat = 0.55
-    let minImageCarouselHeightProportion: CGFloat = 0.20
     
     var optionsSelectorViewHeight: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Drag to dismiss
-        let gestureRecognizer = UIPanGestureRecognizer(target: self,
-                                                       action: #selector(panGestureRecognizerHandler(_:)))
-        view.addGestureRecognizer(gestureRecognizer)
         
         // ScrollViewDelegate
         descriptionContainerView.delegate = self
@@ -78,10 +72,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Checkout button
         self.configureCheckOutButtons()
-        
-        // Variant option selection container view
-        self.configureVariantOptionsContainerView()
-        self.configureVariantOptionDisclosure()
         
         // Image carousel
         self.configureImageCarouselContainerView()
@@ -100,6 +90,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Configure description text
         self.configureDescriptionTextView()
+        
+        // Variant option selection container view
+        self.configureVariantOptionsContainerView()
+        self.configureVariantOptionDisclosure()
         
         // Configure image slider
         self.configureImageSlider()
@@ -251,7 +245,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Description container view
             descriptionContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            descriptionContainerView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
+            descriptionContainerView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
             
             // Price tag
             priceLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
@@ -305,7 +299,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth/100*55-20-rightPadding)
         
             ])
-        descriptionContainerView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        descriptionContainerView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: optionsSelectorViewHeight, right: 0)
     }
     
     // Portrait
@@ -338,7 +332,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth-20)
             
             ])
-        descriptionContainerView.contentInset = UIEdgeInsets(top: viewHeight*maxImageCarouselHeightProportion, left: 0, bottom: 0, right: 0)
+        descriptionContainerView.contentInset = UIEdgeInsets(top: viewHeight*maxImageCarouselHeightProportion, left: 0, bottom: optionsSelectorViewHeight, right: 0)
     }
     
     func configureCloseButton() {
@@ -685,32 +679,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         formatter.currencyCode = currency
         let convertedPrice = formatter.string(from: convertPrice)
         return convertedPrice!
-    }
-    
-    // Drag to dismiss and enlarge description view
-    
-    @IBAction func panGestureRecognizerHandler(_ sender: UIPanGestureRecognizer) {
-        let percentThreshold:CGFloat = 0.3
-        let translation = sender.translation(in: view)
-        
-        let newY = ensureRange(value: view.frame.minY + translation.y, minimum: 0, maximum: view.frame.maxY)
-        let progress = progressAlongAxis(newY, view.bounds.height)
-        
-        if sender.state == .ended {
-            let velocity = sender.velocity(in: view)
-            if imageCarouselContainerView.frame.size.height >= viewHeight*maxImageCarouselHeightProportion && velocity.y >= 300 || progress > percentThreshold {
-                Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
-                if !interaction {
-                    Monetizr.shared.dismissCreate(tag: tag!, completionHandler: { success, error, value in ()})
-                }
-                self.dismiss(animated: true) //Perform dismiss
-            } else {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.view.frame.origin.y = 0 // Revert animation
-                })
-            }
-        }
-        sender.setTranslation(.zero, in: view)
     }
     
     func progressAlongAxis(_ pointOnAxis: CGFloat, _ axisLength: CGFloat) -> CGFloat {
