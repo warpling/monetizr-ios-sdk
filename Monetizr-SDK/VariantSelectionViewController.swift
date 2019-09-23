@@ -161,14 +161,49 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "Cell")
+        let cell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "Cell")
+        
+        // Format cell
         cell.backgroundColor = backgroundColor
+        cell.textLabel?.textColor = UIColor(hex: 0xE0093B)
+        cell.detailTextLabel?.textColor = .lightGray
+        
+        // Reset cell - need to be clear if reused
+        cell.selectionStyle = .none
+        cell.textLabel!.text = ""
+        cell.detailTextLabel?.text = ""
+        cell.accessoryType = .none
+        
+        // Configyre accesory view
         if level+1 != names.count {
             cell.accessoryType = .disclosureIndicator
         }
+        
+        // Add title - variant
         cell.textLabel!.text = values[indexPath.row] as? String
-        cell.textLabel?.textColor = UIColor(hex: 0xE0093B)
-        cell.selectionStyle = .none
+        
+        // Add subtatle - price
+        if level+1 == names.count {
+            var availableVariants: [VariantsEdge] = []
+            if selectedValues.count > 0 {
+                for variant in variants {
+                    let optionsValues: NSMutableArray = []
+                    for option in (variant.node?.selectedOptions)! {
+                        optionsValues.add(option.value!)
+                    }
+                    if selectedValues.allSatisfy(optionsValues.contains) {
+                        availableVariants.append(variant)
+                    }
+                }
+            }
+            if availableVariants.count > 0 {
+                let selectedVariant = availableVariants[0].node
+                let priceAmount = selectedVariant?.priceV2?.amount ?? "0"
+                let priceCurrency = selectedVariant?.priceV2?.currency ?? "USD"
+                cell.detailTextLabel?.text = priceAmount.priceFormat(currency: priceCurrency)
+            }
+        }
+        
         return cell
     }
     

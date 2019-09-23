@@ -472,7 +472,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         titleLabel.text = selectedVariant?.product?.title
         titleLabel.accessibilityValue = selectedVariant?.product?.title
         
-        priceLabel.text = self.getCurrencyFormat(price: (selectedVariant?.priceV2?.amount ?? "0")!, currency: (selectedVariant?.priceV2?.currency ?? "USD")!)
+        let priceAmount = selectedVariant?.priceV2?.amount ?? "0"
+        let priceCurrency = selectedVariant?.priceV2?.currency ?? "USD"
+        priceLabel.text = priceAmount.priceFormat(currency: priceCurrency)
         priceLabel.accessibilityValue = priceLabel.text
         
         // Description text view

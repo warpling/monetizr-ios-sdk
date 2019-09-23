@@ -244,3 +244,14 @@ extension UIImage {
         return nil
     }
 }
+
+extension String {
+    func priceFormat(currency:String)->String{
+        let convertPrice = NSNumber(value: Double(self)!)
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currency
+        let convertedPrice = formatter.string(from: convertPrice)
+        return convertedPrice!
+    }
+}
