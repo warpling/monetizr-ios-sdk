@@ -132,11 +132,33 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         } else {
             // load wide view
         }
+        
+        // Deactivate previous constraints
+        self.deactivateVariableConstraints()
+        
+        self.viewWidth = view.frame.size.width
+        self.viewHeight = view.frame.size.height
+        
+        // Configure safe area insets
+        if #available(iOS 11.0, *) {
+            self.topPadding = self.view.safeAreaInsets.top
+            self.bottomPadding = self.view.safeAreaInsets.bottom
+            self.leftPadding = self.view.safeAreaInsets.left
+            self.rightPadding = self.view.safeAreaInsets.right
+        }
+        
+        // Resize and position option selector view - do not do this if view is not in hierarchy
+        self.optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: self.viewWidth, height: self.viewHeight)
+        self.optionsSelectorPlaceholderView.center = self.optionsSelectorOverlayView.convert(self.optionsSelectorOverlayView.center, from:self.optionsSelectorOverlayView.superview)
+        
+        // Configure new constraints
+        self.configureConstraintsForCurrentOrietnation()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
+        /*
         // Deactivate previous constraints
         self.deactivateVariableConstraints()
         
@@ -161,6 +183,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             self.configureConstraintsForCurrentOrietnation()
             
         }, completion: nil)
+ */
     }
     
     func activateInitialConstraints() {
