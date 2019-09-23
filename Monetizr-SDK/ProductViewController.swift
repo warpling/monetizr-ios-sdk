@@ -65,7 +65,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         descriptionContainerView.delegate = self
         
         // Background configuration
-        self.view.backgroundColor = .black
+        self.view.backgroundColor = UIColor(hex: 0x444444)
         
         // Load product
         self.loadProductData()
