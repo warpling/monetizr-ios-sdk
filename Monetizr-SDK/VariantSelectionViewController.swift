@@ -178,10 +178,6 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         cell.accessoryType = .none
         
         // Configyre accesory view
-        
-        
-        
-        
         // Show disclosure except last
         if level+1 != names.count {
             cell.accessoryType = .disclosureIndicator
@@ -199,20 +195,8 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         
         // Add subtitle - price
         if level+1 == names.count {
-            var availableVariants: [VariantsEdge] = []
-            if selectedValues.count > 0 {
-                for variant in variants {
-                    let optionsValues: NSMutableArray = []
-                    for option in (variant.node?.selectedOptions)! {
-                        optionsValues.add(option.value!)
-                    }
-                    if selectedValues.allSatisfy(optionsValues.contains) {
-                        availableVariants.append(variant)
-                    }
-                }
-            }
             if availableVariants.count > 0 {
-                let currentVariant = availableVariants[0].node
+                let currentVariant = availableVariants[indexPath.row].node
                 let priceAmount = currentVariant?.priceV2?.amount ?? "0"
                 let priceCurrency = currentVariant?.priceV2?.currency ?? "USD"
                 cell.detailTextLabel?.text = priceAmount.priceFormat(currency: priceCurrency)

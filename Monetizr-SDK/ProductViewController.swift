@@ -126,6 +126,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         updateCheckoutButtons()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if traitCollection.horizontalSizeClass == .compact {
+            // load slim view
+        } else {
+            // load wide view
+        }
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
@@ -249,7 +257,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Price tag
             priceLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
-            priceLabel.heightAnchor.constraint(equalToConstant: 30),
+            //priceLabel.heightAnchor.constraint(equalToConstant: 30),
             priceLabel.widthAnchor.constraint(equalToConstant: 120),
             priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
             
