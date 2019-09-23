@@ -65,19 +65,19 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         descriptionContainerView.delegate = self
         
         // Background configuration
-        self.view.backgroundColor = UIColor(hex: 0x121212) // UIColor.init(white: 0.15, alpha: 1) // UIColor(hex: 0x121212)
+        self.view.backgroundColor = UIColor(hex: 0x121212)
         
         // Load product
         self.loadProductData()
-        
-        // Checkout button
-        self.configureCheckOutButtons()
         
         // Image carousel
         self.configureImageCarouselContainerView()
         
         // Description container view
         self.configureDescriptionContainerView()
+        
+        // Checkout button
+        self.configureCheckOutButtons()
         
         // Close button
         self.configureCloseButton()
