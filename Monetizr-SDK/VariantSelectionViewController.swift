@@ -99,6 +99,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         self.title = name
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeSelector))
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         
         // Register cusotm headers
         tableView.register(VariantSelectionHeaderView.self,
