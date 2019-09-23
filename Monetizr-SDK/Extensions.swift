@@ -130,7 +130,7 @@ extension UIButton {
     
     func checkoutProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .black //UIColor(hex: 0x007aff)
+        self.backgroundColor = UIColor(hex: 0x121212) //UIColor(hex: 0x007aff)
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
         self.setTitleColor(UIColor.white, for: .normal)
         self.setTitleColor(UIColor.lightGray, for: .highlighted)

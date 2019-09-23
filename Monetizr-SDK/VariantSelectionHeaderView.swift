@@ -25,7 +25,7 @@ class VariantSelectionHeaderView: UITableViewHeaderFooterView {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textColor = .lightGray
         title.font = .systemFont(ofSize: 14, weight: UIFont.Weight.medium)
-        self.contentView.backgroundColor = .black
+        self.contentView.backgroundColor = UIColor(hex: 0x121212)
 
         contentView.addSubview(title)
 

@@ -197,9 +197,9 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
                 }
             }
             if availableVariants.count > 0 {
-                let selectedVariant = availableVariants[0].node
-                let priceAmount = selectedVariant?.priceV2?.amount ?? "0"
-                let priceCurrency = selectedVariant?.priceV2?.currency ?? "USD"
+                let currentVariant = availableVariants[0].node
+                let priceAmount = currentVariant?.priceV2?.amount ?? "0"
+                let priceCurrency = currentVariant?.priceV2?.currency ?? "USD"
                 cell.detailTextLabel?.text = priceAmount.priceFormat(currency: priceCurrency)
             }
         }
