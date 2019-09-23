@@ -31,6 +31,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     var names: NSMutableArray = []
     var selectedValues: NSMutableArray = []
     var availableVariants: [VariantsEdge] = []
+    var selectedVariant: PurpleNode?
     let backgroundColor = UIColor.init(white: 0.15, alpha: 1)
 
     override func viewDidLoad() {
@@ -167,6 +168,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         cell.backgroundColor = backgroundColor
         cell.textLabel?.textColor = UIColor(hex: 0xE0093B)
         cell.detailTextLabel?.textColor = .lightGray
+        cell.tintColor = UIColor(hex: 0xE0093B)
         
         // Reset cell - need to be clear if reused
         cell.selectionStyle = .none
@@ -175,14 +177,26 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         cell.accessoryType = .none
         
         // Configyre accesory view
+        
+        
+        
+        
+        // Show disclosure except last
         if level+1 != names.count {
             cell.accessoryType = .disclosureIndicator
+        }
+        
+        // Figure out selected value and show checkmark
+        for option in (selectedVariant?.selectedOptions)! {
+            if values[indexPath.row] as? String == option.value ?? "" {
+                cell.accessoryType = .checkmark
+            }
         }
         
         // Add title - variant
         cell.textLabel!.text = values[indexPath.row] as? String
         
-        // Add subtatle - price
+        // Add subtitle - price
         if level+1 == names.count {
             var availableVariants: [VariantsEdge] = []
             if selectedValues.count > 0 {
@@ -215,6 +229,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
             variantSelectionViewController.variants = availableVariants
             variantSelectionViewController.level = level+1
             variantSelectionViewController.selectedValues = selectedValues
+            variantSelectionViewController.selectedVariant = selectedVariant
             
             variantSelectionViewController.delegate = self
             self.navigationController?.pushViewController(variantSelectionViewController, animated: true)

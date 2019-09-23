@@ -550,6 +550,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Populate first level selection
         let variantSelectionViewController = VariantSelectionViewController()
         variantSelectionViewController.variants = variants
+        variantSelectionViewController.selectedVariant = selectedVariant
         variantSelectionViewController.delegate = self
         variantSelctionNavigationController.pushViewController(variantSelectionViewController, animated: true)
     }
