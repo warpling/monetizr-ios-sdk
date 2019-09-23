@@ -182,7 +182,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         self.deactivateVariableConstraints()
         
-        if UIDevice.current.orientation.isLandscape {
+        if !screenIsInPortrait() {
             if compactConstraints.count < 1 {
                 // Configure initial constraints
                 self.configureCompactConstraints()
@@ -728,7 +728,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if UIDevice.current.orientation.isPortrait {
+        if screenIsInPortrait() {
             let offset = scrollView.contentOffset.y
             var height = abs(offset)
             if offset > 0 {

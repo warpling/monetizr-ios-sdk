@@ -17,12 +17,23 @@ public func screenWidthPixelsInPortraitOrientation() -> Int {
     let screenHeight = screenRect.size.height
     //let window = UIApplication.shared.keyWindow
     
-    if UIDevice.current.orientation.isLandscape {
+    if !screenIsInPortrait() {
         // Landscape
         return Int(((screenHeight)) * UIScreen.main.scale)
     } else {
         // Portrait
         return Int(((screenWidth)) * UIScreen.main.scale)
+    }
+}
+
+// Orientation
+public func screenIsInPortrait() -> Bool {
+    if UIApplication.shared.statusBarOrientation.isPortrait {
+        // Portrait
+        return true
+    } else {
+        // Landscape
+        return false
     }
 }
 
