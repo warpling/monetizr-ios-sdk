@@ -32,6 +32,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     let imageCarouselContainerView = UIView()
     let descriptionContainerView = ProductDescriptionScrollView()
     let priceLabel = UILabel()
+    let discountPriceLabel = UILabel()
     let titleLabel = UILabel()
     let descriptionTextView = UITextView()
     let slideShow = ImageSlideshow()
@@ -84,6 +85,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Configure price tag
         self.configurePriceTagLabel()
+        
+        // Configure discount price tag
+        self.configureDiscountPriceTagLabel()
         
         // Configure title label
         self.configureTitleLabel()
@@ -280,9 +284,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Price tag
             priceLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
-            //priceLabel.heightAnchor.constraint(equalToConstant: 30),
             priceLabel.widthAnchor.constraint(equalToConstant: 120),
             priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
+            
+            // Discount price tag
+            discountPriceLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 0),
+            discountPriceLabel.widthAnchor.constraint(equalToConstant: 120),
+            discountPriceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
             
             // Product title
             titleLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
@@ -290,7 +298,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             titleLabel.rightAnchor.constraint(equalTo: priceLabel.leftAnchor, constant: -10),
             
             // Description text
-            descriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            descriptionTextView.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor),
+            descriptionTextView.topAnchor.constraint(greaterThanOrEqualTo: discountPriceLabel.bottomAnchor),
+            //descriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             descriptionTextView.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
             descriptionTextView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: 0),
             descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
@@ -457,6 +467,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         descriptionContainerView.addSubview(priceLabel)
     }
     
+    func configureDiscountPriceTagLabel() {
+        // Configure price tag
+        discountPriceLabel.discountPriceLabelStyle()
+        discountPriceLabel.accessibilityLabel = NSLocalizedString("Original price", comment: "Original price")
+        descriptionContainerView.addSubview(discountPriceLabel)
+    }
+    
     func configureTitleLabel() {
         // Configure product title
         titleLabel.titleLabelStyle()
@@ -483,9 +500,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func loadProductData() {
         // Prepare image links Array
         let images = self.product?.data?.productByHandle?.images?.edges
-        for image in images! {
-            let link = image.node?.transformedSrc
-            imageLinks.add(link!)
+        if images != nil {
+            for image in images! {
+                let link = image.node?.transformedSrc
+                imageLinks.add(link!)
+            }
         }
         
         // Extract variants
@@ -508,6 +527,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         priceLabel.text = priceAmount.priceFormat(currency: priceCurrency)
         priceLabel.accessibilityValue = priceLabel.text
         
+        let discointPriceAmount = selectedVariant?.compareAtPriceV2?.amount ?? "0"
+        let discointPriceCurrency = selectedVariant?.compareAtPriceV2?.currency ?? "USD"
+        print("Discount", discointPriceAmount.priceFormat(currency: discointPriceCurrency))
+        if discointPriceAmount != "0" {
+            discountPriceLabel.text = discointPriceAmount.priceFormat(currency: discointPriceCurrency)
+            discountPriceLabel.underline()
+        }
+        
         // Description text view
         descriptionTextView.text = selectedVariant?.product?.description_ios
         
@@ -524,7 +551,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Options selector show/hide
         if variants.count > 1 {
-            optionsSelectorViewHeight = 55
+            optionsSelectorViewHeight = 65
             view.setNeedsUpdateConstraints()
             
             for option in (selectedVariant?.selectedOptions)! {

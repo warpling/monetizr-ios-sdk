@@ -134,7 +134,7 @@ public class Monetizr {
                 
         Alamofire.request(URL(string: urlString)!, headers: headers).responseProduct { response in
             if let retrievedProduct = response.result.value {
-                if retrievedProduct.data != nil {
+                if retrievedProduct.data?.productByHandle != nil {
                     if (presenter != nil) {
                         let product = retrievedProduct
                         let targetStyle = presentationStyle ?? UIModalPresentationStyle.overCurrentContext  

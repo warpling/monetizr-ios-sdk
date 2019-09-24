@@ -159,7 +159,7 @@ extension UILabel {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .lightGray
-        self.font = .systemFont(ofSize: 12, weight: UIFont.Weight.semibold)
+        self.font = .systemFont(ofSize: 14, weight: UIFont.Weight.light)
         self.text = self.text?.uppercased()
         self.numberOfLines = 1
         self.textAlignment = .left
@@ -171,7 +171,7 @@ extension UILabel {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white //UIColor(hex: 0x007aff)
-        self.font = .systemFont(ofSize: 18, weight: UIFont.Weight.medium)
+        self.font = .systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         self.numberOfLines = 1
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
@@ -182,7 +182,18 @@ extension UILabel {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = UIColor(hex: 0xE0093B) //UIColor(hex: 0x007aff)
-        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
+        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.medium)
+        self.numberOfLines = 1
+        self.textAlignment = .right
+        self.adjustsFontSizeToFitWidth = true
+        self.minimumScaleFactor = 0.7
+    }
+    
+    func discountPriceLabelStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
+        self.textColor = .lightGray //UIColor(hex: 0x007aff)
+        self.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
         self.numberOfLines = 1
         self.textAlignment = .right
         self.adjustsFontSizeToFitWidth = true
@@ -193,11 +204,19 @@ extension UILabel {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white
-        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
+        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.medium)
         self.numberOfLines = 0
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
+    }
+    
+    func underline() {
+        if let textString = self.text {
+          let attributedString = NSMutableAttributedString(string: textString)
+            attributedString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: attributedString.length))
+          attributedText = attributedString
+        }
     }
 }
 
@@ -206,7 +225,7 @@ extension UITextView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white
-        self.font = .systemFont(ofSize: 16)
+        self.font = .systemFont(ofSize: 16, weight: UIFont.Weight.light)
         self.isSelectable = false
         self.isEditable = false
         self.isScrollEnabled = false
