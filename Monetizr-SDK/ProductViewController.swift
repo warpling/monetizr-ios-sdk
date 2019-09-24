@@ -130,6 +130,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         updateCheckoutButtons()
     }
     
+    override func viewDidLayoutSubviews() {
+        descriptionContainerView.scrollToTop(animated: true)
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         if traitCollection.horizontalSizeClass == .compact {
             // load slim view
@@ -799,4 +803,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             }
         }
     }
+}
+
+extension UIScrollView {
+   func scrollToTop(animated: Bool) {
+        let desiredOffset = CGPoint(x: 0, y: -contentInset.top)
+        setContentOffset(desiredOffset, animated: false)
+  }
 }
