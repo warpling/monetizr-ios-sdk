@@ -804,10 +804,3 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
     }
 }
-
-extension UIScrollView {
-   func scrollToTop(animated: Bool) {
-        let desiredOffset = CGPoint(x: 0, y: -contentInset.top)
-        setContentOffset(desiredOffset, animated: false)
-  }
-}
