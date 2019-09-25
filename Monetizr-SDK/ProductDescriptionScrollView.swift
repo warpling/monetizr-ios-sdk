@@ -21,7 +21,7 @@ class ProductDescriptionScrollView: UIScrollView {
     }
     
     func scrollToTop(animated: Bool) {
-        if self.contentSize.height < self.bounds.size.height { return }
+        //if self.contentSize.height < self.bounds.size.height { return }
         let desiredOffset = CGPoint(x: 0, y: 0)
         setContentOffset(desiredOffset, animated: false)
     }

@@ -129,7 +129,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     override func viewDidLayoutSubviews() {
-        descriptionContainerView.scrollToTop(animated: true)
+        if !screenIsInPortrait() {
+            descriptionContainerView.scrollToTop(animated: true)
+        }        
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -164,32 +166,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        /*
-        // Deactivate previous constraints
-        self.deactivateVariableConstraints()
-        
-        // Update view sizes
-        self.viewWidth = size.width
-        self.viewHeight = size.height
-        
-        coordinator.animate(alongsideTransition: { (context) in
-            // Configure safe area insets
-            if #available(iOS 11.0, *) {
-                self.topPadding = self.view.safeAreaInsets.top
-                self.bottomPadding = self.view.safeAreaInsets.bottom
-                self.leftPadding = self.view.safeAreaInsets.left
-                self.rightPadding = self.view.safeAreaInsets.right
-            }
-            
-            // Resize and position option selector view - do not do this if view is not in hierarchy
-            self.optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: self.viewWidth, height: self.viewHeight)
-            self.optionsSelectorPlaceholderView.center = self.optionsSelectorOverlayView.convert(self.optionsSelectorOverlayView.center, from:self.optionsSelectorOverlayView.superview)
-            
-            // Configure new constraints
-            self.configureConstraintsForCurrentOrietnation()
-            
-        }, completion: nil)
- */
     }
     
     func activateInitialConstraints() {
@@ -209,6 +185,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func configureConstraintsForCurrentOrietnation() {
+        print("Offset Y", descriptionContainerView.contentOffset.y)
         if sharedConstraints.count < 1 {
             // Configure initial constraints
             self.configureSharedConstraints()
@@ -310,6 +287,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Landscape
     func configureCompactConstraints() {
+        
+        descriptionContainerView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: optionsSelectorViewHeight, right: 0)
+        
         compactConstraints.append(contentsOf: [
             // Checkout buttons background
             checkoutBackgroundView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
@@ -334,11 +314,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth/100*55-20-rightPadding)
         
             ])
-        descriptionContainerView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: optionsSelectorViewHeight, right: 0)
     }
     
     // Portrait
     func configureRegularConstraints() {
+        
+        descriptionContainerView.contentInset = UIEdgeInsets(top: viewHeight*maxImageCarouselHeightProportion, left: 0, bottom: optionsSelectorViewHeight, right: 0)
+        
         regularConstraints.append(contentsOf: [
             // Checkout buttons background
             checkoutBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
@@ -353,7 +335,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             descriptionContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             
             // Image carousel container view
-            imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight*maxImageCarouselHeightProportion),
+            imageCarouselContainerView.heightAnchor.constraint(equalToConstant: -descriptionContainerView.contentOffset.y),
             imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth),
             
             // Close button
@@ -362,9 +344,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Description text
             descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth-20)
-            
             ])
-        descriptionContainerView.contentInset = UIEdgeInsets(top: viewHeight*maxImageCarouselHeightProportion, left: 0, bottom: optionsSelectorViewHeight, right: 0)
     }
     
     func configureCloseButton() {
