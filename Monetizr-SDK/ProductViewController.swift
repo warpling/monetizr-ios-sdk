@@ -533,8 +533,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 nameLabel.optionNameStyle()
                 
                 let valueLabel = UILabel()
-                valueLabel.text = (option.value ?? "") + "⌄"
+                //valueLabel.text = (option.value ?? "")
                 valueLabel.optionValueStyle()
+                valueLabel.optionValueTextWithImage(text: (option.value ?? ""), image: (UIImage(named: "expand-down")))
                 
                 optionView.addArrangedSubview(nameLabel)
                 optionView.addArrangedSubview(valueLabel)

@@ -226,6 +226,20 @@ extension UILabel {
           attributedText = attributedString
         }
     }
+    
+    func optionValueTextWithImage(text: String, image: UIImage?) {
+        let attachment = NSTextAttachment()
+        attachment.image = image
+        attachment.bounds = CGRect(x: 0, y: 0, width: 15, height: 10)
+        let attachmentStr = NSAttributedString(attachment: attachment)
+
+        let mutableAttributedString = NSMutableAttributedString()
+        let textString = NSAttributedString(string: text+" ", attributes: [.font: self.font as Any])
+        mutableAttributedString.append(textString)
+        mutableAttributedString.append(attachmentStr)
+
+      self.attributedText = mutableAttributedString
+    }
 }
 
 extension UITextView {
