@@ -36,7 +36,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     let titleLabel = UILabel()
     let descriptionTextView = UITextView()
     let slideShow = ImageSlideshow()
-    let variantOptionDisclosureView = UIImageView()
     var optionsTapGesture = UITapGestureRecognizer()
     var optionsSelectorOverlayView = UIView()
     var optionsSelectorOverlayTapGesture = UITapGestureRecognizer()
@@ -97,7 +96,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Variant option selection container view
         self.configureVariantOptionsContainerView()
-        self.configureVariantOptionDisclosure()
         
         // Configure image slider
         self.configureImageSlider()
@@ -261,15 +259,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             variantOptionsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             variantOptionsContainerView.heightAnchor.constraint(equalToConstant: optionsSelectorViewHeight),
             
-            // Option disclosure view
-            variantOptionDisclosureView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
-            variantOptionDisclosureView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
-            variantOptionDisclosureView.widthAnchor.constraint(equalToConstant: 40),
-            
             // Variant stack view
             stackView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 10),
             stackView.leftAnchor.constraint(equalTo: variantOptionsContainerView.leftAnchor, constant: 10),
-            stackView.rightAnchor.constraint(equalTo: variantOptionDisclosureView.leftAnchor, constant: 10),
+            stackView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 10-rightPadding),
             stackView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 10),
             
             // Image carousel container view
@@ -337,9 +330,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
             closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding),
             
-            // Option disclosure view
-            variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
-            
             // Description text
             descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth/100*55-20-rightPadding)
         
@@ -369,9 +359,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
             closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding),
-            
-            // Option disclosure view
-            variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
             
             // Description text
             descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth-20)
@@ -441,14 +428,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         optionsTapGesture.numberOfTapsRequired = 1
         optionsTapGesture.numberOfTouchesRequired = 1
         variantOptionsContainerView.addGestureRecognizer(optionsTapGesture)
-    }
-    
-    func configureVariantOptionDisclosure() {
-        variantOptionDisclosureView.translatesAutoresizingMaskIntoConstraints = false
-        variantOptionDisclosureView.backgroundColor = .clear
-        variantOptionDisclosureView.image = UIImage.disclosureIndicator()
-        variantOptionDisclosureView.contentMode = .center
-        variantOptionsContainerView.addSubview(variantOptionDisclosureView)
     }
     
     func configureImageCarouselContainerView() {
@@ -522,6 +501,12 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func updateViewsData() {
+        //Clear previous data
+        titleLabel.text = ""
+        priceLabel.text = ""
+        discountPriceLabel.text = ""
+        descriptionTextView.text = ""
+        
         // Title label
         titleLabel.text = selectedVariant?.product?.title
         titleLabel.accessibilityValue = selectedVariant?.product?.title
@@ -533,10 +518,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         let discointPriceAmount = selectedVariant?.compareAtPriceV2?.amount ?? "0"
         let discointPriceCurrency = selectedVariant?.compareAtPriceV2?.currency ?? "USD"
-        print("Discount", discointPriceAmount.priceFormat(currency: discointPriceCurrency))
         if discointPriceAmount != "0" {
             discountPriceLabel.text = discointPriceAmount.priceFormat(currency: discointPriceCurrency)
-            discountPriceLabel.underline()
+            discountPriceLabel.strikeThrough()
         }
         
         // Description text view
@@ -569,7 +553,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 nameLabel.optionNameStyle()
                 
                 let valueLabel = UILabel()
-                valueLabel.text = option.value
+                valueLabel.text = (option.value ?? "") + "⌄"
                 valueLabel.optionValueStyle()
                 
                 optionView.addArrangedSubview(nameLabel)
