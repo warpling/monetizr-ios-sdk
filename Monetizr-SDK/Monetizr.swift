@@ -334,6 +334,7 @@ public class Monetizr {
     public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
         if applePayCanMakePayments() && applePayMerchantID != nil && haveStripeToken == true {
             let applePayViewController = ApplePayViewController()
+            applePayViewController.delegate = presenter as? ApplePayControllerDelegate
             applePayViewController.modalPresentationStyle = .overCurrentContext
             applePayViewController.selectedVariant = selectedVariant
             applePayViewController.tag = tag

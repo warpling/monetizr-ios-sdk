@@ -12,7 +12,7 @@ import Alamofire
 import ImageSlideshow
 import PassKit
 
-class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
@@ -698,6 +698,19 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         if availableVariants.count > 0 {
             selectedVariant = availableVariants[0].node
             self.updateViewsData()
+        }
+    }
+    
+    // Apple Pay finished
+    func applePayFinishedWithCheckout(checkout: Checkout?) {
+        // Show confiramtion alert
+        if !(checkout?.data?.third?.payment?.id ?? "").isEmpty {
+            let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
+            alert.view.tintColor = UIColor(hex: 0xE0093B)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+                  // Switch if needed handle buttons
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     

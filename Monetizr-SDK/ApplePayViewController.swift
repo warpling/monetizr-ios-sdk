@@ -10,11 +10,17 @@ import UIKit
 import PassKit
 import Stripe
 
+// Protocol used for sending data back to product view
+protocol ApplePayControllerDelegate: class {
+    func applePayFinishedWithCheckout(checkout: Checkout?)
+}
+
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
     
     var selectedVariant: PurpleNode?
     var checkout: Checkout?
     var tag: String?
+    weak var delegate: ApplePayControllerDelegate? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +39,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     func dismiss() {
         self.dismiss(animated: true, completion: nil)
+        delegate?.applePayFinishedWithCheckout(checkout: self.checkout)
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
@@ -58,7 +65,6 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                     else {
                         completion(PKPaymentAuthorizationStatus.failure)
                     }
-                    
                  }
                  else {
                  // Handle error
