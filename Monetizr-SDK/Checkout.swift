@@ -197,6 +197,7 @@ public struct Node: Codable {
 // MARK: - Payment
 public struct Payment: Codable {
     let id: String?
+    let errorMessage: String?
 }
 
 // MARK: - Helper functions for creating encoders and decoders

@@ -59,7 +59,10 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                  if success {
                  // Handle success response
                     self.checkout = checkout
-                    if !(self.checkout?.data?.third?.payment?.id ?? "").isEmpty {
+                    
+                    let paymentError = !(self.checkout?.data?.third?.payment?.errorMessage ?? "").isEmpty
+                    let hasPaymentID = !(self.checkout?.data?.third?.payment?.id ?? "").isEmpty
+                    if !paymentError && hasPaymentID {
                         completion(PKPaymentAuthorizationStatus.success)
                     }
                     else {
