@@ -139,8 +139,8 @@ public class Monetizr {
                 if retrievedProduct.data?.productByHandle != nil {
                     if (presenter != nil) {
                         let product = retrievedProduct
-                        let targetStyle = presentationStyle ?? UIModalPresentationStyle.overCurrentContext  
-                        self.openProductViewForProduct(product: product, tag: tag, presenter: presenter!, presentationStyle: targetStyle)
+                        let targetStyle = presentationStyle ?? UIModalPresentationStyle.overCurrentContext
+                        self.presentProductView(productViewController: self.productViewForProduct(product: product, tag: tag), presenter: presenter!, presentationStyle: targetStyle)
                     }
                     completionHandler(true, nil, retrievedProduct)
                 }
@@ -160,12 +160,17 @@ public class Monetizr {
         }
     }
     
-    // Open product View
-    func openProductViewForProduct(product: Product, tag: String, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
+    // Create product View
+    func productViewForProduct(product: Product, tag: String) -> ProductViewController {
         let productViewController = ProductViewController()
-        productViewController.modalPresentationStyle = presentationStyle
         productViewController.product = product
         productViewController.tag = tag
+        return productViewController
+    }
+    
+    // Present product View
+    func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
+        productViewController.modalPresentationStyle = presentationStyle
         presenter.present(productViewController, animated: true, completion: nil)
     }
     

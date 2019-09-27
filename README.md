@@ -38,7 +38,7 @@ If Apple Pay support is planned in applicationDidFinishLaunching(_:) do the conf
 
 ```swift
 Monetizr.shared.setApplePayMerchantID(id: String)
-Monetizr.shared.setCompanyName(name: String)
+Monetizr.shared.setCompanyAndAppName(companyName: String, appName: String)
 Monetizr.shared.setStripeToken(token: String)
 ```
 
@@ -63,11 +63,13 @@ If you choose to show product in a view provided in SDK you should provide prese
 
 ### Manual usage of *Monetizr.shared* with custom product views
 
-Open product view
+Create Product View Controller
 
-```swift
-func openProductViewForProduct(product: Product, tag: String)
-```
+```func productViewForProduct(product: Product, tag: String) -> ProductViewController```
+
+Present product View
+
+```func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle)```
 
 Checkout variant for product with tag
 
