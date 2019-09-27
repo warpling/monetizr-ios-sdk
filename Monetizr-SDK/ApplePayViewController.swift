@@ -165,7 +165,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         let amount = NSDecimalNumber(string: priceString)
         let currencyCode = selectedVariant?.priceV2?.currency ?? "USD"
         let productTitle = selectedVariant?.product?.title ?? ""
-        let companyName = Monetizr.shared.companyName ?? "Company"
+        let merchantName = (Monetizr.shared.companyName ?? "") + " via " + (Monetizr.shared.appName ?? "")
         
         // Create and configure request
         let request = PKPaymentRequest()
@@ -175,7 +175,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         request.countryCode = regionCode() ?? "US"
         request.currencyCode = currencyCode
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: productTitle, amount: amount), PKPaymentSummaryItem(label: companyName, amount: amount)
+            PKPaymentSummaryItem(label: productTitle, amount: amount), PKPaymentSummaryItem(label: merchantName, amount: amount)
         ]
         if #available(iOS 11.0, *) {
             request.requiredShippingContactFields = [PKContactField.postalAddress, PKContactField.name, PKContactField.emailAddress]
@@ -236,13 +236,13 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         let taxAmount = NSDecimalNumber(string: taxPriceString)
         
         // Total
-        let companyName = Monetizr.shared.companyName ?? "Company"
+        let merchantName = (Monetizr.shared.companyName ?? "") + " via " + (Monetizr.shared.appName ?? "")
         let totalPriceString = self.checkout?.data?.checkoutCreate?.checkout?.totalPriceV2?.amount ?? "0"
         var totalAmount = NSDecimalNumber(string: totalPriceString)
         totalAmount = totalAmount.adding(shippingPrice)
         
         // Payment items
-        let paymentSummaryItems = [PKPaymentSummaryItem(label: productTitle, amount: subTotalAmount), PKPaymentSummaryItem(label: taxTitle, amount: taxAmount), PKPaymentSummaryItem(label: shippingTitle, amount: shippingPrice), PKPaymentSummaryItem(label: companyName, amount: totalAmount)]
+        let paymentSummaryItems = [PKPaymentSummaryItem(label: productTitle, amount: subTotalAmount), PKPaymentSummaryItem(label: taxTitle, amount: taxAmount), PKPaymentSummaryItem(label: shippingTitle, amount: shippingPrice), PKPaymentSummaryItem(label: merchantName, amount: totalAmount)]
         
         return paymentSummaryItems
     }
