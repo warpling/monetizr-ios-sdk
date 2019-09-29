@@ -15,12 +15,13 @@ Monetizr rewards your users with an opportunity to unlock and buy your own game 
   s.swift_version = "5.0"
   s.ios.deployment_target = '10.0'
   s.source_files = 'Monetizr-SDK/*'
-  s.resource_bundles = { 'Monetizr' => ['Monetizr-SDK/*.{lproj, xcassets)'] }
+  s.resource_bundles = { 'Monetizr' => ['Monetizr-SDK/*.lproj', 'Monetizr-SDK/*.xcassets'] }
 
   s.framework = "UIKit"
   s.framework = "PassKit"
   s.dependency 'Alamofire', '~> 4.0'
   s.dependency 'ImageSlideshow/Alamofire'
   s.dependency 'ImageSlideshow', '~> 1.8'
+  s.dependency 'Stripe/ApplePay'
  
 end
