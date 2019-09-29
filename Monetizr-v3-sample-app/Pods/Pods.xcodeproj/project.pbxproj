@@ -1216,41 +1216,6 @@
 			};
 			name = Release;
 		};
-		06C33D19FFFD21B35E6809868573AD8E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = FF05118B428F817C04EAC51D972E4EC5 /* ImageSlideshow.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/ImageSlideshow/ImageSlideshow-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ImageSlideshow/ImageSlideshow-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/ImageSlideshow/ImageSlideshow.modulemap";
-				PRODUCT_MODULE_NAME = ImageSlideshow;
-				PRODUCT_NAME = ImageSlideshow;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 		196DFA3E4A09A28224918543529A1885 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1350,7 +1315,7 @@
 			};
 			name = Debug;
 		};
-		4011723087A79C2CEFE743A2A14A2568 /* Release */ = {
+		22B9E7594C95FCFE90B37418F23DF324 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FF05118B428F817C04EAC51D972E4EC5 /* ImageSlideshow.xcconfig */;
 			buildSettings = {
@@ -1378,13 +1343,12 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5;
+				SWIFT_VERSION = 5.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
 		4758B0974275FCD541F0A2B9EBD5C5B9 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1423,6 +1387,42 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
+		};
+		511F37A141EABDD16E8FA8F419FAE906 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FF05118B428F817C04EAC51D972E4EC5 /* ImageSlideshow.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/ImageSlideshow/ImageSlideshow-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ImageSlideshow/ImageSlideshow-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/ImageSlideshow/ImageSlideshow.modulemap";
+				PRODUCT_MODULE_NAME = ImageSlideshow;
+				PRODUCT_NAME = ImageSlideshow;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
 		};
 		75BBB760DFD877E344322B54D29DFE64 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1698,8 +1698,8 @@
 		E251990AE6E0BE4DF7E06A643E20E20C /* Build configuration list for PBXNativeTarget "ImageSlideshow" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				06C33D19FFFD21B35E6809868573AD8E /* Debug */,
-				4011723087A79C2CEFE743A2A14A2568 /* Release */,
+				22B9E7594C95FCFE90B37418F23DF324 /* Debug */,
+				511F37A141EABDD16E8FA8F419FAE906 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

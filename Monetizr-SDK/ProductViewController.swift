@@ -744,6 +744,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             slideShow.presentFullScreenController(from: self)
         }
         
+        
+        
         if Monetizr.shared.clickCountInSession < 1 {
             Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }
