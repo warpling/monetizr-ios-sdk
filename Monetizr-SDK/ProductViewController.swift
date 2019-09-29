@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 import Alamofire
 import ImageSlideshow
+import PassKit
 
-class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, VariantSelectionDelegate {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
@@ -25,16 +26,16 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Outlets
     let closeButton = UIButton()
-    let checkoutButtonBackgroundView = UIView()
-    let checkoutButton = UIButton()
+    let checkoutBackgroundView = UIStackView()
+    let applePayButtonContainerView = UIView()
     let variantOptionsContainerView = UIView()
     let imageCarouselContainerView = UIView()
-    let descriptionContainerView = UIView()
+    let descriptionContainerView = ProductDescriptionScrollView()
     let priceLabel = UILabel()
+    let discountPriceLabel = UILabel()
     let titleLabel = UILabel()
     let descriptionTextView = UITextView()
     let slideShow = ImageSlideshow()
-    let variantOptionDisclosureView = UIImageView()
     var optionsTapGesture = UITapGestureRecognizer()
     var optionsSelectorOverlayView = UIView()
     var optionsSelectorOverlayTapGesture = UITapGestureRecognizer()
@@ -54,30 +55,20 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     let maxImageCarouselHeightProportion: CGFloat = 0.55
-    let minImageCarouselHeightProportion: CGFloat = 0.20
     
     var optionsSelectorViewHeight: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Drag to dismiss
-        let gestureRecognizer = UIPanGestureRecognizer(target: self,
-                                                       action: #selector(panGestureRecognizerHandler(_:)))
-        view.addGestureRecognizer(gestureRecognizer)
+        
+        // ScrollViewDelegate
+        descriptionContainerView.delegate = self
         
         // Background configuration
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = UIColor(hex: 0x121212)
         
         // Load product
         self.loadProductData()
-        
-        // Checkout button
-        self.configureCheckOutButton()
-        
-        // Variant option selection container view
-        self.configureVariantOptionsContainerView()
-        self.configureVariantOptionDisclosure()
         
         // Image carousel
         self.configureImageCarouselContainerView()
@@ -85,11 +76,17 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Description container view
         self.configureDescriptionContainerView()
         
+        // Checkout button
+        self.configureCheckOutButtons()
+        
         // Close button
         self.configureCloseButton()
         
         // Configure price tag
         self.configurePriceTagLabel()
+        
+        // Configure discount price tag
+        self.configureDiscountPriceTagLabel()
         
         // Configure title label
         self.configureTitleLabel()
@@ -97,14 +94,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Configure description text
         self.configureDescriptionTextView()
         
+        // Variant option selection container view
+        self.configureVariantOptionsContainerView()
+        
         // Configure image slider
         self.configureImageSlider()
         
         // Update views data
         self.updateViewsData()
-        
-        // Setup constraints
-        self.activateInitialConstraints()
         
         // Create a new entry for clickreward
         Monetizr.shared.clickrewardCreate(tag: tag!, completionHandler: { success, error, value in ()})
@@ -124,39 +121,55 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.accessibilityViewIsModal = true
+        // Setup constraints
+        self.activateInitialConstraints()
+        
+        // Update buttons
+        updateCheckoutButtons()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        if !screenIsInPortrait() {
+            descriptionContainerView.scrollToTop(animated: true)
+        }        
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if traitCollection.horizontalSizeClass == .compact {
+            // load slim view
+        } else {
+            // load wide view
+        }
+        
+        // Deactivate previous constraints
+        self.deactivateVariableConstraints()
+        
+        self.viewWidth = view.frame.size.width
+        self.viewHeight = view.frame.size.height
+        
+        // Configure safe area insets
+        if #available(iOS 11.0, *) {
+            self.topPadding = self.view.safeAreaInsets.top
+            self.bottomPadding = self.view.safeAreaInsets.bottom
+            self.leftPadding = self.view.safeAreaInsets.left
+            self.rightPadding = self.view.safeAreaInsets.right
+        }
+        
+        // Resize and position option selector view - do not do this if view is not in hierarchy
+        self.optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: self.viewWidth, height: self.viewHeight)
+        self.optionsSelectorPlaceholderView.center = self.optionsSelectorOverlayView.convert(self.optionsSelectorOverlayView.center, from:self.optionsSelectorOverlayView.superview)
+        
+        // Configure new constraints
+        self.configureConstraintsForCurrentOrietnation()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        // Deactivate previous constraints
-        self.deactivateVariableConstraints()
-        
-        // Update view sizes
-        self.viewWidth = size.width
-        self.viewHeight = size.height
-        
-        coordinator.animate(alongsideTransition: { (context) in
-            // Configure safe area insets
-            if #available(iOS 11.0, *) {
-                self.topPadding = self.view.safeAreaInsets.top
-                self.bottomPadding = self.view.safeAreaInsets.bottom
-                self.leftPadding = self.view.safeAreaInsets.left
-                self.rightPadding = self.view.safeAreaInsets.right
-            }
-            
-            // Resize and position option selector view - do not do this if view is not in hierarchy
-            self.optionsSelectorOverlayView.frame = CGRect(x: 0, y: 0, width: self.viewWidth, height: self.viewHeight)
-            self.optionsSelectorPlaceholderView.center = self.optionsSelectorOverlayView.convert(self.optionsSelectorOverlayView.center, from:self.optionsSelectorOverlayView.superview)
-            
-            // Configure new constraints
-            self.configureConstraintsForCurrentOrietnation()
-            
-        }, completion: nil)
     }
     
     func activateInitialConstraints() {
-        let window = UIApplication.shared.keyWindow
+        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
         viewHeight = view.frame.size.height
         viewWidth = view.frame.size.width
         
@@ -172,6 +185,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func configureConstraintsForCurrentOrietnation() {
+        print("Offset Y", descriptionContainerView.contentOffset.y)
         if sharedConstraints.count < 1 {
             // Configure initial constraints
             self.configureSharedConstraints()
@@ -182,7 +196,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         self.deactivateVariableConstraints()
         
-        if UIDevice.current.orientation.isLandscape {
+        if !screenIsInPortrait() {
             if compactConstraints.count < 1 {
                 // Configure initial constraints
                 self.configureCompactConstraints()
@@ -214,27 +228,18 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Create shared constraints array
         sharedConstraints.append(contentsOf: [
             // Checkout buttons background
-            checkoutButtonBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
-            checkoutButtonBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            
-            // Checkout button
-            checkoutButton.topAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 10),
-            checkoutButton.heightAnchor.constraint(equalToConstant: 50),
+            checkoutBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            checkoutBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             
             // Variant option selection container view
-            variantOptionsContainerView.bottomAnchor.constraint(equalTo: checkoutButtonBackgroundView.topAnchor, constant: 0),
+            variantOptionsContainerView.bottomAnchor.constraint(equalTo: checkoutBackgroundView.topAnchor, constant: 0),
             variantOptionsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             variantOptionsContainerView.heightAnchor.constraint(equalToConstant: optionsSelectorViewHeight),
-            
-            // Option disclosure view
-            variantOptionDisclosureView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
-            variantOptionDisclosureView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
-            variantOptionDisclosureView.widthAnchor.constraint(equalToConstant: 40),
             
             // Variant stack view
             stackView.topAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 10),
             stackView.leftAnchor.constraint(equalTo: variantOptionsContainerView.leftAnchor, constant: 10),
-            stackView.rightAnchor.constraint(equalTo: variantOptionDisclosureView.leftAnchor, constant: 10),
+            stackView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 10-rightPadding),
             stackView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 10),
             
             // Image carousel container view
@@ -249,23 +254,30 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Description container view
             descriptionContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            descriptionContainerView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.topAnchor, constant: 0),
+            descriptionContainerView.bottomAnchor.constraint(equalTo: variantOptionsContainerView.bottomAnchor, constant: 0),
             
             // Price tag
             priceLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
-            priceLabel.heightAnchor.constraint(equalToConstant: 30),
             priceLabel.widthAnchor.constraint(equalToConstant: 120),
+            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
+            
+            // Discount price tag
+            discountPriceLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 0),
+            discountPriceLabel.widthAnchor.constraint(equalToConstant: 120),
+            discountPriceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
             
             // Product title
             titleLabel.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
             titleLabel.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
             titleLabel.rightAnchor.constraint(equalTo: priceLabel.leftAnchor, constant: -10),
-            titleLabel.heightAnchor.constraint(equalToConstant: 30),
             
             // Description text
-            descriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            descriptionTextView.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor),
+            descriptionTextView.topAnchor.constraint(greaterThanOrEqualTo: discountPriceLabel.bottomAnchor),
+            //descriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             descriptionTextView.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
             descriptionTextView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: 0),
+            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
             
             // Close button
             closeButton.widthAnchor.constraint(equalToConstant: 44),
@@ -273,11 +285,15 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             ])
     }
     
+    // Landscape
     func configureCompactConstraints() {
+        
+        descriptionContainerView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: optionsSelectorViewHeight, right: 0)
+        
         compactConstraints.append(contentsOf: [
             // Checkout buttons background
-            checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
-            checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
+            checkoutBackgroundView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
+            checkoutBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
             
             // Variant option selection container view
             variantOptionsContainerView.leftAnchor.constraint(equalTo: imageCarouselContainerView.rightAnchor, constant: 0),
@@ -288,60 +304,46 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             
             // Image carousel container view
             imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight),
-            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth/100*55),
+            imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth/100*45),
             
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
             closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding),
             
-            // Option disclosure view
-            variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
-            
-            // Checkout button
-            checkoutButton.leftAnchor.constraint(equalTo: checkoutButtonBackgroundView.leftAnchor, constant: 10),
-            checkoutButton.rightAnchor.constraint(equalTo: checkoutButtonBackgroundView.rightAnchor, constant: -10-rightPadding),
-            
             // Description text
-            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding),
-            
-            // Price tag
-            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding)
+            descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth/100*55-20-rightPadding)
+        
             ])
     }
     
+    // Portrait
     func configureRegularConstraints() {
+        
+        descriptionContainerView.contentInset = UIEdgeInsets(top: viewHeight*maxImageCarouselHeightProportion, left: 0, bottom: optionsSelectorViewHeight, right: 0)
+        
         regularConstraints.append(contentsOf: [
             // Checkout buttons background
-            checkoutButtonBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
-            checkoutButtonBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
+            checkoutBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
+            checkoutBackgroundView.heightAnchor.constraint(equalToConstant: 70+bottomPadding),
             
             // Variant option selection container view
             variantOptionsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             
             // Description container view
-            descriptionContainerView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
+            descriptionContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            //descriptionContainerView.topAnchor.constraint(equalTo: imageCarouselContainerView.bottomAnchor, constant: 0),
             descriptionContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
             
             // Image carousel container view
-            imageCarouselContainerView.heightAnchor.constraint(equalToConstant: viewHeight*maxImageCarouselHeightProportion),
+            imageCarouselContainerView.heightAnchor.constraint(equalToConstant: -descriptionContainerView.contentOffset.y),
             imageCarouselContainerView.widthAnchor.constraint(equalToConstant: viewWidth),
             
             // Close button
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 10+topPadding),
             closeButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10+leftPadding),
             
-            // Option disclosure view
-            variantOptionDisclosureView.rightAnchor.constraint(equalTo: variantOptionsContainerView.rightAnchor, constant: 0-rightPadding),
-            
-            // Checkout button
-            checkoutButton.leftAnchor.constraint(equalTo: checkoutButtonBackgroundView.leftAnchor, constant: 10+leftPadding),
-            checkoutButton.rightAnchor.constraint(equalTo: checkoutButtonBackgroundView.rightAnchor, constant: -10-rightPadding),
-            
             // Description text
-            descriptionTextView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding),
-            
-            // Price tag
-            priceLabel.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10-rightPadding)
+            descriptionTextView.widthAnchor.constraint(equalToConstant: viewWidth-20)
             ])
     }
     
@@ -353,15 +355,39 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         self.view.addSubview(closeButton)
     }
     
-    func configureCheckOutButton() {
-        // Checkout buttons background
-        checkoutButtonBackgroundView.checkoutButtonBackgroundViewStyle()
-        self.view.addSubview(checkoutButtonBackgroundView)
+    func configureCheckOutButtons() {
+        // Configure container view
+        checkoutBackgroundView.checkoutButtonBackgroundViewStyle()
+        self.view.addSubview(checkoutBackgroundView)
         
-        // Checkout button
+        // Update buttons
+        updateCheckoutButtons()
+    }
+    
+    func updateCheckoutButtons() {
+        // Remove all buttons
+        checkoutBackgroundView.removeAllArrangedSubviews()
+        
+        // Add checkout button
+        let checkoutButton = UIButton()
+        // Configure checkout button
         checkoutButton.checkoutProductButtonStyle()
-        checkoutButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        self.view.addSubview(checkoutButton)
+        checkoutButton.addTarget(self, action: #selector(checkoutButtonAction), for: .touchUpInside)
+        checkoutBackgroundView.addArrangedSubview(checkoutButton)
+        
+        // Add Apple Pay button
+        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
+            let applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .whiteOutline)
+            applePayButton.height(constant: 50)
+            applePayButton.addTarget(self, action: #selector(buyApplePayButtonAction), for: .touchUpInside)
+            checkoutBackgroundView.addArrangedSubview(applePayButton)
+        }
+        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
+            let applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
+            applePayButton.height(constant: 50)
+            applePayButton.addTarget(self, action: #selector(setupApplePayButtonAction), for: .touchUpInside)
+            checkoutBackgroundView.addArrangedSubview(applePayButton)
+        }
     }
     
     func configureVariantOptionsContainerView() {
@@ -384,14 +410,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         variantOptionsContainerView.addGestureRecognizer(optionsTapGesture)
     }
     
-    func configureVariantOptionDisclosure() {
-        variantOptionDisclosureView.translatesAutoresizingMaskIntoConstraints = false
-        variantOptionDisclosureView.backgroundColor = .clear
-        variantOptionDisclosureView.image = UIImage.disclosureIndicator()
-        variantOptionDisclosureView.contentMode = .center
-        variantOptionsContainerView.addSubview(variantOptionDisclosureView)
-    }
-    
     func configureImageCarouselContainerView() {
         // Image carousel container view
         imageCarouselContainerView.imageCarouselContainerViewStyle()
@@ -401,6 +419,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureDescriptionContainerView() {
         // Description container view
         descriptionContainerView.descriptionContainerViewStyle()
+        descriptionContainerView.showsVerticalScrollIndicator = false
         view.addSubview(descriptionContainerView)
     }
     
@@ -409,6 +428,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         priceLabel.priceLabelStyle()
         priceLabel.accessibilityLabel = NSLocalizedString("Price", comment: "Price")
         descriptionContainerView.addSubview(priceLabel)
+    }
+    
+    func configureDiscountPriceTagLabel() {
+        // Configure price tag
+        discountPriceLabel.discountPriceLabelStyle()
+        discountPriceLabel.accessibilityLabel = NSLocalizedString("Original price", comment: "Original price")
+        descriptionContainerView.addSubview(discountPriceLabel)
     }
     
     func configureTitleLabel() {
@@ -437,9 +463,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func loadProductData() {
         // Prepare image links Array
         let images = self.product?.data?.productByHandle?.images?.edges
-        for image in images! {
-            let link = image.node?.transformedSrc
-            imageLinks.add(link!)
+        if images != nil {
+            for image in images! {
+                let link = image.node?.transformedSrc
+                imageLinks.add(link!)
+            }
         }
         
         // Extract variants
@@ -453,12 +481,27 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func updateViewsData() {
+        //Clear previous data
+        titleLabel.text = ""
+        priceLabel.text = ""
+        discountPriceLabel.text = ""
+        descriptionTextView.text = ""
+        
         // Title label
         titleLabel.text = selectedVariant?.product?.title
         titleLabel.accessibilityValue = selectedVariant?.product?.title
         
-        priceLabel.text = self.getCurrencyFormat(price: (selectedVariant?.priceV2?.amount)!, currency: (selectedVariant?.priceV2?.currency)!)
+        let priceAmount = selectedVariant?.priceV2?.amount ?? "0"
+        let priceCurrency = selectedVariant?.priceV2?.currency ?? "USD"
+        priceLabel.text = priceAmount.priceFormat(currency: priceCurrency)
         priceLabel.accessibilityValue = priceLabel.text
+        
+        let discointPriceAmount = selectedVariant?.compareAtPriceV2?.amount ?? "0"
+        let discointPriceCurrency = selectedVariant?.compareAtPriceV2?.currency ?? "USD"
+        if discointPriceAmount != "0" {
+            discountPriceLabel.text = discointPriceAmount.priceFormat(currency: discointPriceCurrency)
+            discountPriceLabel.strikeThrough()
+        }
         
         // Description text view
         descriptionTextView.text = selectedVariant?.product?.description_ios
@@ -476,7 +519,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Options selector show/hide
         if variants.count > 1 {
-            optionsSelectorViewHeight = 55
+            optionsSelectorViewHeight = 65
             view.setNeedsUpdateConstraints()
             
             for option in (selectedVariant?.selectedOptions)! {
@@ -490,8 +533,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 nameLabel.optionNameStyle()
                 
                 let valueLabel = UILabel()
-                valueLabel.text = option.value
+                //valueLabel.text = (option.value ?? "")
                 valueLabel.optionValueStyle()
+                valueLabel.optionValueTextWithImage(text: (option.value ?? ""), image: (UIImage(named: "expand-down")))
                 
                 optionView.addArrangedSubview(nameLabel)
                 optionView.addArrangedSubview(valueLabel)
@@ -519,7 +563,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Options selector placeholder
         optionsSelectorPlaceholderView.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
         optionsSelectorPlaceholderView.center = optionsSelectorOverlayView.convert(optionsSelectorOverlayView.center, from:optionsSelectorOverlayView.superview)
-        optionsSelectorPlaceholderView.backgroundColor = .white
+        optionsSelectorPlaceholderView.backgroundColor = .clear
         optionsSelectorOverlayView.addSubview(optionsSelectorPlaceholderView)
         
         // Add navigation controller childview controller
@@ -533,6 +577,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Populate first level selection
         let variantSelectionViewController = VariantSelectionViewController()
         variantSelectionViewController.variants = variants
+        variantSelectionViewController.selectedVariant = selectedVariant
         variantSelectionViewController.delegate = self
         variantSelctionNavigationController.pushViewController(variantSelectionViewController, animated: true)
     }
@@ -589,14 +634,32 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             }
             dismiss(animated: true, completion: nil)
         }
-        if sender == checkoutButton {
-            interaction = true
-            // Start checkout
-            self.checkoutSelectedVariant()
-            if Monetizr.shared.checkoutCountInSession < 1 {
-                Monetizr.shared.firstimpressioncheckoutCreate(firstImpressionCheckout: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
+    }
+    
+    @objc func checkoutButtonAction() {
+        interaction = true
+        // Start checkout
+        self.checkoutSelectedVariant()
+        if Monetizr.shared.checkoutCountInSession < 1 {
+            Monetizr.shared.firstimpressioncheckoutCreate(firstImpressionCheckout: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
+        }
+        Monetizr.shared.increaseCheckoutCountInSession()
+    }
+    
+    @objc func setupApplePayButtonAction() {
+        let passLibrary = PKPassLibrary()
+        passLibrary.openPaymentSetup()
+    }
+    
+    @objc func buyApplePayButtonAction() {
+        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: self) {success, error in
+            // Show some error if needed
+            if success {
+                // Success
             }
-            Monetizr.shared.increaseCheckoutCountInSession()
+            else {
+                // Handle error
+            }
         }
     }
     
@@ -638,6 +701,19 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
     }
     
+    // Apple Pay finished
+    func applePayFinishedWithCheckout(checkout: Checkout?) {
+        // Show confiramtion alert
+        if !(checkout?.data?.third?.payment?.id ?? "").isEmpty {
+            let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
+            alert.view.tintColor = UIColor(hex: 0xE0093B)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+                  // Switch if needed handle buttons
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     // Cureency string preparation
     func getCurrencyFormat(price:String, currency:String)->String{
         let convertPrice = NSNumber(value: Double(price)!)
@@ -646,51 +722,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         formatter.currencyCode = currency
         let convertedPrice = formatter.string(from: convertPrice)
         return convertedPrice!
-    }
-    
-    // Drag to dismiss and enlarge description view
-    @IBAction func panGestureRecognizerHandler(_ sender: UIPanGestureRecognizer) {
-        let percentThreshold:CGFloat = 0.3
-        let translation = sender.translation(in: view)
-        
-        let newY = ensureRange(value: view.frame.minY + translation.y, minimum: 0, maximum: view.frame.maxY)
-        let progress = progressAlongAxis(newY, view.bounds.height)
-        
-        if view.frame.origin.y == CGFloat(0.0)  {
-            if UIDevice.current.orientation.isPortrait {
-                for constraint in imageCarouselContainerView.constraints {
-                    if constraint.firstAttribute == .height {
-                        if imageCarouselContainerView.frame.size.height <= viewHeight*maxImageCarouselHeightProportion+1 {
-                            if textExceedBoundsOf(descriptionTextView) || translation.y > 0 {
-                                let newH = ensureRange(value: constraint.constant + translation.y, minimum: viewHeight*minImageCarouselHeightProportion, maximum: viewHeight*maxImageCarouselHeightProportion)
-                                constraint.constant = newH
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        if imageCarouselContainerView.frame.size.height >= viewHeight*maxImageCarouselHeightProportion {
-            view.frame.origin.y = newY //Move view to new position
-        }
-        
-        if sender.state == .ended {
-            let velocity = sender.velocity(in: view)
-            if imageCarouselContainerView.frame.size.height >= viewHeight*maxImageCarouselHeightProportion && velocity.y >= 300 || progress > percentThreshold {
-                Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
-                if !interaction {
-                    Monetizr.shared.dismissCreate(tag: tag!, completionHandler: { success, error, value in ()})
-                }
-                self.dismiss(animated: true) //Perform dismiss
-            } else {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.view.frame.origin.y = 0 // Revert animation
-                })
-            }
-        }
-        
-        sender.setTranslation(.zero, in: view)
     }
     
     func progressAlongAxis(_ pointOnAxis: CGFloat, _ axisLength: CGFloat) -> CGFloat {
@@ -706,7 +737,15 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Slideshow fullscreen
     @objc func slideShowTap() {
-        slideShow.presentFullScreenController(from: self)
+        if #available(iOS 13.0, *) {
+            
+        }
+        else {
+            slideShow.presentFullScreenController(from: self)
+        }
+        
+        
+        
         if Monetizr.shared.clickCountInSession < 1 {
             Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }
@@ -728,5 +767,20 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func textExceedBoundsOf(_ textView: UITextView) -> Bool {
         let textHeight = textView.contentSize.height
         return textHeight > textView.bounds.height
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if screenIsInPortrait() {
+            let offset = scrollView.contentOffset.y
+            var height = abs(offset)
+            if offset > 0 {
+                height = 0
+            }
+            for constraint in imageCarouselContainerView.constraints {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = height
+                }
+            }
+        }
     }
 }

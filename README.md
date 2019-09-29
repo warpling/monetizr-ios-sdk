@@ -18,7 +18,7 @@ Requires iOS 10.0+
 #### CocoaPods
 
 ```swift
-pod 'Monetizr', '~> 3.0'
+pod 'Monetizr', '~> 3.1'
 ```
 
 #### Manual
@@ -34,6 +34,14 @@ In applicationDidFinishLaunching(_:) do the initialization with token provided t
 Monetizr.shared.token = String
 ```
 
+If Apple Pay support is planned in applicationDidFinishLaunching(_:) do the configuration
+
+```swift
+Monetizr.shared.setApplePayMerchantID(id: String)
+Monetizr.shared.setCompanyAndAppName(companyName: String, appName: String)
+Monetizr.shared.setStripeToken(token: String)
+```
+
 Optionally you can set languge - might not be availeble, check with Monetizr team
 
 ```swift
@@ -45,24 +53,34 @@ Import "Monetizr" to your project
 import Monetizr
 ```
 
-To show product or to get product data and show in your custom view
+#### Show product or get product data and show in your custom view. 
 
 ```swift
-Monetizr.shared.getProductForTag(tag: String, show: Bool) { success, error, product in ()}
+Monetizr.shared.getProductForTag(tag: String, presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
 ```
+
+If you choose to show product in a view provided in SDK you should provide presenter view and presentation style. If presentation style not provided it will be `UIModalPresentationStyle.overCurrentContext`
 
 ### Manual usage of *Monetizr.shared* with custom product views
 
-Open product view
+Create Product View Controller
 
-```swift
-func openProductViewForProduct(product: Product, tag: String)
-```
+```func productViewForProduct(product: Product, tag: String) -> ProductViewController```
+
+Present product View
+
+```func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle)```
 
 Checkout variant for product with tag
 
 ```swift
 func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void)
+```
+
+Checkout with Apple Pay
+
+```swift
+Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: UIViewController) { success, error in ()}
 ```
 
 Increase impression count for session

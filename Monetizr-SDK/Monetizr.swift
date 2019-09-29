@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 import Alamofire
+import PassKit
+import Stripe
 
 public class Monetizr {
     
@@ -20,6 +22,9 @@ public class Monetizr {
         }
     }
     var headers: HTTPHeaders = [:]
+    var applePayMerchantID: String?
+    var companyName: String?
+    var appName: String?
     var language: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
     var dateSessionStarted: Date = Date()
@@ -27,6 +32,7 @@ public class Monetizr {
     var impressionCountInSession: Int = 0
     var clickCountInSession: Int = 0
     var checkoutCountInSession: Int = 0
+    var haveStripeToken: Bool = false
     
     // Initialization
     private init(token: String) {
@@ -44,9 +50,26 @@ public class Monetizr {
         headers["Authorization"] = "Bearer "+token
     }
     
+    // Set Apple Pay MerchantID
+    public func setApplePayMerchantID(id: String) {
+        self.applePayMerchantID = id
+    }
+    
+    // Set Company Name
+    public func setCompanyAndAppName(companyName: String, appName: String) {
+        self.companyName = companyName
+        self.appName = appName
+    }
+    
     // Set language
     public func setLanguage(language: String) {
         self.language = language
+    }
+    
+    // Set stripe token
+    public func setStripeToken(token: String) {
+        haveStripeToken = true
+        Stripe.setDefaultPublishableKey(token)
     }
     
     // Application become active
@@ -103,7 +126,7 @@ public class Monetizr {
     }
     
     // Load product data
-    public func getProductForTag(tag: String, show: Bool, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
+    public func getProductForTag(tag: String, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
         if language != nil {
@@ -113,10 +136,11 @@ public class Monetizr {
                 
         Alamofire.request(URL(string: urlString)!, headers: headers).responseProduct { response in
             if let retrievedProduct = response.result.value {
-                if retrievedProduct.data != nil {
-                    if show == true {
+                if retrievedProduct.data?.productByHandle != nil {
+                    if (presenter != nil) {
                         let product = retrievedProduct
-                        self.openProductViewForProduct(product: product, tag: tag)
+                        let targetStyle = presentationStyle ?? UIModalPresentationStyle.overCurrentContext
+                        self.presentProductView(productViewController: self.productViewForProduct(product: product, tag: tag), presenter: presenter!, presentationStyle: targetStyle)
                     }
                     completionHandler(true, nil, retrievedProduct)
                 }
@@ -136,25 +160,24 @@ public class Monetizr {
         }
     }
     
-    // Open product View
-    func openProductViewForProduct(product: Product, tag: String) {
-        if var topController = UIApplication.shared.keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            
-            let productViewController = ProductViewController()
-            productViewController.modalPresentationStyle = .overCurrentContext
-            productViewController.product = product
-            productViewController.tag = tag
-            topController.present(productViewController, animated: true, completion: nil)
-        }
+    // Create product View
+    func productViewForProduct(product: Product, tag: String) -> ProductViewController {
+        let productViewController = ProductViewController()
+        productViewController.product = product
+        productViewController.tag = tag
+        return productViewController
+    }
+    
+    // Present product View
+    func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
+        productViewController.modalPresentationStyle = presentationStyle
+        presenter.present(productViewController, animated: true, completion: nil)
     }
     
     // Checkout variant for product
-    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, shippingAddress: CNPostalAddress? = nil, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkout"
-        var parameters: [String: String] = [
+        var parameters: [String: Any] = [
             "product_handle" : tag,
             "variantId" : selectedVariant.id!,
             "quantity" : "1",
@@ -163,6 +186,16 @@ public class Monetizr {
             parameters["language"] = language
         }
         
+        let shippingParameters: [String: String] = [
+            "city" : shippingAddress?.city ?? "",
+            "country" : shippingAddress?.country ?? "",
+            "province" : shippingAddress?.state ?? ""
+        ]
+ 
+        if shippingAddress != nil {
+            parameters["shippingAddress"] = shippingParameters
+        }
+ 
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
@@ -171,16 +204,153 @@ public class Monetizr {
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
                     completionHandler(false, error, nil)
+                    
+                    #if DEBUG
+                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                        print("Data: \(utf8Text)")
+                    }
+                    #endif
                 }
             }
             else if let error = response.result.error as? URLError {
+                #if DEBUG
                 print("URLError occurred: \(error)")
+                #endif
                 completionHandler(false, error, nil)
             }
             else {
+                #if DEBUG
                 print("Unknown error: \(String(describing: response.result.error))")
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                    print("Data: \(utf8Text)")
+                }
+                #endif
                 completionHandler(false, response.result.error!, nil)
             }
+        }
+    }
+    
+    // Checkout with payment
+    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, token: STPToken, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+        let urlString = apiUrl+"products/checkoutwithpayment"
+        
+        let paymentAmount: [String: Any] = [
+            "amount": String(describing: amount),
+            "currencyCode": selectedVariant.priceV2?.currency ?? "USD"
+        ]
+        
+        let shippingStreet = payment.shippingContact?.postalAddress?.street ?? ""
+        let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
+        var shippingSubLocality = ""
+        var billingSubLocality = ""
+        if #available(iOS 10.3, *) {
+            shippingSubLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
+            billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
+        } else {
+            // Fallback on earlier versions
+        }
+        var shippingSubAdministrativeArea = ""
+        var billingSubAdministrativeArea = ""
+        if #available(iOS 10.3, *) {
+            shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+            billingSubAdministrativeArea = payment.billingContact?.postalAddress?.subAdministrativeArea ?? ""
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        var test = false
+        #if DEBUG
+        test = true
+        #endif
+        
+        let shippingAddress: [String: Any] = [
+            "firstName" : payment.shippingContact?.name?.givenName ?? "",
+            "lastName" : payment.shippingContact?.name?.familyName ?? "",
+            "address1" : shippingStreet + shippingSubLocality + shippingSubAdministrativeArea,
+            "city" : payment.shippingContact?.postalAddress?.city ?? "",
+            "country" : payment.shippingContact?.postalAddress?.country ?? "",
+            "zip" : payment.shippingContact?.postalAddress?.postalCode ?? "",
+            "phone" : payment.shippingContact?.phoneNumber?.stringValue ?? "",
+            "province" : payment.shippingContact?.postalAddress?.state ?? "",
+        ]
+        
+        let billingAddress: [String: Any] = [
+            "firstName" : payment.billingContact?.name?.givenName ?? "",
+            "lastName" : payment.billingContact?.name?.familyName ?? "",
+            "address1" : billingStreet + billingSubLocality + billingSubAdministrativeArea,
+            "city" : payment.billingContact?.postalAddress?.city ?? "",
+            "country" : payment.billingContact?.postalAddress?.country ?? "",
+            "zip" : payment.billingContact?.postalAddress?.postalCode ?? "",
+            "phone" : payment.billingContact?.phoneNumber?.stringValue ?? "",
+            "province" : payment.billingContact?.postalAddress?.state ?? "",
+        ]
+        
+        let stripeTokenfields = token.allResponseFields
+        let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: stripeTokenfields, options: [])
+        let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
+        
+        let parameters: [String: Any] = [
+            "checkoutId": checkout.data?.checkoutCreate?.checkout?.id ?? "",
+            "product_handle" : tag,
+            "type" : "apple_pay",
+            "idempotencyKey" : payment.token.transactionIdentifier,
+            "paymentData" : tokenFieldsJsonString as Any,
+            "paymentAmount" : paymentAmount,
+            "shippingAddress" : shippingAddress,
+            "billingAddress" : billingAddress,
+            "test" : test,
+            "shippingRateHandle" : payment.shippingMethod?.identifier ?? "",
+            "email" : payment.shippingContact?.emailAddress ?? ""
+        ]
+        
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
+            if let responseCheckout = response.result.value {
+                if responseCheckout.data != nil {
+                    completionHandler(true, nil, responseCheckout)
+                }
+                else {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
+                    completionHandler(false, error, responseCheckout)
+                    
+                    #if DEBUG
+                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                        print("Error Data: \(utf8Text)")
+                    }
+                    #endif
+                }
+            }
+            else if let error = response.result.error as? URLError {
+                #if DEBUG
+                print("URLError occurred: \(error)")
+                #endif
+                completionHandler(false, error, nil)
+            }
+            else {
+                #if DEBUG
+                print("Unknown error: \(String(describing: response.result.error))")
+                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                    print("Error Data: \(utf8Text)")
+                }
+                #endif
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Buy product-variant with Apple Pay
+    public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
+        if applePayCanMakePayments() && applePayMerchantID != nil && haveStripeToken == true {
+            let applePayViewController = ApplePayViewController()
+            applePayViewController.delegate = presenter as? ApplePayControllerDelegate
+            applePayViewController.modalPresentationStyle = .overCurrentContext
+            applePayViewController.selectedVariant = selectedVariant
+            applePayViewController.tag = tag
+            presenter.present(applePayViewController, animated: true, completion: nil)
+            completionHandler(true, nil)
+        }
+        else {
+            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Apple pay not configured"])
+            completionHandler(false, error)
         }
     }
     

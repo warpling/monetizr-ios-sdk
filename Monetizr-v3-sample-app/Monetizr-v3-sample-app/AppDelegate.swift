@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Stripe
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,7 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Setup Monetizr
         Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1"
         //Monetizr.shared.setLanguage(language: "de_DE")
-        
+        Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdkv3test")
+        Monetizr.shared.setCompanyAndAppName(companyName: "Monetizing Solutions", appName: "Idea Smash")
+        Monetizr.shared.setStripeToken(token: "pk_live_CWmQoXocvis3aEFufn7R1CKf")
+        // pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu
         return true
     }
 

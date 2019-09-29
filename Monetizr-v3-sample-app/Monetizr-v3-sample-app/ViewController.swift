@@ -49,7 +49,11 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
             // Open product here
             textLabel.text = "Product loading..."
             Monetizr.shared.token = tokenField.text!
-            Monetizr.shared.getProductForTag(tag: merchTagField.text!, show: true) { success, error, product  in
+            var presentationStyle = UIModalPresentationStyle.overCurrentContext
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                presentationStyle = UIModalPresentationStyle.formSheet
+            }
+            Monetizr.shared.getProductForTag(tag: merchTagField.text!, presenter: self, presentationStyle: presentationStyle) { success, error, product  in
                 self.hideActivityIndicator()
                 // Show some error if needed
                 if success {

@@ -11,5 +11,12 @@
 "Checkout" = "Checkout";
 "Product title" = "Product title";
 "Price" = "Price";
+"Original price" = "Original price";
 "Product description" = "Product description";
 "Product variant selection" = "Product variant selection";
+"Tax" = "Tax";
+"Shipping" = "Shipping";
+"Unknown" = "Unknown";
+"Selected" = "Selected";
+"Thank you!" = "Thank you!";
+"Order confirmation" = "Your order is on its way! \nCheck the order confirmation email for tracking information.";

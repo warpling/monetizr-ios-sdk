@@ -11,6 +11,7 @@ import UIKit
 
 extension UIView {
     
+    // Safe area
     var safeTopAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return self.safeAreaLayoutGuide.topAnchor
@@ -39,15 +40,42 @@ extension UIView {
         return self.bottomAnchor
     }
     
-    // Styles
-    func checkoutButtonBackgroundViewStyle() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .white
+    // Size
+    
+    func height(constant: CGFloat) {
+        setConstraint(value: constant, attribute: .height)
     }
     
+    func width(constant: CGFloat) {
+        setConstraint(value: constant, attribute: .width)
+    }
+    
+    func removeConstraint(attribute: NSLayoutConstraint.Attribute) {
+        constraints.forEach {
+            if $0.firstAttribute == attribute {
+                removeConstraint($0)
+            }
+        }
+    }
+    
+    func setConstraint(value: CGFloat, attribute: NSLayoutConstraint.Attribute) {
+        removeConstraint(attribute: attribute)
+        let constraint =
+            NSLayoutConstraint(item: self,
+                               attribute: attribute,
+                               relatedBy: NSLayoutConstraint.Relation.equal,
+                               toItem: nil,
+                               attribute: NSLayoutConstraint.Attribute.notAnAttribute,
+                               multiplier: 1,
+                               constant: value)
+        self.addConstraint(constraint)
+    }
+    
+    // Styles
     func variantOptionsContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(hex: 0x231f20)
+        self.backgroundColor = .clear //UIColor(hex: 0x231f20)
+        self.addBlurEffect(style: .dark)
     }
     
     func imageCarouselContainerViewStyle() {
@@ -57,7 +85,7 @@ extension UIView {
     
     func descriptionContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .black
+        self.backgroundColor = .clear
     }
     
     func addBlurEffect(style: UIBlurEffect.Style)
@@ -76,25 +104,40 @@ extension UIView {
     }
 }
 
+extension UIStackView {
+    // Styles
+    func checkoutButtonBackgroundViewStyle() {
+        self.axis = NSLayoutConstraint.Axis.horizontal
+        self.distribution = UIStackView.Distribution.fillEqually
+        self.alignment = UIStackView.Alignment.leading
+        self.spacing = 10.0
+        self.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        self.isLayoutMarginsRelativeArrangement = true
+        self.translatesAutoresizingMaskIntoConstraints = false
+    }
+}
+
 extension UIButton {
     
     // Styles
-    
     func closeProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.setTitle("✕", for: .normal)
         self.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: UIFont.Weight.light)
-        self.setTitleColor(UIColor.black, for: .normal)
+        self.setTitleColor(UIColor.white, for: .normal)
     }
     
     func checkoutProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(hex: 0x007aff)
+        self.backgroundColor = UIColor(hex: 0x121212) //UIColor(hex: 0x007aff)
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
         self.setTitleColor(UIColor.white, for: .normal)
         self.setTitleColor(UIColor.lightGray, for: .highlighted)
+        self.height(constant: 50)
         self.layer.cornerRadius = 5
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor.white.cgColor
     }
 }
 
@@ -116,7 +159,7 @@ extension UILabel {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .lightGray
-        self.font = .systemFont(ofSize: 12, weight: UIFont.Weight.semibold)
+        self.font = .systemFont(ofSize: 14, weight: UIFont.Weight.light)
         self.text = self.text?.uppercased()
         self.numberOfLines = 1
         self.textAlignment = .left
@@ -127,8 +170,8 @@ extension UILabel {
     func optionValueStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = UIColor(hex: 0x007aff)
-        self.font = .systemFont(ofSize: 18, weight: UIFont.Weight.medium)
+        self.textColor = .white //UIColor(hex: 0x007aff)
+        self.font = .systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         self.numberOfLines = 1
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
@@ -138,8 +181,19 @@ extension UILabel {
     func priceLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = UIColor(hex: 0x007aff)
-        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
+        self.textColor = UIColor(hex: 0xE0093B) //UIColor(hex: 0x007aff)
+        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.medium)
+        self.numberOfLines = 1
+        self.textAlignment = .right
+        self.adjustsFontSizeToFitWidth = true
+        self.minimumScaleFactor = 0.7
+    }
+    
+    func discountPriceLabelStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
+        self.textColor = .lightGray //UIColor(hex: 0x007aff)
+        self.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
         self.numberOfLines = 1
         self.textAlignment = .right
         self.adjustsFontSizeToFitWidth = true
@@ -150,11 +204,41 @@ extension UILabel {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white
-        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.bold)
-        self.numberOfLines = 1
+        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.medium)
+        self.numberOfLines = 0
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
+    }
+    
+    func underline() {
+        if let textString = self.text {
+          let attributedString = NSMutableAttributedString(string: textString)
+            attributedString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: attributedString.length))
+          attributedText = attributedString
+        }
+    }
+    
+    func strikeThrough() {
+        if let textString = self.text {
+          let attributedString = NSMutableAttributedString(string: textString)
+            attributedString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: attributedString.length))
+          attributedText = attributedString
+        }
+    }
+    
+    func optionValueTextWithImage(text: String, image: UIImage?) {
+        let attachment = NSTextAttachment()
+        attachment.image = image
+        attachment.bounds = CGRect(x: 0, y: 0, width: 15, height: 10)
+        let attachmentStr = NSAttributedString(attachment: attachment)
+
+        let mutableAttributedString = NSMutableAttributedString()
+        let textString = NSAttributedString(string: text+" ", attributes: [.font: self.font as Any])
+        mutableAttributedString.append(textString)
+        mutableAttributedString.append(attachmentStr)
+
+      self.attributedText = mutableAttributedString
     }
 }
 
@@ -163,9 +247,10 @@ extension UITextView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.textColor = .white
-        self.font = .systemFont(ofSize: 15)
+        self.font = .systemFont(ofSize: 16, weight: UIFont.Weight.light)
         self.isSelectable = false
         self.isEditable = false
+        self.isScrollEnabled = false
     }
 }
 
@@ -198,5 +283,16 @@ extension UIImage {
             }
         }
         return nil
+    }
+}
+
+extension String {
+    func priceFormat(currency:String)->String{
+        let convertPrice = NSNumber(value: Double(self)!)
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currency
+        let convertedPrice = formatter.string(from: convertPrice)
+        return convertedPrice!
     }
 }

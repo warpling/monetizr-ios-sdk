@@ -69,7 +69,7 @@ public struct PurpleNode: Codable {
     let product: ProductClass?
     let title: String?
     let selectedOptions: [SelectedOption]?
-    let priceV2: PriceV2?
+    let priceV2, compareAtPriceV2: PriceV2?
     let image: ImageClass?
 }
 
