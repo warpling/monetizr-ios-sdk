@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Monetizr'
-  s.version          = '3.0.3'
+  s.version          = '3.1.1'
   s.summary          = 'Monetizr is a game reward engine, we drive revenue to your business and enhance the experience of your players!'
  
   s.description      = <<-DESC
@@ -15,12 +15,12 @@ Monetizr rewards your users with an opportunity to unlock and buy your own game 
   s.swift_version = "5.0"
   s.ios.deployment_target = '10.0'
   s.source_files = 'Monetizr-SDK/*'
-  s.resource_bundles = { 'Monetizr' => ['Monetizr-SDK/*.lproj'] }
+  s.resource_bundles = { 'Monetizr' => ['Monetizr-SDK/*.{lproj, xcassets)'] }
 
   s.framework = "UIKit"
   s.framework = "PassKit"
   s.dependency 'Alamofire', '~> 4.0'
   s.dependency 'ImageSlideshow/Alamofire'
-  s.dependency 'ImageSlideshow', '~> 1.6'
+  s.dependency 'ImageSlideshow', '~> 1.8'
  
 end
