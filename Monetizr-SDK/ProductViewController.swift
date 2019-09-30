@@ -535,6 +535,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 let valueLabel = UILabel()
                 //valueLabel.text = (option.value ?? "")
                 valueLabel.optionValueStyle()
+                
                 let expandDownImage = UIImage(named: "expand-down", in: Bundle(for: type(of: self)), compatibleWith: nil)
                 valueLabel.optionValueTextWithImage(text: (option.value ?? ""), image: expandDownImage)
                 

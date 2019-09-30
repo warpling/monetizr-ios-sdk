@@ -18,13 +18,14 @@
 		28AE865B22C6D279005F2D2D /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865222C6D279005F2D2D /* Product.swift */; };
 		28AE865C22C6D279005F2D2D /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865322C6D279005F2D2D /* Checkout.swift */; };
 		28AE865D22C6D279005F2D2D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865422C6D279005F2D2D /* Device.swift */; };
+		28D2FF3C234215BE00A3819D /* expand-down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28D2FF3A234215BD00A3819D /* expand-down@2x.png */; };
+		28D2FF3D234215BE00A3819D /* expand-down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28D2FF3B234215BD00A3819D /* expand-down@3x.png */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
 		28E6B7942262109300E43C83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7922262109300E43C83 /* Main.storyboard */; };
 		28E6B7962262109500E43C83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7952262109500E43C83 /* Assets.xcassets */; };
 		28E6B7992262109500E43C83 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7972262109500E43C83 /* LaunchScreen.storyboard */; };
 		28F1AAA5230B11D30039FF7E /* ApplePayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */; };
-		28FF44BE2341559000AF50CA /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28FF44BD2341558F00AF50CA /* Media.xcassets */; };
 		F17B7801DCFCEB8AFD9A8583 /* Pods_Monetizr_v3_sample_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,8 @@
 		28AE865222C6D279005F2D2D /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		28AE865322C6D279005F2D2D /* Checkout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
 		28AE865422C6D279005F2D2D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		28D2FF3A234215BD00A3819D /* expand-down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down@2x.png"; sourceTree = "<group>"; };
+		28D2FF3B234215BD00A3819D /* expand-down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down@3x.png"; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28E6B7902262109300E43C83 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -49,7 +52,6 @@
 		28E6B7982262109500E43C83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		28E6B79A2262109500E43C83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayViewController.swift; sourceTree = "<group>"; };
-		28FF44BD2341558F00AF50CA /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		36BF1201E621B75EEE391125 /* Pods-Monetizr-v3-sample-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.debug.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.debug.xcconfig"; sourceTree = "<group>"; };
 		65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Monetizr_v3_sample_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77A3F60495AE31152A231C31 /* Pods-Monetizr-v3-sample-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.release.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.release.xcconfig"; sourceTree = "<group>"; };
@@ -70,7 +72,8 @@
 		28AE864A22C6D279005F2D2D /* Monetizr-SDK */ = {
 			isa = PBXGroup;
 			children = (
-				28FF44BD2341558F00AF50CA /* Media.xcassets */,
+				28D2FF3A234215BD00A3819D /* expand-down@2x.png */,
+				28D2FF3B234215BD00A3819D /* expand-down@3x.png */,
 				28AE864B22C6D279005F2D2D /* Localizable.strings */,
 				28AE864D22C6D279005F2D2D /* ProductViewController.swift */,
 				28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */,
@@ -205,9 +208,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				28E6B7992262109500E43C83 /* LaunchScreen.storyboard in Resources */,
+				28D2FF3D234215BE00A3819D /* expand-down@3x.png in Resources */,
 				28AE865522C6D279005F2D2D /* Localizable.strings in Resources */,
 				28E6B7962262109500E43C83 /* Assets.xcassets in Resources */,
-				28FF44BE2341559000AF50CA /* Media.xcassets in Resources */,
+				28D2FF3C234215BE00A3819D /* expand-down@2x.png in Resources */,
 				28E6B7942262109300E43C83 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -454,7 +458,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1.3;
+				MARKETING_VERSION = 3.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -476,7 +480,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1.3;
+				MARKETING_VERSION = 3.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
