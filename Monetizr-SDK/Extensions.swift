@@ -72,6 +72,21 @@ extension UIView {
     }
     
     // Styles
+    func backgroundViewStyle() {
+        //self.backgroundColor = UIColor(hex: 0x121212)
+        if Monetizr.shared.chosenTheme == .Black {
+            self.backgroundColor = UIColor(hex: 0xc1c1c1)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.backgroundColor = UIColor.systemBackground
+            } else {
+                // Fallback on earlier versions
+                self.backgroundColor = UIColor.white
+            }
+        }
+    }
+    
     func variantOptionsContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear //UIColor(hex: 0x231f20)
@@ -80,7 +95,17 @@ extension UIView {
     
     func imageCarouselContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(hex: 0xc1c1c1)
+        if Monetizr.shared.chosenTheme == .Black {
+            self.backgroundColor = UIColor(hex: 0xc1c1c1)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.backgroundColor = UIColor.systemBackground
+            } else {
+                // Fallback on earlier versions
+                self.backgroundColor = UIColor.white
+            }
+        }
     }
     
     func descriptionContainerViewStyle() {
@@ -130,7 +155,7 @@ extension UIButton {
     
     func checkoutProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(hex: 0x121212) //UIColor(hex: 0x007aff)
+        self.backgroundColor = UIColor(hex: 0x121212)
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
         self.setTitleColor(UIColor.white, for: .normal)
         self.setTitleColor(UIColor.lightGray, for: .highlighted)
@@ -151,6 +176,8 @@ extension UIColor {
         )
         self.init(red: components.R, green: components.G, blue: components.B, alpha: 1)
     }
+    
+    static let globalTint =  UIApplication.shared.keyWindow?.tintColor ?? .blue
     
 }
 
@@ -181,18 +208,29 @@ extension UILabel {
     func priceLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = UIColor(hex: 0xE0093B) //UIColor(hex: 0x007aff)
         self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.medium)
         self.numberOfLines = 1
         self.textAlignment = .right
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
+        
+        if Monetizr.shared.chosenTheme == .Black {
+            self.textColor = UIColor(hex: 0xE0093B)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.textColor = UIColor.label
+            } else {
+                // Fallback on earlier versions
+                self.textColor = .globalTint
+            }
+        }
     }
     
     func discountPriceLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = .lightGray //UIColor(hex: 0x007aff)
+        self.textColor = .lightGray
         self.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
         self.numberOfLines = 1
         self.textAlignment = .right
@@ -203,12 +241,23 @@ extension UILabel {
     func titleLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = .white
         self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.medium)
         self.numberOfLines = 0
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
+        
+        if Monetizr.shared.chosenTheme == .Black {
+            self.textColor = .white
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.textColor = UIColor.label
+            } else {
+                // Fallback on earlier versions
+                self.textColor = UIColor.black
+            }
+        }
     }
     
     func underline() {
@@ -246,11 +295,22 @@ extension UITextView {
     func descriptionTextViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = .white
         self.font = .systemFont(ofSize: 16, weight: UIFont.Weight.light)
         self.isSelectable = false
         self.isEditable = false
         self.isScrollEnabled = false
+        
+        if Monetizr.shared.chosenTheme == .Black {
+            self.textColor = .white
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.textColor = UIColor.label
+            } else {
+                // Fallback on earlier versions
+                self.textColor = UIColor.black
+            }
+        }
     }
 }
 
