@@ -11,6 +11,7 @@ import UIKit
 import Alamofire
 import ImageSlideshow
 import PassKit
+import SafariServices
 
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate {
     
@@ -604,7 +605,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             // Show some error if needed
             if success {
                 guard let url = URL(string: (checkout?.data?.checkoutCreate?.checkout?.webURL)!) else { return }
-                UIApplication.shared.open(url)
+                
+                // Open Checkout in web browser
+                //UIApplication.shared.open(url)
+                
+                // Open Checkout in Safaru SFSafariViewController
+                let vc = SFSafariViewController(url: url, entersReaderIfAvailable: false)
+                vc.delegate = self as? SFSafariViewControllerDelegate
+                self.present(vc, animated: true)
             }
             else {
                 // Handle error
