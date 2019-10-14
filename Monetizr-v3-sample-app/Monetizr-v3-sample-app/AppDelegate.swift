@@ -19,12 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // Setup Monetizr
-        Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1"
-        //Monetizr.shared.setLanguage(language: "de_DE")
-        Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdk")
-        Monetizr.shared.setCompanyAndAppName(companyName: "Monetizing Solutions", appName: "Idea Smash")
-        Monetizr.shared.setStripeToken(token: "pk_live_CWmQoXocvis3aEFufn7R1CKf")
-        // pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu
+        Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1" // set token
+        Monetizr.shared.setTheme(theme: .Black) // Optional
+        //Monetizr.shared.setLanguage(language: "de_DE") // Optional
+        Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdk") // Optional
+        Monetizr.shared.setCompanyAndAppName(companyName: "Monetizing Solutions", appName: "Idea Smash") // Optional
+        Monetizr.shared.setStripeToken(token: "pk_live_CWmQoXocvis3aEFufn7R1CKf") // Optional
         return true
     }
 

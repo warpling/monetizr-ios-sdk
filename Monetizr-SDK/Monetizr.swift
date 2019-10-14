@@ -33,6 +33,12 @@ public class Monetizr {
     var clickCountInSession: Int = 0
     var checkoutCountInSession: Int = 0
     var haveStripeToken: Bool = false
+    var chosenTheme: ProductViewControllerTheme? = .Default
+    
+    public enum ProductViewControllerTheme {
+      case Default
+      case Black
+    }
     
     // Initialization
     private init(token: String) {
@@ -48,6 +54,11 @@ public class Monetizr {
     // Create headers
     func createHeaders() {
         headers["Authorization"] = "Bearer "+token
+    }
+    
+    // Set Theme
+    public func setTheme(theme: ProductViewControllerTheme) {
+        self.chosenTheme = theme
     }
     
     // Set Apple Pay MerchantID
