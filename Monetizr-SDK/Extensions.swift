@@ -93,7 +93,7 @@ extension UIColor {
         self.init(red: components.R, green: components.G, blue: components.B, alpha: 1)
     }
     
-    static let globalTint =  UIApplication.shared.keyWindow?.tintColor ?? .blue
+    static let globalTint =  UIApplication.shared.keyWindow?.tintColor ?? .systemBlue
 }
 
 extension UILabel {

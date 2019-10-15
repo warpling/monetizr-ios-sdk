@@ -12,9 +12,8 @@ import UIKit
 // Styles
 extension UIView {
     func backgroundViewStyle() {
-        //self.backgroundColor = UIColor(hex: 0x121212)
         if Monetizr.shared.chosenTheme == .Black {
-            self.backgroundColor = UIColor(hex: 0xc1c1c1)
+            self.backgroundColor = UIColor(hex: 0x121212)
         }
         else {
             if #available(iOS 13.0, *) {
@@ -79,14 +78,30 @@ extension UIButton {
     
     func checkoutProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor(hex: 0x121212)
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
         self.setTitleColor(UIColor.white, for: .normal)
         self.setTitleColor(UIColor.lightGray, for: .highlighted)
         self.height(constant: 50)
         self.layer.cornerRadius = 5
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.white.cgColor
+  
+        if Monetizr.shared.chosenTheme == .Black {
+            self.backgroundColor = UIColor(hex: 0x121212)
+            self.layer.borderColor = UIColor.white.cgColor
+            self.setTitleColor(UIColor.white, for: .normal)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.backgroundColor = UIColor.systemBackground
+                self.layer.borderColor = UIColor.label.cgColor
+                self.setTitleColor(UIColor.label, for: .normal)
+            } else {
+                // Fallback on earlier versions
+                self.backgroundColor = UIColor.white
+                self.layer.borderColor = UIColor.globalTint.cgColor
+                self.setTitleColor(UIColor.globalTint, for: .normal)
+            }
+        }
     }
 }
 
