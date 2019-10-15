@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import PassKit
 
 // Styles
 extension UIView {
@@ -79,7 +80,6 @@ extension UIButton {
     func checkoutProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
-        self.setTitleColor(UIColor.white, for: .normal)
         self.setTitleColor(UIColor.lightGray, for: .highlighted)
         self.height(constant: 50)
         self.layer.cornerRadius = 5
@@ -89,19 +89,44 @@ extension UIButton {
             self.backgroundColor = UIColor(hex: 0x121212)
             self.layer.borderColor = UIColor.white.cgColor
             self.setTitleColor(UIColor.white, for: .normal)
+            self.setTitleColor(UIColor.lightGray, for: .highlighted)
         }
         else {
             if #available(iOS 13.0, *) {
                 self.backgroundColor = UIColor.systemBackground
                 self.layer.borderColor = UIColor.label.cgColor
                 self.setTitleColor(UIColor.label, for: .normal)
+                self.setTitleColor(UIColor.label, for: .highlighted)
             } else {
                 // Fallback on earlier versions
                 self.backgroundColor = UIColor.white
                 self.layer.borderColor = UIColor.globalTint.cgColor
                 self.setTitleColor(UIColor.globalTint, for: .normal)
+                self.setTitleColor(UIColor.globalTint, for: .highlighted)
             }
         }
+    }
+}
+
+extension PKPaymentButton {
+    func buyButtonWithTheme()->PKPaymentButton {
+        if Monetizr.shared.chosenTheme == .Black {
+            return PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .whiteOutline)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
+                    return PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .whiteOutline)
+                }
+                else {
+                    return PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
+                }
+            } else {
+                // Fallback on earlier versions
+                return PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
+            }
+        }
+        
     }
 }
 
