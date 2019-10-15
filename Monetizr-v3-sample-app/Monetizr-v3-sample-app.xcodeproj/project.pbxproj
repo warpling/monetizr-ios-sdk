@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2847C68523422BCD004EE18B /* expand-down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2847C68323422BCD004EE18B /* expand-down@2x.png */; };
 		2847C68623422BCD004EE18B /* expand-down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2847C68423422BCD004EE18B /* expand-down@3x.png */; };
+		28591EB023564B4200611353 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28591EAF23564B4200611353 /* Styles.swift */; };
 		28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */; };
 		28A32D082337FD22004F1A5E /* VariantSelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */; };
 		28AE865522C6D279005F2D2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 28AE864B22C6D279005F2D2D /* Localizable.strings */; };
@@ -32,6 +33,7 @@
 /* Begin PBXFileReference section */
 		2847C68323422BCD004EE18B /* expand-down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down@2x.png"; sourceTree = "<group>"; };
 		2847C68423422BCD004EE18B /* expand-down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down@3x.png"; sourceTree = "<group>"; };
+		28591EAF23564B4200611353 /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
 		2897E16F2301DACB00C4A2DE /* Monetizr-v3-sample-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Monetizr-v3-sample-app.entitlements"; sourceTree = "<group>"; };
 		28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDescriptionScrollView.swift; sourceTree = "<group>"; };
 		28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantSelectionHeaderView.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				28AE864F22C6D279005F2D2D /* VariantSelectionViewController.swift */,
 				28AE865022C6D279005F2D2D /* Monetizr.swift */,
 				28AE865122C6D279005F2D2D /* Extensions.swift */,
+				28591EAF23564B4200611353 /* Styles.swift */,
 				28AE865222C6D279005F2D2D /* Product.swift */,
 				28AE865322C6D279005F2D2D /* Checkout.swift */,
 				28AE865422C6D279005F2D2D /* Device.swift */,
@@ -291,6 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */,
+				28591EB023564B4200611353 /* Styles.swift in Sources */,
 				28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */,
 				28AE865B22C6D279005F2D2D /* Product.swift in Sources */,
 				28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */,
