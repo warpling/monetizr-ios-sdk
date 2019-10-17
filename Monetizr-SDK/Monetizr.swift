@@ -136,7 +136,7 @@ public class Monetizr {
     }
     
     // Load product data
-    public func getProductForTag(tag: String, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
+    public func showProduct(tag: String, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
         if language != nil {

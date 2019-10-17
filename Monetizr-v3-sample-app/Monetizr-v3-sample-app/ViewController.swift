@@ -53,7 +53,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
             if UIDevice.current.userInterfaceIdiom == .pad {
                 presentationStyle = UIModalPresentationStyle.formSheet
             }
-            Monetizr.shared.getProductForTag(tag: merchTagField.text!, presenter: self, presentationStyle: presentationStyle) { success, error, product  in
+            Monetizr.shared.showProduct(tag: merchTagField.text!, presenter: self, presentationStyle: presentationStyle) { success, error, product  in
                 self.hideActivityIndicator()
                 // Show some error if needed
                 if success {
