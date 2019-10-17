@@ -28,8 +28,26 @@ extension UIView {
     
     func variantOptionsContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .clear //UIColor(hex: 0x231f20)
-        self.addBlurEffect(style: .dark)
+        if Monetizr.shared.chosenTheme == .Black {
+            self.backgroundColor = .clear
+            self.addBlurEffect(style: .dark)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
+                    self.backgroundColor = .clear
+                    self.addBlurEffect(style: .dark)
+                }
+                else {
+                    self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+                    self.addBlurEffect(style: .light)
+                }
+            } else {
+                // Fallback on earlier versions
+                self.backgroundColor = UIColor.lightGray.withAlphaComponent(0.3)
+                self.addBlurEffect(style: .light)
+            }
+        }
     }
     
     func imageCarouselContainerViewStyle() {
@@ -74,13 +92,24 @@ extension UIButton {
         self.backgroundColor = .clear
         self.setTitle("✕", for: .normal)
         self.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: UIFont.Weight.light)
-        self.setTitleColor(UIColor.white, for: .normal)
+        
+        if Monetizr.shared.chosenTheme == .Black {
+            self.setTitleColor(.white, for: .normal)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.setTitleColor(.label, for: .normal)
+            } else {
+                // Fallback on earlier versions
+                self.setTitleColor(.black, for: .normal)
+            }
+        }
     }
     
     func checkoutProductButtonStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
-        self.setTitleColor(UIColor.lightGray, for: .highlighted)
+        self.setTitleColor(.lightGray, for: .highlighted)
         self.height(constant: 50)
         self.layer.cornerRadius = 5
         self.layer.borderWidth = 1
@@ -88,21 +117,21 @@ extension UIButton {
         if Monetizr.shared.chosenTheme == .Black {
             self.backgroundColor = UIColor(hex: 0x121212)
             self.layer.borderColor = UIColor.white.cgColor
-            self.setTitleColor(UIColor.white, for: .normal)
-            self.setTitleColor(UIColor.lightGray, for: .highlighted)
+            self.setTitleColor(.white, for: .normal)
+            self.setTitleColor(.lightGray, for: .highlighted)
         }
         else {
             if #available(iOS 13.0, *) {
-                self.backgroundColor = UIColor.systemBackground
+                self.backgroundColor = .systemBackground
                 self.layer.borderColor = UIColor.label.cgColor
-                self.setTitleColor(UIColor.label, for: .normal)
-                self.setTitleColor(UIColor.label, for: .highlighted)
+                self.setTitleColor(.label, for: .normal)
+                self.setTitleColor(.label, for: .highlighted)
             } else {
                 // Fallback on earlier versions
-                self.backgroundColor = UIColor.white
+                self.backgroundColor = .white
                 self.layer.borderColor = UIColor.globalTint.cgColor
-                self.setTitleColor(UIColor.globalTint, for: .normal)
-                self.setTitleColor(UIColor.globalTint, for: .highlighted)
+                self.setTitleColor(.globalTint, for: .normal)
+                self.setTitleColor(.globalTint, for: .highlighted)
             }
         }
     }
@@ -134,24 +163,51 @@ extension UILabel {
     func optionNameStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = .lightGray
         self.font = .systemFont(ofSize: 14, weight: UIFont.Weight.light)
         self.text = self.text?.uppercased()
         self.numberOfLines = 1
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
+        
+        if Monetizr.shared.chosenTheme == .Black {
+            self.textColor = .lightGray
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
+                    self.textColor = .lightGray
+                }
+                else {
+                    self.textColor = .gray
+                }
+            }
+            else {
+                self.textColor = .gray
+            }
+        }
     }
     
     func optionValueStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
-        self.textColor = .white //UIColor(hex: 0x007aff)
         self.font = .systemFont(ofSize: 20, weight: UIFont.Weight.regular)
         self.numberOfLines = 1
         self.textAlignment = .left
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
+        
+        if Monetizr.shared.chosenTheme == .Black {
+            self.textColor = .white
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.textColor = .label
+            }
+            else {
+                self.textColor = .black
+            }
+        }
     }
     
     func priceLabelStyle() {
@@ -168,7 +224,7 @@ extension UILabel {
         }
         else {
             if #available(iOS 13.0, *) {
-                self.textColor = UIColor.label
+                self.textColor = .label
             } else {
                 // Fallback on earlier versions
                 self.textColor = .globalTint
@@ -201,10 +257,10 @@ extension UILabel {
         }
         else {
             if #available(iOS 13.0, *) {
-                self.textColor = UIColor.label
+                self.textColor = .label
             } else {
                 // Fallback on earlier versions
-                self.textColor = UIColor.black
+                self.textColor = .black
             }
         }
     }
@@ -224,10 +280,31 @@ extension UITextView {
         }
         else {
             if #available(iOS 13.0, *) {
-                self.textColor = UIColor.label
+                self.textColor = .label
             } else {
                 // Fallback on earlier versions
-                self.textColor = UIColor.black
+                self.textColor = .black
+            }
+        }
+    }
+}
+
+extension String {
+    func expandDownImageName()->String {
+        if Monetizr.shared.chosenTheme == .Black {
+            return "expand-down-white"
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
+                    return "expand-down-white"
+                }
+                else {
+                    return "expand-down-black"
+                }
+            } else {
+                // Fallback on earlier versions
+                return "expand-down-black"
             }
         }
     }

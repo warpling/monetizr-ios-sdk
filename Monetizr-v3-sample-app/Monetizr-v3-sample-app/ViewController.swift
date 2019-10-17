@@ -27,7 +27,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         tokenField.text = "4D2E54389EB489966658DDD83E2D1"
-        merchTagField.text = "monetizr-sample-t-shirt" //"30-credits", "1794883780674"
+        merchTagField.text = "monetizr-sample-t-shirt" //"30-credits"
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
