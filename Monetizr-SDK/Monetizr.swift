@@ -33,9 +33,9 @@ public class Monetizr {
     var clickCountInSession: Int = 0
     var checkoutCountInSession: Int = 0
     var haveStripeToken: Bool = false
-    var chosenTheme: ProductViewControllerTheme? = .Default
+    var chosenTheme: productViewControllerTheme? = .Default
     
-    public enum ProductViewControllerTheme {
+    public enum productViewControllerTheme {
       case Default
       case Black
     }
@@ -57,7 +57,7 @@ public class Monetizr {
     }
     
     // Set Theme
-    public func setTheme(theme: ProductViewControllerTheme) {
+    public func setTheme(theme: productViewControllerTheme) {
         self.chosenTheme = theme
     }
     
