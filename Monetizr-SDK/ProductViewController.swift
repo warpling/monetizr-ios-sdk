@@ -66,7 +66,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         descriptionContainerView.delegate = self
         
         // Background configuration
-        self.view.backgroundViewStyle()
+        self.view.productViewBackgroundStyle()
         
         // Load product
         self.loadProductData()

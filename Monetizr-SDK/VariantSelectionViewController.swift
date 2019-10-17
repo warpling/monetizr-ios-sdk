@@ -39,7 +39,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         
         // Enforce dark mode for variant selector
         if #available(iOS 13, *) {
-            overrideUserInterfaceStyle = .dark
+           // overrideUserInterfaceStyle = .dark
         }
         
         tableView.delegate = self
@@ -48,7 +48,8 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.showsVerticalScrollIndicator = false
         
-        self.view.backgroundColor = backgroundColor
+        //self.view.backgroundColor = backgroundColor
+        self.view.variantSelectorViewBackgroundStyle()
         // Available variants for level
         if selectedValues.count > 0 {
             for variant in variants {
@@ -89,14 +90,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         }
         
         // Setup navigation bar
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.backgroundColor = backgroundColor
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.barTintColor = backgroundColor
-        self.navigationController?.navigationBar.tintColor = UIColor(hex: 0xE0093B)
-        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        self.navigationController?.variantSelectionControllerNavigationStyle()
         self.title = name
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(closeSelector))
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
@@ -166,10 +160,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "Cell")
         
         // Format cell
-        cell.backgroundColor = backgroundColor
-        cell.textLabel?.textColor = UIColor(hex: 0xE0093B)
-        cell.detailTextLabel?.textColor = .lightGray
-        cell.tintColor = UIColor(hex: 0xE0093B)
+        cell.variantSelectionControllerCellStyle()
         
         // Reset cell - need to be clear if reused
         cell.selectionStyle = .none

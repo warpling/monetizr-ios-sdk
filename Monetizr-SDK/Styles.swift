@@ -12,9 +12,23 @@ import PassKit
 
 // Styles
 extension UIView {
-    func backgroundViewStyle() {
+    func productViewBackgroundStyle() {
         if Monetizr.shared.chosenTheme == .Black {
             self.backgroundColor = UIColor(hex: 0x121212)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.backgroundColor = UIColor.systemBackground
+            } else {
+                // Fallback on earlier versions
+                self.backgroundColor = UIColor.white
+            }
+        }
+    }
+    
+    func variantSelectorViewBackgroundStyle() {
+        if Monetizr.shared.chosenTheme == .Black {
+            self.backgroundColor = UIColor.init(white: 0.15, alpha: 1)
         }
         else {
             if #available(iOS 13.0, *) {
@@ -305,6 +319,63 @@ extension String {
             } else {
                 // Fallback on earlier versions
                 return "expand-down-black"
+            }
+        }
+    }
+}
+
+extension UINavigationController {
+    func variantSelectionControllerNavigationStyle() {
+        if Monetizr.shared.chosenTheme == .Black {
+            self.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            self.navigationBar.shadowImage = UIImage()
+            let backgroundColor = UIColor.init(white: 0.15, alpha: 1)
+            self.navigationBar.backgroundColor = backgroundColor
+            self.navigationBar.isTranslucent = false
+            self.navigationBar.barTintColor = backgroundColor
+            self.navigationBar.tintColor = UIColor(hex: 0xE0093B)
+            let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
+            self.navigationBar.titleTextAttributes = textAttributes
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
+                    
+                }
+                else {
+                    
+                }
+            } else {
+                // Fallback on earlier versions
+                
+            }
+        }
+    }
+}
+
+extension UITableViewCell {
+    func variantSelectionControllerCellStyle() {        
+        if Monetizr.shared.chosenTheme == .Black {
+            let backgroundColor = UIColor.init(white: 0.15, alpha: 1)
+            self.backgroundColor = backgroundColor
+            self.textLabel?.textColor = UIColor(hex: 0xE0093B)
+            self.detailTextLabel?.textColor = .lightGray
+            self.tintColor = UIColor(hex: 0xE0093B)
+            if #available(iOS 13, *) {
+               overrideUserInterfaceStyle = .dark
+            }
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
+                    
+                }
+                else {
+                    
+                }
+            } else {
+                // Fallback on earlier versions
+                
             }
         }
     }
