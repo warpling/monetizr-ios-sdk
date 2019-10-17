@@ -42,10 +42,11 @@ Monetizr.shared.setCompanyAndAppName(companyName: String, appName: String)
 Monetizr.shared.setStripeToken(token: String)
 ```
 
-Optionally you can set languge - might not be availeble, check with Monetizr team
+Optionally you can set language (might not be available, check with Monetizr team) and Product View theme (if not set Default would be used)
 
 ```swift
 Monetizr.shared.setLanguage(language: "en_EN")
+Monetizr.shared.setTheme(theme: ProductViewControllerTheme)
 ```
 Import "Monetizr" to your project
 
@@ -56,7 +57,7 @@ import Monetizr
 #### Show product or get product data and show in your custom view. 
 
 ```swift
-Monetizr.shared.getProductForTag(tag: String, presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
+Monetizr.shared.showProduct(tag: String, presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
 ```
 
 If you choose to show product in a view provided in SDK you should provide presenter view and presentation style. If presentation style not provided it will be `UIModalPresentationStyle.overCurrentContext`
