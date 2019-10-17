@@ -13,7 +13,7 @@ import PassKit
 // Styles
 extension UIView {
     func productViewBackgroundStyle() {
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.backgroundColor = UIColor(hex: 0x121212)
         }
         else {
@@ -27,7 +27,7 @@ extension UIView {
     }
     
     func variantSelectorViewBackgroundStyle() {
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.backgroundColor = UIColor.init(white: 0.15, alpha: 1)
         }
         else {
@@ -42,7 +42,7 @@ extension UIView {
     
     func variantOptionsContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.backgroundColor = .clear
             self.addBlurEffect(style: .dark)
         }
@@ -66,7 +66,7 @@ extension UIView {
     
     func imageCarouselContainerViewStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.backgroundColor = UIColor(hex: 0xc1c1c1)
         }
         else {
@@ -107,7 +107,7 @@ extension UIButton {
         self.setTitle("✕", for: .normal)
         self.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: UIFont.Weight.light)
         
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.setTitleColor(.white, for: .normal)
         }
         else {
@@ -128,7 +128,7 @@ extension UIButton {
         self.layer.cornerRadius = 5
         self.layer.borderWidth = 1
   
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.backgroundColor = UIColor(hex: 0x121212)
             self.layer.borderColor = UIColor.white.cgColor
             self.setTitleColor(.white, for: .normal)
@@ -153,7 +153,7 @@ extension UIButton {
 
 extension PKPaymentButton {
     func buyButtonWithTheme()->PKPaymentButton {
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             return PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .whiteOutline)
         }
         else {
@@ -184,7 +184,7 @@ extension UILabel {
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
         
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.textColor = .lightGray
         }
         else {
@@ -211,7 +211,7 @@ extension UILabel {
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
         
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.textColor = .white
         }
         else {
@@ -233,7 +233,7 @@ extension UILabel {
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
         
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.textColor = UIColor(hex: 0xE0093B)
         }
         else {
@@ -266,7 +266,7 @@ extension UILabel {
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
         
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.textColor = .white
         }
         else {
@@ -289,7 +289,7 @@ extension UITextView {
         self.isEditable = false
         self.isScrollEnabled = false
         
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.textColor = .white
         }
         else {
@@ -305,7 +305,7 @@ extension UITextView {
 
 extension String {
     func expandDownImageName()->String {
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             return "expand-down-white"
         }
         else {
@@ -326,7 +326,7 @@ extension String {
 
 extension UINavigationController {
     func variantSelectionControllerNavigationStyle() {
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             self.navigationBar.setBackgroundImage(UIImage(), for: .default)
             self.navigationBar.shadowImage = UIImage()
             let backgroundColor = UIColor.init(white: 0.15, alpha: 1)
@@ -350,7 +350,7 @@ extension UINavigationController {
 
 extension UITableViewCell {
     func variantSelectionControllerCellStyle() {        
-        if Monetizr.shared.chosenTheme == .Black {
+        if Monetizr.shared.chosenTheme == .black {
             let backgroundColor = UIColor.init(white: 0.15, alpha: 1)
             self.backgroundColor = backgroundColor
             self.textLabel?.textColor = UIColor(hex: 0xE0093B)
