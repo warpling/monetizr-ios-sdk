@@ -339,12 +339,7 @@ extension UINavigationController {
         }
         else {
             if #available(iOS 13.0, *) {
-                if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
-                    
-                }
-                else {
-                    
-                }
+                self.navigationBar.tintColor = .label
             } else {
                 // Fallback on earlier versions
                 
@@ -367,12 +362,7 @@ extension UITableViewCell {
         }
         else {
             if #available(iOS 13.0, *) {
-                if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
-                    
-                }
-                else {
-                    
-                }
+                self.tintColor = .label
             } else {
                 // Fallback on earlier versions
                 
