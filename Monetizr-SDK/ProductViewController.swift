@@ -35,6 +35,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     let priceLabel = UILabel()
     let discountPriceLabel = UILabel()
     let titleLabel = UILabel()
+    let descriptionSeparatorView = UIView()
     let descriptionTextView = UITextView()
     let slideShow = ImageSlideshow()
     var optionsTapGesture = UITapGestureRecognizer()
@@ -94,6 +95,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Configure description text
         self.configureDescriptionTextView()
+        
+        // Configure description separator
+        self.configureDescriptionSeparator()
         
         // Variant option selection container view
         self.configureVariantOptionsContainerView()
@@ -272,9 +276,15 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             titleLabel.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
             titleLabel.rightAnchor.constraint(equalTo: priceLabel.leftAnchor, constant: -10),
             
+            // Description separator
+            descriptionSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+            descriptionSeparatorView.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
+            descriptionSeparatorView.rightAnchor.constraint(equalTo: descriptionContainerView.rightAnchor, constant: -10),
+            descriptionSeparatorView.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor, constant: 5),
+            descriptionSeparatorView.topAnchor.constraint(greaterThanOrEqualTo: discountPriceLabel.bottomAnchor, constant: 5),
+            
             // Description text
-            descriptionTextView.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor),
-            descriptionTextView.topAnchor.constraint(greaterThanOrEqualTo: discountPriceLabel.bottomAnchor),
+            descriptionTextView.topAnchor.constraint(equalTo: descriptionSeparatorView.bottomAnchor),
             //descriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             descriptionTextView.leftAnchor.constraint(equalTo: descriptionContainerView.leftAnchor, constant: 10),
             descriptionTextView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: 0),
@@ -443,6 +453,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         titleLabel.titleLabelStyle()
         titleLabel.accessibilityLabel = NSLocalizedString("Product title", comment: "Product title")
         descriptionContainerView.addSubview(titleLabel)
+    }
+    
+    func configureDescriptionSeparator() {
+        descriptionSeparatorView.descriptionSeparatorViewStyle()
+        descriptionContainerView.addSubview(descriptionSeparatorView)
     }
     
     func configureDescriptionTextView() {

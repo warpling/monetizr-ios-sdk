@@ -83,6 +83,11 @@ extension UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
     }
+    
+    func descriptionSeparatorViewStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .lightGray
+    }
 }
 
 extension UIStackView {
