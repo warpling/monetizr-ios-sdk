@@ -7,6 +7,7 @@ pod 'AlamofireImage'
 pod 'ImageSlideshow', '~> 1.6'
 pod "ImageSlideshow/Alamofire"
 pod 'Stripe/ApplePay'
+pod 'McPicker', '~> 2.0.0'
 end
 
 target 'Monetizr-v3-sample-app' do

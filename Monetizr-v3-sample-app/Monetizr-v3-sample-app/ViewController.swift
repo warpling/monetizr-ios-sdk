@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import McPicker
 
 class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPresenter {
     
@@ -18,8 +19,10 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
     @IBOutlet var tokenField: UITextField!
     @IBOutlet var merchTagField: UITextField!
     @IBOutlet var textLabel: UILabel!
+    @IBOutlet var themeLabel: UILabel!
     
     @IBOutlet var openButton: UIButton!
+    @IBOutlet var changeThemeButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,8 +68,38 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
                 }
             }
         }
+        if sender == changeThemeButton {
+            self.pickTheme()
+        }
     }
-
+    
+    func pickTheme() {
+        let data: [[String]] = [
+            ["Default theme", "Black theme"]
+        ]
+        let mcPicker = McPicker(data: data)
+        if #available(iOS 13.0, *) {
+            mcPicker.pickerBackgroundColor = .systemBackground
+        } else {
+            // Fallback on earlier versions
+            mcPicker.pickerBackgroundColor = .white
+        }
+        mcPicker.show(doneHandler: { [weak self] (selections: [Int : String]) -> Void in
+            if let name = selections[0] {
+                self?.themeLabel.text = name
+                if name == "Default theme" {
+                    Monetizr.shared.setTheme(theme: .base)
+                }
+                if name == "Black theme" {
+                    Monetizr.shared.setTheme(theme: .black)
+                }
+            }
+        }, cancelHandler: {
+           
+        }, selectionChangedHandler: { (selections: [Int:String], componentThatChanged: Int) -> Void  in
+            
+        })
+    }
 }
 
 // Extension to dismiss keyboard when tapped in blank space

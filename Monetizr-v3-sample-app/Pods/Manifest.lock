@@ -8,6 +8,7 @@ PODS:
     - AlamofireImage (~> 3.0)
     - ImageSlideshow/Core
   - ImageSlideshow/Core (1.8.1)
+  - McPicker (2.0.1)
   - Stripe/ApplePay (7.0.1):
     - Stripe/Core
   - Stripe/Core (7.0.1)
@@ -17,6 +18,7 @@ DEPENDENCIES:
   - AlamofireImage
   - ImageSlideshow (~> 1.6)
   - ImageSlideshow/Alamofire
+  - McPicker (~> 2.0.0)
   - Stripe/ApplePay
 
 SPEC REPOS:
@@ -24,14 +26,16 @@ SPEC REPOS:
     - Alamofire
     - AlamofireImage
     - ImageSlideshow
+    - McPicker
     - Stripe
 
 SPEC CHECKSUMS:
   Alamofire: afc3e7c6db61476cb45cdd23fed06bad03bbc321
   AlamofireImage: 63cfe3baf1370be6c498149687cf6db3e3b00999
   ImageSlideshow: 634865d7d4e96f21e3830a31b51bde768cc94cea
+  McPicker: a0a6b8ece8f1642e05401a29867463aba501188b
   Stripe: b92298b31cf156fb23a029361b57e2fcb6583d57
 
-PODFILE CHECKSUM: 4363740cb53acff8b77837fc70912ef735f3334d
+PODFILE CHECKSUM: ca9d50047017876f3a53fd3774db03deeda27b1f
 
-COCOAPODS: 1.8.0.beta.2
+COCOAPODS: 1.8.3
