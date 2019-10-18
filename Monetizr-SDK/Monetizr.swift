@@ -149,7 +149,10 @@ public class Monetizr {
                 if retrievedProduct.data?.productByHandle != nil {
                     if (presenter != nil) {
                         let product = retrievedProduct
-                        let targetStyle = presentationStyle ?? UIModalPresentationStyle.overCurrentContext
+                        var targetStyle = presentationStyle ?? UIModalPresentationStyle.overCurrentContext
+                        if #available(iOS 13.0, *) {
+                            targetStyle = presentationStyle ?? UIModalPresentationStyle.automatic
+                        }
                         self.presentProductView(productViewController: self.productViewForProduct(product: product, tag: tag), presenter: presenter!, presentationStyle: targetStyle)
                     }
                     completionHandler(true, nil, retrievedProduct)
