@@ -47,6 +47,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         tableView.isUserInteractionEnabled = true
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.showsVerticalScrollIndicator = false
+        tableView.contentInset.bottom = 10
         
         //self.view.backgroundColor = backgroundColor
         self.view.variantSelectorViewBackgroundStyle()
