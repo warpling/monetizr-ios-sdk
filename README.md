@@ -18,7 +18,7 @@ Requires iOS 10.0+
 #### CocoaPods
 
 ```swift
-pod 'Monetizr', '~> 3.1'
+pod 'Monetizr', '~> 3.2'
 ```
 
 #### Manual
