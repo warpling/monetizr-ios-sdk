@@ -88,7 +88,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
             if let name = selections[0] {
                 self?.themeLabel.text = name
                 if name == "Default theme" {
-                    Monetizr.shared.setTheme(theme: .base)
+                    Monetizr.shared.setTheme(theme: .system)
                 }
                 if name == "Black theme" {
                     Monetizr.shared.setTheme(theme: .black)

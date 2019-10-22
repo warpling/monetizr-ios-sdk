@@ -33,10 +33,10 @@ public class Monetizr {
     var clickCountInSession: Int = 0
     var checkoutCountInSession: Int = 0
     var haveStripeToken: Bool = false
-    var chosenTheme: ProductViewControllerTheme? = .base
+    var chosenTheme: ProductViewControllerTheme? = .system
     
     public enum ProductViewControllerTheme {
-        case base
+        case system
         case black
     }
     
