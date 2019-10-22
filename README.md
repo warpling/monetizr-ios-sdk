@@ -26,6 +26,12 @@ pod 'Monetizr', '~> 3.2'
 Copy "Monetizr-SDK" folder to your project and resolve dependencies
 ```
 
+Import "Monetizr" to your project
+
+```swift
+import Monetizr
+```
+
 ### Usage
 
 In applicationDidFinishLaunching(_:) do the initialization with token provided to you
@@ -42,17 +48,23 @@ Monetizr.shared.setCompanyAndAppName(companyName: String, appName: String)
 Monetizr.shared.setStripeToken(token: String)
 ```
 
-Optionally you can set language (might not be available, check with Monetizr team) and Product View theme (if not set Default would be used)
+Optionally you can set language (might not be available, check with Monetizr team) 
 
 ```swift
-Monetizr.shared.setLanguage(language: "en_EN")
+Monetizr.shared.setLanguage(language: "en")
+```
+
+Also you can set Product View theme (if not set Default .system would be used)
+
+```swift
 Monetizr.shared.setTheme(theme: ProductViewControllerTheme)
 ```
-Import "Monetizr" to your project
 
-```swift
-import Monetizr
-```
+##### Themes:
+
+*.system - prior to iOS13 will be light theme with globalTint elements, on iOS13+ theme will use system Dark/Light mode preference and adopt to user selection.*
+
+*.black - on all iOS versions and modes will look the same, it would be dark with red elements.*
 
 #### Show product or get product data and show in your custom view. 
 
