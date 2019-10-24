@@ -221,4 +221,9 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
        
     }
+    
+    override func accessibilityPerformEscape() -> Bool {
+        delegate?.closeOptionsSelector()
+        return true
+    }
 }

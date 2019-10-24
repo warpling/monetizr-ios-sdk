@@ -165,6 +165,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
     }
     
+    override func accessibilityPerformEscape() -> Bool {
+        self.buttonAction(sender:closeButton)
+        return true
+    }
+    
     func activateInitialConstraints() {
         viewHeight = view.frame.size.height
         viewWidth = view.frame.size.width
