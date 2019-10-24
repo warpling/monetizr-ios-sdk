@@ -39,20 +39,21 @@ In applicationDidFinishLaunching(_:) do the initialization with token provided t
 ```swift
 Monetizr.shared.token = String
 ```
+##### Apple Pay
 
-If Apple Pay support is planned in applicationDidFinishLaunching(_:) do the configuration
+If Apple Pay support is planned in applicationDidFinishLaunching(_:) set Merchant
 
 ```swift
 Monetizr.shared.setApplePayMerchantID(id: String)
-Monetizr.shared.setCompanyAndAppName(companyName: String, appName: String)
-Monetizr.shared.setStripeToken(token: String)
 ```
 
-Optionally you can set language (might not be available, check with Monetizr team) 
+Optioanlly you can override default company and app name used in payment sheet
 
 ```swift
-Monetizr.shared.setLanguage(language: "en")
+Monetizr.shared.setCompanyAndAppName(companyName: String, appName: String)
 ```
+
+##### Themes:
 
 Also you can set Product View theme (if not set Default .system would be used)
 
@@ -60,7 +61,6 @@ Also you can set Product View theme (if not set Default .system would be used)
 Monetizr.shared.setTheme(theme: ProductViewControllerTheme)
 ```
 
-##### Themes:
 
 *.system - prior to iOS13 will be light theme with globalTint elements, on iOS13+ theme will use system Dark/Light mode preference and adopt to user selection.*
 
