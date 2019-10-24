@@ -133,6 +133,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         updateCheckoutButtons()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        UIAccessibility.post(notification: .screenChanged, argument:titleLabel)
+    }
+    
     override func viewDidLayoutSubviews() {
         if !screenIsInPortrait() {
             descriptionContainerView.scrollToTop(animated: true)
@@ -592,6 +597,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Remove and reset optionsSelectorOverlayView
         optionsSelectorOverlayView.removeFromSuperview()
         optionsSelectorOverlayView = UIView()
+        UIAccessibility.post(notification: .screenChanged, argument:titleLabel)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {

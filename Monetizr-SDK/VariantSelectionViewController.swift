@@ -110,6 +110,11 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        UIAccessibility.post(notification: .screenChanged, argument:self.title)
+    }
+    
     @objc func closeSelector() {
         delegate?.closeOptionsSelector()
     }
