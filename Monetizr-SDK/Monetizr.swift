@@ -64,6 +64,9 @@ public class Monetizr {
     // Set Apple Pay MerchantID
     public func setApplePayMerchantID(id: String) {
         self.applePayMerchantID = id
+        self.setCompanyAndAppName(companyName: "Monetization Solutions", appName: Bundle.appName())
+        print("name", Bundle.appName())
+        self.setStripeToken(token: "pk_live_CWmQoXocvis3aEFufn7R1CKf")
     }
     
     // Set Company Name
