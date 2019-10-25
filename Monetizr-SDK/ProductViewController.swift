@@ -394,6 +394,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     func configureVariantOptionsContainerView() {
         // Variant option selection container view
         variantOptionsContainerView.variantOptionsContainerViewStyle()
+        variantOptionsContainerView.isAccessibilityElement = true
+        variantOptionsContainerView.accessibilityLabel = NSLocalizedString("Select product variant", comment: "Select product variant")
+        variantOptionsContainerView.accessibilityTraits = .button
         self.view.addSubview(variantOptionsContainerView)
         
         // Configure option stack
@@ -507,6 +510,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         if discointPriceAmount != "0" {
             discountPriceLabel.text = discointPriceAmount.priceFormat(currency: discointPriceCurrency)
             discountPriceLabel.strikeThrough()
+            discountPriceLabel.accessibilityValue = discountPriceLabel.text
         }
         
         // Description text view
