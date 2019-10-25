@@ -99,6 +99,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
         // Register cusotm headers
         tableView.register(VariantSelectionHeaderView.self,
         forHeaderFooterViewReuseIdentifier: "sectionHeader")
+        UIAccessibility.post(notification: .screenChanged, argument:self.title)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,7 +113,7 @@ class VariantSelectionViewController: UITableViewController, VariantSelectionDel
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        UIAccessibility.post(notification: .screenChanged, argument:self.title)
+       
     }
     
     @objc func closeSelector() {
