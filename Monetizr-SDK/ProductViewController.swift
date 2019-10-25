@@ -509,8 +509,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         let discointPriceCurrency = selectedVariant?.compareAtPriceV2?.currency ?? "USD"
         if discointPriceAmount != "0" {
             discountPriceLabel.text = discointPriceAmount.priceFormat(currency: discointPriceCurrency)
-            discountPriceLabel.strikeThrough()
             discountPriceLabel.accessibilityValue = discountPriceLabel.text
+            discountPriceLabel.strikeThrough()
         }
         
         // Description text view
