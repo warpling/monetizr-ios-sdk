@@ -49,7 +49,6 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
             (token, error) -> Void in
             
             if (error != nil) {
-                print(error as Any)
                 completion(PKPaymentAuthorizationStatus.failure)
             }
             else {

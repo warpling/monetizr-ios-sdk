@@ -65,7 +65,6 @@ public class Monetizr {
     public func setApplePayMerchantID(id: String) {
         self.applePayMerchantID = id
         self.setCompanyAndAppName(companyName: "Monetization Solutions", appName: Bundle.appName())
-        print("name", Bundle.appName())
         self.setStripeToken(token: "pk_live_CWmQoXocvis3aEFufn7R1CKf")
     }
     
@@ -167,11 +166,9 @@ public class Monetizr {
                 }
             }
             else if let error = response.result.error as? URLError {
-                print("URLError occurred: \(error)")
                 completionHandler(false, error, nil)
             }
             else {
-                print("Unknown error: \(String(describing: response.result.error))")
                 completionHandler(false, response.result.error!, nil)
             }
         }
@@ -221,27 +218,12 @@ public class Monetizr {
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
                     completionHandler(false, error, nil)
-                    
-                    #if DEBUG
-                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                        print("Data: \(utf8Text)")
-                    }
-                    #endif
                 }
             }
             else if let error = response.result.error as? URLError {
-                #if DEBUG
-                print("URLError occurred: \(error)")
-                #endif
                 completionHandler(false, error, nil)
             }
             else {
-                #if DEBUG
-                print("Unknown error: \(String(describing: response.result.error))")
-                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                    print("Data: \(utf8Text)")
-                }
-                #endif
                 completionHandler(false, response.result.error!, nil)
             }
         }
@@ -328,27 +310,12 @@ public class Monetizr {
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
                     completionHandler(false, error, responseCheckout)
-                    
-                    #if DEBUG
-                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                        print("Error Data: \(utf8Text)")
-                    }
-                    #endif
                 }
             }
             else if let error = response.result.error as? URLError {
-                #if DEBUG
-                print("URLError occurred: \(error)")
-                #endif
                 completionHandler(false, error, nil)
             }
             else {
-                #if DEBUG
-                print("Unknown error: \(String(describing: response.result.error))")
-                if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                    print("Error Data: \(utf8Text)")
-                }
-                #endif
                 completionHandler(false, response.result.error!, nil)
             }
         }

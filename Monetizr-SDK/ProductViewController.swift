@@ -184,7 +184,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func configureConstraintsForCurrentOrietnation() {
-        print("Offset Y", descriptionContainerView.contentOffset.y)
         if sharedConstraints.count < 1 {
             // Configure initial constraints
             self.configureSharedConstraints()
@@ -780,14 +779,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         
         // Configure new constraints
         self.configureConstraintsForCurrentOrietnation()
-        
-        #if DEBUG
-        print("saveAreaInsetsDidChange")
-        print("top:    " + String(describing: view.safeAreaInsets.top))
-        print("right:  " + String(describing: view.safeAreaInsets.right))
-        print("bottom: " + String(describing: view.safeAreaInsets.bottom))
-        print("left:   " + String(describing: view.safeAreaInsets.left))
-        #endif
     }
     
     func textExceedBoundsOf(_ textView: UITextView) -> Bool {
