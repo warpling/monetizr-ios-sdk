@@ -45,6 +45,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
         
         // Get Stripe token
+        //STPAPIClient.shared().stripeAccount = ""
         STPAPIClient.shared().createToken(with: payment) {
             (token, error) -> Void in
             

@@ -1,48 +1,98 @@
 # Stripe iOS SDK
+
 [![Travis](https://img.shields.io/travis/stripe/stripe-ios/master.svg?style=flat)](https://travis-ci.org/stripe/stripe-ios)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
 
-The Stripe iOS SDK make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
+The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details.
 
-We also offer [seamless integration](https://stripe.com/apple-pay) with [Apple Pay](https://www.apple.com/apple-pay/) that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
+<p align="center">
+<img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/card-field.gif" width="300" height="56" alt="STPPaymentCardTextField" align="center">
+</p>
+
+We also expose the low-level APIs that power those UIs so that you can build fully custom experiences. See our [iOS Integration Guide](https://stripe.com/docs/mobile/ios/setup) to get started!
+
+> Updating to a newer version of the SDK? See our [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and [changelog](https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md).
+
+Table of contents
+=================
+
+<!--ts-->
+   * [Features](#features)
+   * [Releases](#releases)
+   * [Requirements](#requirements)
+   * [Getting Started](#getting-started)
+      * [Integration](#integration)
+      * [Examples](#examples)
+   * [Card IO](#card-io)
+   * [Contributing](#contributing)
+   * [Migrating](#migrating-from-older-versions)
+<!--te-->
+
+## Features
+
+**Simplified Security**: We make it simple for you to collect sensitive data such as credit card numbers and remain [PCI compliant](https://stripe.com/docs/security#pci-dss-guidelines). This means the sensitive data is sent directly to Stripe instead of passing through your server. For more information, see our [Integration Security Guide](https://stripe.com/docs/security).
+
+**Apple Pay**: We provide a seamless integration with [Apple Pay](https://stripe.com/apple-pay). After [installing the SDK](https://stripe.com/docs/mobile/ios/setup), see our full guide to [accept Apple Pay in your iOS app](https://stripe.com/docs/apple-pay#native).
+
+**Native UI**: We provide out-of-the-box native screens and elements so that you can get started quickly without having to think about designing the right interfaces. For example, [STPPaymentCardTextField](https://stripe.com/docs/mobile/ios/custom#stppaymentcardtextfield) is a UIView that collects and validates card details. [STPAddCardViewController](https://stripe.com/docs/mobile/ios/custom#stpaddcardviewcontroller) is a UIViewController that also creates the Stripe API payment object for you. See our [Custom Integration Guide](https://stripe.com/docs/mobile/ios/custom).
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/add-card-vc.png" width="200" alt="STPAddCardViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/payment-options.png" width="200" alt="STPPaymentOptionsViewController" hspace="20"><img src="https://raw.githubusercontent.com/stripe/stripe-ios/a87e2fb12ce1ba6b45a075ee22e0da5072a54279/shipping-address.png" width="200" alt="STPShippingAddressViewController" hspace="20">
+</p>
+
+We also offer all of our UI components bundled into an all-in-one class designed to handle collecting, saving, and reusing your user’s payment details, as well as collecting shipping info. Take our entire checkout flow at once by following the [STPPaymentContext guide](https://stripe.com/docs/mobile/ios/standard).
+
+**Card Scanning**: We support card scanning capabilities using card.io. See our [Card IO](#card-io) section.
+
+## Releases
+
+We recommend that you install the Stripe iOS SDK using a package manager such as [Cocoapods or Carthage](https://stripe.com/docs/mobile/ios#getting-started). If you prefer to link the library manually, please use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page because we consider the master branch to be unstable.
+
+If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
+[this link](https://github.com/stripe/stripe-ios/tree/v18.2.0).
 
 ## Requirements
-Our SDK is compatible with iOS apps supporting iOS 7.0 and above. It requires Xcode 7.0+ to build the source.
 
-## Integration
+The Stripe iOS SDK requires Xcode 10.1 or later and is compatible with apps targeting iOS 9 or above.
 
-We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everything from installation, to creating payment tokens, to Apple Pay integration and more.
+## Getting Started
 
-## Example apps
+### Integration
 
-There are 2 example apps included in the repository:
-- Stripe iOS Example (Simple) shows a minimal Swift integration with our iOS SDK using Apple Pay.
-- Stripe iOS Example (Custom) demonstrates 2 different ways of collecting your user's payment details: via Apple Pay, and STPPaymentCardTextField, a native credit card UI form component we provide. It, too, uses a small example backend to make charges.
+Please see our [iOS Integration Guide](https://stripe.com/docs/mobile/ios/setup) which explains SDK installation, collecting payment information, Apple Pay integration, and more. For more fine-grained documentation for all of the classes and methods, please see our full [Stripe iOS SDK Reference](http://stripe.github.io/stripe-ios/docs/index.html).
 
-To build and run the example apps, open `Stripe.xcworkspace` and choose the appropriate scheme.
+### Examples
 
-### Getting started with the Simple iOS Example App
+There are 3 example apps included in the repository:
 
-Note: all the example apps require Xcode 7.0 to build and run.
+- [**UI Examples** Example/UI Examples/README.md ](/Example/UI%20Examples/README.md).
+  - This example lets you try out the pre-built UI components we provide.
+- [**Custom Integration** Example/Custom Integration/README.md](/Example/Custom%20Integration/README.md)
+  - This example demonstrates how to uset push `STPAPIClient` to accept various payment methods.
+- [**Basic Integration** Example/Basic Integration/README.md](/Example/Basic%20Integration/README.md)
+  - This example demonstrates how to build a payment flow using our pre-built UI component integration (`STPPaymentContext`).
 
-Before you can run the app, you need to provide it with your Stripe publishable key.
+## Card IO
 
-1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
-2. Replace the `stripePublishableKey` constant in ViewController.swift (for the Simple app) or Constants.m (for the Custom app) with your Test Publishable Key.
-3. Head to https://github.com/stripe/example-ios-backend and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
-4. Replace the `backendChargeURLString` variable in the example iOS app with the app URL Heroku provides you with (e.g. "https://my-example-app.herokuapp.com")
+To add card scanning capabilities to our prebuilt UI components, you can simply [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
 
-After this is done, you can make test payments through the app (use credit card number 4242 4242 4242 4242, along with any cvc and any future expiration date) and then view them in your Stripe Dashboard!
+To try this out, you can run `./install_cardio.rb`, which will download and install card.io in the Basic Integration project. Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
-## Running the tests
+## Contributing
 
-1. Open Stripe.xcworkspace
-1. Choose the "iOS Tests" or "OS X Tests" scheme
-1. Run Product -> Test
+We welcome contributions of any kind including new features, bug fixes, and documentation improvements. Please first open an issue describing what you want to build if it is a major change so that we can discuss how to move forward. Otherwise, go ahead and open a pull request for minor changes such as typo fixes and one liners.
 
-## Migrating from older versions
+### Running Tests
 
-See `MIGRATING.md`
+1. Install Carthage (if you have homebrew installed, `brew install carthage`)
+2. From the root of the repo, install test dependencies by running `carthage bootstrap --platform ios --configuration Release --no-use-binaries`
+3. Open Stripe.xcworkspace
+4. Choose the "StripeiOS" scheme with the iPhone 6, iOS 11.2 simulator (required for snapshot tests to pass)
+5. Run Product -> Test
+
+## Migrating from Older Versions
+
+See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md)

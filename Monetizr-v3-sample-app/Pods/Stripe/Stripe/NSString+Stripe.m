@@ -21,13 +21,21 @@
 - (NSString *)stp_reversedString {
     NSMutableString *mutableReversedString = [NSMutableString stringWithCapacity:self.length];
     [self enumerateSubstringsInRange:NSMakeRange(0, self.length)
-                             options:NSStringEnumerationReverse | NSStringEnumerationByComposedCharacterSequences
+                             options:(NSStringEnumerationOptions)(NSStringEnumerationReverse | NSStringEnumerationByComposedCharacterSequences)
                           usingBlock:^(NSString *substring, __unused NSRange substringRange, __unused NSRange enclosingRange, __unused BOOL *stop) {
         [mutableReversedString appendString:substring];
     }];
     return [mutableReversedString copy];
 }
 
+- (NSString *)stp_stringByRemovingSuffix:(NSString *)suffix {
+    if (suffix != nil && [self hasSuffix:suffix]) {
+        return [self stp_safeSubstringToIndex:self.length-suffix.length];
+    } else {
+        return [self copy];
+    }
+}
+
 @end
 
-void linkStringCategory(void){}
+void linkNSStringCategory(void){}

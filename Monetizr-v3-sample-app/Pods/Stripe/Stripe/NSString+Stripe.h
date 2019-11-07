@@ -13,7 +13,8 @@
 - (NSString *)stp_safeSubstringToIndex:(NSUInteger)index;
 - (NSString *)stp_safeSubstringFromIndex:(NSUInteger)index;
 - (NSString *)stp_reversedString;
+- (NSString *)stp_stringByRemovingSuffix:(NSString *)suffix;
 
 @end
 
-void linkStringCategory(void);
+void linkNSStringCategory(void);
