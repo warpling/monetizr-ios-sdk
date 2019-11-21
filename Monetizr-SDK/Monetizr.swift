@@ -231,7 +231,7 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, token: STPToken, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, token: STPToken? = nil, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkoutwithpayment"
         
         let paymentAmount: [String: Any] = [
@@ -285,16 +285,25 @@ public class Monetizr {
             "province" : payment.billingContact?.postalAddress?.state ?? "",
         ]
         
-        let stripeTokenfields = token.allResponseFields
-        let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: stripeTokenfields, options: [])
-        let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
+        // Stripe token
+        // let stripeTokenfields = token.allResponseFields
+        // let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: stripeTokenfields, options: [])
+        // let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
+        
+        // Apple pay direct
+        //let tokenDataField = payment.token.paymentData
+        //let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: tokenDataField, options: [])
+        //let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
+        
+        let tokenFieldString = String(data: payment.token.paymentData, encoding: .utf8)!
+        print("paymentDataToken", tokenFieldString as Any)
         
         let parameters: [String: Any] = [
             "checkoutId": checkout.data?.checkoutCreate?.checkout?.id ?? "",
             "product_handle" : tag,
             "type" : "apple_pay",
             "idempotencyKey" : payment.token.transactionIdentifier,
-            "paymentData" : tokenFieldsJsonString as Any,
+            "paymentData" : tokenFieldString as Any,
             "paymentAmount" : paymentAmount,
             "shippingAddress" : shippingAddress,
             "billingAddress" : billingAddress,
@@ -304,6 +313,7 @@ public class Monetizr {
         ]
         
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
+            print(String(data: response.data!, encoding: .utf8)!)
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
                     completionHandler(true, nil, responseCheckout)

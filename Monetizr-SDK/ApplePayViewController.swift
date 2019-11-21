@@ -44,6 +44,30 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
         
+        // Pass data to Monetizr
+        let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
+        Monetizr.shared.checkoutVarinatWithPayment(checkout: self.checkout!, selectedVariant: self.selectedVariant!, payment: payment, tag: self.tag ?? "", amount: amount) {success, error, checkout  in
+        if success {
+        // Handle success response
+           self.checkout = checkout
+           
+           let paymentError = !(self.checkout?.data?.third?.payment?.errorMessage ?? "").isEmpty
+           let hasPaymentID = !(self.checkout?.data?.third?.payment?.id ?? "").isEmpty
+           if !paymentError && hasPaymentID {
+               completion(PKPaymentAuthorizationStatus.success)
+           }
+           else {
+               completion(PKPaymentAuthorizationStatus.failure)
+           }
+        }
+        else {
+        // Handle error
+           completion(PKPaymentAuthorizationStatus.failure)
+        }
+        }
+            
+        /*
+        
         // Get Stripe token
         //STPAPIClient.shared().stripeAccount = ""
         STPAPIClient.shared().createToken(with: payment) {
@@ -76,6 +100,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                 }
             }
         }
+    */
     }
     
     @available(iOS, deprecated:11.0, message:"Use PKPaymentRequestShippingContactUpdate")
