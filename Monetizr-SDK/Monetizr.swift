@@ -232,7 +232,7 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, token: STPToken, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkoutwithpayment"
         
         let paymentAmount: [String: Any] = [
@@ -286,16 +286,12 @@ public class Monetizr {
             "province" : payment.billingContact?.postalAddress?.state ?? "",
         ]
         
-        let stripeTokenfields = token.allResponseFields
-        let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: stripeTokenfields, options: [])
-        let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
-        
         let parameters: [String: Any] = [
             "checkoutId": checkout.data?.checkoutCreate?.checkout?.id ?? "",
             "product_handle" : tag,
             "type" : "apple_pay",
             "idempotencyKey" : payment.token.transactionIdentifier,
-            "paymentData" : tokenFieldsJsonString as Any,
+            "paymentData" : "",
             "paymentAmount" : paymentAmount,
             "shippingAddress" : shippingAddress,
             "billingAddress" : billingAddress,
