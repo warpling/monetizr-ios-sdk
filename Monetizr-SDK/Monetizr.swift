@@ -11,6 +11,7 @@ import UIKit
 import Alamofire
 import PassKit
 import Stripe
+import MobileBuySDK
 
 public class Monetizr {
     
