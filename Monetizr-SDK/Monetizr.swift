@@ -233,8 +233,8 @@ public class Monetizr {
     
     // Checkout with payment
     public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
-        let urlString = apiUrl+"products/checkoutwithpayment"
         
+        // Data for handling
         let paymentAmount: [String: Any] = [
             "amount": String(describing: amount),
             "currencyCode": selectedVariant.priceV2?.currency ?? "USD"
@@ -259,6 +259,72 @@ public class Monetizr {
             // Fallback on earlier versions
         }
         
+        let billingAddress = Storefront.MailingAddressInput.create(
+            address1:  .value(billingStreet + billingSubLocality + billingSubAdministrativeArea),
+            //address2:  .value("Suite 400"),
+            city:      .value(payment.billingContact?.postalAddress?.city ?? ""),
+            country:   .value(payment.billingContact?.postalAddress?.country ?? ""),
+            firstName: .value(payment.billingContact?.name?.givenName ?? ""),
+            lastName:  .value(payment.billingContact?.name?.familyName ?? ""),
+            phone:     .value(payment.billingContact?.phoneNumber?.stringValue ?? ""),
+            province:  .value(payment.billingContact?.postalAddress?.state ?? ""),
+            zip:       .value(payment.billingContact?.postalAddress?.postalCode ?? "")
+        )
+        
+        // Checkout with mobile buy
+
+        let payment = Storefront.TokenizedPaymentInputV2.create(
+            amount:         amount as Decimal,
+            idempotencyKey: payment.token.transactionIdentifier,
+            billingAddress: billingAddress, // <- perform the conversion
+            type:           "apple_pay",
+            paymentData:    String(data: payment.token.paymentData, encoding: .utf8)!
+        )
+
+        let mutation = Storefront.buildMutation { $0
+            .checkoutCompleteWithTokenizedPaymentV2(checkoutId: GraphQL.ID(rawValue: checkout.data?.checkoutCreate?.checkout?.id ?? ""), payment: payment) { $0
+                .payment { $0
+                    .id()
+                    .ready()
+                }
+                .checkout { $0
+                    .id()
+                    .ready()
+                }
+                .userErrors { $0
+                    .field()
+                    .message()
+                }
+            }
+        }
+        
+        let client = Graph.Client(
+            shopDomain: "shoes.myshopify.com",
+            apiKey:     "dGhpcyBpcyBhIHByaXZhdGUgYXBpIGtleQ"
+        )
+
+        let task = client.mutateGraphWith(mutation) { result, error in
+            guard error == nil else {
+                // handle request error
+            }
+
+            guard let userError = result?.checkoutCompleteWithTokenizedPayment?.userErrors else {
+                // handle any user error
+                return
+            }
+
+            let checkoutReady = result?.checkoutCompleteWithTokenizedPayment?.checkout.ready ?? false
+            let paymentReady  = result?.checkoutCompleteWithTokenizedPayment?.payment?.ready ?? false
+
+            // checkoutReady == false
+            // paymentReady == false
+        }
+        task.resume()
+        
+        
+        // Checkout with Monetizr API
+        let urlString = apiUrl+"products/checkoutwithpayment"
+        
         var test = false
         #if DEBUG
         test = true
@@ -273,17 +339,6 @@ public class Monetizr {
             "zip" : payment.shippingContact?.postalAddress?.postalCode ?? "",
             "phone" : payment.shippingContact?.phoneNumber?.stringValue ?? "",
             "province" : payment.shippingContact?.postalAddress?.state ?? "",
-        ]
-        
-        let billingAddress: [String: Any] = [
-            "firstName" : payment.billingContact?.name?.givenName ?? "",
-            "lastName" : payment.billingContact?.name?.familyName ?? "",
-            "address1" : billingStreet + billingSubLocality + billingSubAdministrativeArea,
-            "city" : payment.billingContact?.postalAddress?.city ?? "",
-            "country" : payment.billingContact?.postalAddress?.country ?? "",
-            "zip" : payment.billingContact?.postalAddress?.postalCode ?? "",
-            "phone" : payment.billingContact?.phoneNumber?.stringValue ?? "",
-            "province" : payment.billingContact?.postalAddress?.state ?? "",
         ]
         
         let parameters: [String: Any] = [
