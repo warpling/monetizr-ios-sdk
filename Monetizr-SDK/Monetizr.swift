@@ -232,7 +232,7 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, token: STPToken? = nil, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, token: STPToken, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkoutwithpayment"
         
         let paymentAmount: [String: Any] = [
@@ -286,25 +286,16 @@ public class Monetizr {
             "province" : payment.billingContact?.postalAddress?.state ?? "",
         ]
         
-        // Stripe token
-        // let stripeTokenfields = token.allResponseFields
-        // let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: stripeTokenfields, options: [])
-        // let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
-        
-        // Apple pay direct
-        //let tokenDataField = payment.token.paymentData
-        //let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: tokenDataField, options: [])
-        //let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
-        
-        let tokenFieldString = String(data: payment.token.paymentData, encoding: .utf8)!
-        print("paymentDataToken", tokenFieldString as Any)
+        let stripeTokenfields = token.allResponseFields
+        let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: stripeTokenfields, options: [])
+        let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
         
         let parameters: [String: Any] = [
             "checkoutId": checkout.data?.checkoutCreate?.checkout?.id ?? "",
             "product_handle" : tag,
             "type" : "apple_pay",
             "idempotencyKey" : payment.token.transactionIdentifier,
-            "paymentData" : tokenFieldString as Any,
+            "paymentData" : tokenFieldsJsonString as Any,
             "paymentAmount" : paymentAmount,
             "shippingAddress" : shippingAddress,
             "billingAddress" : billingAddress,
@@ -314,7 +305,6 @@ public class Monetizr {
         ]
         
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
-            print(String(data: response.data!, encoding: .utf8)!)
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
                     completionHandler(true, nil, responseCheckout)
@@ -332,6 +322,100 @@ public class Monetizr {
             }
         }
     }
+    
+    /*
+    // Checkout with payment
+    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, token: STPToken, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+        let urlString = apiUrl+"products/checkoutwithpayment"
+        
+        let paymentAmount: [String: Any] = [
+            "amount": String(describing: amount),
+            "currencyCode": selectedVariant.priceV2?.currency ?? "USD"
+        ]
+        
+        let shippingStreet = payment.shippingContact?.postalAddress?.street ?? ""
+        let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
+        var shippingSubLocality = ""
+        var billingSubLocality = ""
+        if #available(iOS 10.3, *) {
+            shippingSubLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
+            billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
+        } else {
+            // Fallback on earlier versions
+        }
+        var shippingSubAdministrativeArea = ""
+        var billingSubAdministrativeArea = ""
+        if #available(iOS 10.3, *) {
+            shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+            billingSubAdministrativeArea = payment.billingContact?.postalAddress?.subAdministrativeArea ?? ""
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        var test = false
+        #if DEBUG
+        test = true
+        #endif
+        
+        let shippingAddress: [String: Any] = [
+            "firstName" : payment.shippingContact?.name?.givenName ?? "",
+            "lastName" : payment.shippingContact?.name?.familyName ?? "",
+            "address1" : shippingStreet + shippingSubLocality + shippingSubAdministrativeArea,
+            "city" : payment.shippingContact?.postalAddress?.city ?? "",
+            "country" : payment.shippingContact?.postalAddress?.country ?? "",
+            "zip" : payment.shippingContact?.postalAddress?.postalCode ?? "",
+            "phone" : payment.shippingContact?.phoneNumber?.stringValue ?? "",
+            "province" : payment.shippingContact?.postalAddress?.state ?? "",
+        ]
+        
+        let billingAddress: [String: Any] = [
+            "firstName" : payment.billingContact?.name?.givenName ?? "",
+            "lastName" : payment.billingContact?.name?.familyName ?? "",
+            "address1" : billingStreet + billingSubLocality + billingSubAdministrativeArea,
+            "city" : payment.billingContact?.postalAddress?.city ?? "",
+            "country" : payment.billingContact?.postalAddress?.country ?? "",
+            "zip" : payment.billingContact?.postalAddress?.postalCode ?? "",
+            "phone" : payment.billingContact?.phoneNumber?.stringValue ?? "",
+            "province" : payment.billingContact?.postalAddress?.state ?? "",
+        ]
+        
+        let stripeTokenfields = token.allResponseFields
+        let tokenFieldsJsonData = try? JSONSerialization.data(withJSONObject: stripeTokenfields, options: [])
+        let tokenFieldsJsonString = String(data: tokenFieldsJsonData!, encoding: .utf8)
+        
+        let parameters: [String: Any] = [
+            "checkoutId": checkout.data?.checkoutCreate?.checkout?.id ?? "",
+            "product_handle" : tag,
+            "type" : "apple_pay",
+            "idempotencyKey" : payment.token.transactionIdentifier,
+            "paymentData" : tokenFieldsJsonString as Any,
+            "paymentAmount" : paymentAmount,
+            "shippingAddress" : shippingAddress,
+            "billingAddress" : billingAddress,
+            "test" : test,
+            "shippingRateHandle" : payment.shippingMethod?.identifier ?? "",
+            "email" : payment.shippingContact?.emailAddress ?? ""
+        ]
+        
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
+            if let responseCheckout = response.result.value {
+                if responseCheckout.data != nil {
+                    completionHandler(true, nil, responseCheckout)
+                }
+                else {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
+                    completionHandler(false, error, responseCheckout)
+                }
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    */
     
     // Buy product-variant with Apple Pay
     public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
