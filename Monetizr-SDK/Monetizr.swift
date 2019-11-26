@@ -231,29 +231,75 @@ public class Monetizr {
         }
     }
     
-    // Checkout with payment
-    public func checkoutVarinatWithPayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
-        
-        // Data for handling
-        let paymentAmount: [String: Any] = [
-            "amount": String(describing: amount),
-            "currencyCode": selectedVariant.priceV2?.currency ?? "USD"
-        ]
+    // Update Shipping address
+    public func checkoutUpdateShippingAddressFromPayment(checkout: Checkout, payment: PKPayment, completionHandler: @escaping (Bool, Error?, [Storefront.CheckoutUserError]?, Storefront.Checkout?) -> Void) {
         
         let shippingStreet = payment.shippingContact?.postalAddress?.street ?? ""
-        let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
         var shippingSubLocality = ""
-        var billingSubLocality = ""
+        var shippingSubAdministrativeArea = ""
         if #available(iOS 10.3, *) {
             shippingSubLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
-            billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
-        } else {
+            shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+        }
+        else {
             // Fallback on earlier versions
         }
-        var shippingSubAdministrativeArea = ""
+               
+        let shippingAddress = Storefront.MailingAddressInput.create(
+            address1:  .value(shippingStreet + shippingSubLocality + shippingSubAdministrativeArea),
+                   //address2:  .value("Suite 400"),
+            city:      .value(payment.shippingContact?.postalAddress?.city ?? ""),
+            country:   .value(payment.shippingContact?.postalAddress?.country ?? ""),
+            firstName: .value(payment.shippingContact?.name?.givenName ?? ""),
+            lastName:  .value(payment.shippingContact?.name?.familyName ?? ""),
+            phone:     .value(payment.shippingContact?.phoneNumber?.stringValue ?? ""),
+            province:  .value(payment.shippingContact?.postalAddress?.state ?? ""),
+            zip:       .value(payment.shippingContact?.postalAddress?.postalCode ?? "")
+        )
+        
+        let mutation = Storefront.buildMutation { $0
+            .checkoutShippingAddressUpdateV2(shippingAddress: shippingAddress, checkoutId: GraphQL.ID(rawValue: checkout.data?.checkoutCreate?.checkout?.id ?? "")) { $0
+                .checkout { $0
+                    .id()
+                }
+                .checkoutUserErrors { $0
+                    .field()
+                    .message()
+                }
+            }
+        }
+        
+        let client = Graph.Client(
+            shopDomain: "pixelberry.myshopify.com",
+            apiKey:     "f8ee0cc95d2dd33b35e19a4a1d870d32"
+        )
+
+        let task = client.mutateGraphWith(mutation) { result, error in
+            guard error == nil else {
+                // handle request error
+                completionHandler(false, error, nil, nil)
+                return
+            }
+
+            guard result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors == nil || result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors.count == 0  else {
+                // handle any user error
+                completionHandler(false, nil, result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors, nil)
+                return
+            }
+
+            completionHandler(true, nil, nil, result?.checkoutShippingAddressUpdateV2?.checkout)
+        }
+        task.resume()
+    }
+    
+    // Checkout with payment
+    public func checkoutVarinatWithPayment(checkout: Storefront.Checkout, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, [Storefront.CheckoutUserError]?, Storefront.Checkout?, Storefront.Payment?) -> Void) {
+        
+        let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
+        var billingSubLocality = ""
         var billingSubAdministrativeArea = ""
         if #available(iOS 10.3, *) {
-            shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+            billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
             billingSubAdministrativeArea = payment.billingContact?.postalAddress?.subAdministrativeArea ?? ""
         } else {
             // Fallback on earlier versions
@@ -271,18 +317,22 @@ public class Monetizr {
             zip:       .value(payment.billingContact?.postalAddress?.postalCode ?? "")
         )
         
+        let currencyCode = Storefront.CurrencyCode.usd
+        
+        let paymentAmount = Storefront.MoneyInput.create(amount: amount as Decimal, currencyCode: currencyCode)
+        
         // Checkout with mobile buy
 
         let payment = Storefront.TokenizedPaymentInputV2.create(
-            amount:         amount as Decimal,
+            paymentAmount:  paymentAmount,
             idempotencyKey: payment.token.transactionIdentifier,
-            billingAddress: billingAddress, // <- perform the conversion
+            billingAddress: billingAddress,
             type:           "apple_pay",
             paymentData:    String(data: payment.token.paymentData, encoding: .utf8)!
         )
 
         let mutation = Storefront.buildMutation { $0
-            .checkoutCompleteWithTokenizedPaymentV2(checkoutId: GraphQL.ID(rawValue: checkout.data?.checkoutCreate?.checkout?.id ?? ""), payment: payment) { $0
+            .checkoutCompleteWithTokenizedPaymentV2(checkoutId: checkout.id, payment: payment) { $0
                 .payment { $0
                     .id()
                     .ready()
@@ -291,87 +341,34 @@ public class Monetizr {
                     .id()
                     .ready()
                 }
-                .userErrors { $0
+                .checkoutUserErrors { $0
                     .field()
                     .message()
                 }
             }
         }
-        
+ 
         let client = Graph.Client(
-            shopDomain: "shoes.myshopify.com",
-            apiKey:     "dGhpcyBpcyBhIHByaXZhdGUgYXBpIGtleQ"
+            shopDomain: "pixelberry.myshopify.com",
+            apiKey:     "f8ee0cc95d2dd33b35e19a4a1d870d32"
         )
 
         let task = client.mutateGraphWith(mutation) { result, error in
             guard error == nil else {
                 // handle request error
-            }
-
-            guard let userError = result?.checkoutCompleteWithTokenizedPayment?.userErrors else {
-                // handle any user error
+                completionHandler(false, error, nil, nil, nil)
                 return
             }
 
-            let checkoutReady = result?.checkoutCompleteWithTokenizedPayment?.checkout.ready ?? false
-            let paymentReady  = result?.checkoutCompleteWithTokenizedPayment?.payment?.ready ?? false
+            guard result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors == nil || result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors.count == 0  else {
+                // handle any user error
+                completionHandler(false, nil, result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors, nil, nil)
+                return
+            }
 
-            // checkoutReady == false
-            // paymentReady == false
+            completionHandler(true, nil, nil, result?.checkoutCompleteWithTokenizedPaymentV2?.checkout, result?.checkoutCompleteWithTokenizedPaymentV2?.payment)
         }
         task.resume()
-        
-        
-        // Checkout with Monetizr API
-        let urlString = apiUrl+"products/checkoutwithpayment"
-        
-        var test = false
-        #if DEBUG
-        test = true
-        #endif
-        
-        let shippingAddress: [String: Any] = [
-            "firstName" : payment.shippingContact?.name?.givenName ?? "",
-            "lastName" : payment.shippingContact?.name?.familyName ?? "",
-            "address1" : shippingStreet + shippingSubLocality + shippingSubAdministrativeArea,
-            "city" : payment.shippingContact?.postalAddress?.city ?? "",
-            "country" : payment.shippingContact?.postalAddress?.country ?? "",
-            "zip" : payment.shippingContact?.postalAddress?.postalCode ?? "",
-            "phone" : payment.shippingContact?.phoneNumber?.stringValue ?? "",
-            "province" : payment.shippingContact?.postalAddress?.state ?? "",
-        ]
-        
-        let parameters: [String: Any] = [
-            "checkoutId": checkout.data?.checkoutCreate?.checkout?.id ?? "",
-            "product_handle" : tag,
-            "type" : "apple_pay",
-            "idempotencyKey" : payment.token.transactionIdentifier,
-            "paymentData" : "",
-            "paymentAmount" : paymentAmount,
-            "shippingAddress" : shippingAddress,
-            "billingAddress" : billingAddress,
-            "test" : test,
-            "shippingRateHandle" : payment.shippingMethod?.identifier ?? "",
-            "email" : payment.shippingContact?.emailAddress ?? ""
-        ]
-        
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
-            if let responseCheckout = response.result.value {
-                if responseCheckout.data != nil {
-                    completionHandler(true, nil, responseCheckout)
-                }
-                else {
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
-                    completionHandler(false, error, responseCheckout)
-                }
-            }
-            else if let error = response.result.error as? URLError {
-                completionHandler(false, error, nil)
-            }
-            else {
-                completionHandler(false, response.result.error!, nil)
-            }
-        }
     }
     
     /*
