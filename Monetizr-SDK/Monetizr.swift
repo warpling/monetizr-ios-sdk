@@ -240,32 +240,13 @@ public class Monetizr {
             apiKey:     "f8ee0cc95d2dd33b35e19a4a1d870d32"
         )
         
-        // Update shipping address
-        let shippingStreet = payment.shippingContact?.postalAddress?.street ?? ""
-        var shippingSubLocality = ""
-        var shippingSubAdministrativeArea = ""
-        if #available(iOS 10.3, *) {
-            shippingSubLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
-            shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
-        }
-        else {
-            // Fallback on earlier versions
-        }
-               
-        let shippingAddress = Storefront.MailingAddressInput.create(
-            address1:  .value(shippingStreet + shippingSubLocality + shippingSubAdministrativeArea),
-                   //address2:  .value("Suite 400"),
-            city:      .value(payment.shippingContact?.postalAddress?.city ?? ""),
-            country:   .value(payment.shippingContact?.postalAddress?.country ?? ""),
-            firstName: .value(payment.shippingContact?.name?.givenName ?? ""),
-            lastName:  .value(payment.shippingContact?.name?.familyName ?? ""),
-            phone:     .value(payment.shippingContact?.phoneNumber?.stringValue ?? ""),
-            province:  .value(payment.shippingContact?.postalAddress?.state ?? ""),
-            zip:       .value(payment.shippingContact?.postalAddress?.postalCode ?? "")
-        )
+        let checkoutID = GraphQL.ID(rawValue: checkout.data?.checkoutCreate?.checkout?.id ?? "")
         
+        let shippingEmail = payment.shippingContact?.emailAddress ?? ""
+        
+        // Update e-mail address
         let mutation = Storefront.buildMutation { $0
-            .checkoutShippingAddressUpdateV2(shippingAddress: shippingAddress, checkoutId: GraphQL.ID(rawValue: checkout.data?.checkoutCreate?.checkout?.id ?? "")) { $0
+            .checkoutEmailUpdateV2(checkoutId: checkoutID, email: shippingEmail) { $0
                 .checkout { $0
                     .id()
                 }
@@ -275,7 +256,7 @@ public class Monetizr {
                 }
             }
         }
-
+        
         let task = client.mutateGraphWith(mutation) { result, error in
             guard error == nil else {
                 // handle request error
@@ -283,58 +264,41 @@ public class Monetizr {
                 return
             }
 
-            guard result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors == nil || result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors.count == 0  else {
+            guard result?.checkoutEmailUpdateV2?.checkoutUserErrors == nil || result?.checkoutEmailUpdateV2?.checkoutUserErrors.count == 0  else {
                 // handle any user error
-                completionHandler(false, nil, result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors, nil, nil)
+                completionHandler(false, nil, result?.checkoutEmailUpdateV2?.checkoutUserErrors, nil, nil)
                 return
             }
-            
+
             // Success
-            let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
-            var billingSubLocality = ""
-            var billingSubAdministrativeArea = ""
+            // Update shipping address
+            let shippingStreet = payment.shippingContact?.postalAddress?.street ?? ""
+            var shippingSubLocality = ""
+            var shippingSubAdministrativeArea = ""
             if #available(iOS 10.3, *) {
-                billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
-                billingSubAdministrativeArea = payment.billingContact?.postalAddress?.subAdministrativeArea ?? ""
-            } else {
+                shippingSubLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
+                shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+            }
+            else {
                 // Fallback on earlier versions
             }
-            
-            let billingAddress = Storefront.MailingAddressInput.create(
-                address1:  .value(billingStreet + billingSubLocality + billingSubAdministrativeArea),
-                //address2:  .value("Suite 400"),
-                city:      .value(payment.billingContact?.postalAddress?.city ?? ""),
-                country:   .value(payment.billingContact?.postalAddress?.country ?? ""),
-                firstName: .value(payment.billingContact?.name?.givenName ?? ""),
-                lastName:  .value(payment.billingContact?.name?.familyName ?? ""),
-                phone:     .value(payment.billingContact?.phoneNumber?.stringValue ?? ""),
-                province:  .value(payment.billingContact?.postalAddress?.state ?? ""),
-                zip:       .value(payment.billingContact?.postalAddress?.postalCode ?? "")
+                   
+            let shippingAddress = Storefront.MailingAddressInput.create(
+                address1:  .value(shippingStreet + shippingSubLocality + shippingSubAdministrativeArea),
+                       //address2:  .value("Suite 400"),
+                city:      .value(payment.shippingContact?.postalAddress?.city ?? ""),
+                country:   .value(payment.shippingContact?.postalAddress?.country ?? ""),
+                firstName: .value(payment.shippingContact?.name?.givenName ?? ""),
+                lastName:  .value(payment.shippingContact?.name?.familyName ?? ""),
+                phone:     .value(payment.shippingContact?.phoneNumber?.stringValue ?? ""),
+                province:  .value(payment.shippingContact?.postalAddress?.state ?? ""),
+                zip:       .value(payment.shippingContact?.postalAddress?.postalCode ?? "")
             )
             
-            let currencyCode = Storefront.CurrencyCode.usd
-            
-            let paymentAmount = Storefront.MoneyInput.create(amount: amount as Decimal, currencyCode: currencyCode)
-            
-            // Checkout with mobile buy
-
-            let payment = Storefront.TokenizedPaymentInputV2.create(
-                paymentAmount:  paymentAmount,
-                idempotencyKey: payment.token.transactionIdentifier,
-                billingAddress: billingAddress,
-                type:           "apple_pay",
-                paymentData:    String(data: payment.token.paymentData, encoding: .utf8)!
-            )
-
             let mutation = Storefront.buildMutation { $0
-                .checkoutCompleteWithTokenizedPaymentV2(checkoutId: (result?.checkoutShippingAddressUpdateV2?.checkout!.id)!, payment: payment) { $0
-                    .payment { $0
-                        .id()
-                        .ready()
-                    }
+                .checkoutShippingAddressUpdateV2(shippingAddress: shippingAddress, checkoutId: GraphQL.ID(rawValue: checkout.data?.checkoutCreate?.checkout?.id ?? "")) { $0
                     .checkout { $0
                         .id()
-                        .ready()
                     }
                     .checkoutUserErrors { $0
                         .field()
@@ -350,19 +314,87 @@ public class Monetizr {
                     return
                 }
 
-                guard result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors == nil || result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors.count == 0  else {
+                guard result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors == nil || result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors.count == 0  else {
                     // handle any user error
-                    completionHandler(false, nil, result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors, nil, nil)
+                    completionHandler(false, nil, result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors, nil, nil)
                     return
                 }
+                
+                // Success
+                let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
+                var billingSubLocality = ""
+                var billingSubAdministrativeArea = ""
+                if #available(iOS 10.3, *) {
+                    billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
+                    billingSubAdministrativeArea = payment.billingContact?.postalAddress?.subAdministrativeArea ?? ""
+                } else {
+                    // Fallback on earlier versions
+                }
+                
+                let billingAddress = Storefront.MailingAddressInput.create(
+                    address1:  .value(billingStreet + billingSubLocality + billingSubAdministrativeArea),
+                    //address2:  .value("Suite 400"),
+                    city:      .value(payment.billingContact?.postalAddress?.city ?? ""),
+                    country:   .value(payment.billingContact?.postalAddress?.country ?? ""),
+                    firstName: .value(payment.billingContact?.name?.givenName ?? ""),
+                    lastName:  .value(payment.billingContact?.name?.familyName ?? ""),
+                    phone:     .value(payment.billingContact?.phoneNumber?.stringValue ?? ""),
+                    province:  .value(payment.billingContact?.postalAddress?.state ?? ""),
+                    zip:       .value(payment.billingContact?.postalAddress?.postalCode ?? "")
+                )
+                
+                let currencyCode = Storefront.CurrencyCode.usd
+                
+                let paymentAmount = Storefront.MoneyInput.create(amount: amount as Decimal, currencyCode: currencyCode)
+                
+                // Checkout with mobile buy
+                let payment = Storefront.TokenizedPaymentInputV2.create(
+                    paymentAmount:  paymentAmount,
+                    idempotencyKey: payment.token.transactionIdentifier,
+                    billingAddress: billingAddress,
+                    type:           "apple_pay",
+                    paymentData:    String(data: payment.token.paymentData, encoding: .utf8)!
+                )
 
-                completionHandler(true, nil, nil, result?.checkoutCompleteWithTokenizedPaymentV2?.checkout, result?.checkoutCompleteWithTokenizedPaymentV2?.payment)
+                let mutation = Storefront.buildMutation { $0
+                    .checkoutCompleteWithTokenizedPaymentV2(checkoutId: (result?.checkoutShippingAddressUpdateV2?.checkout!.id)!, payment: payment) { $0
+                        .payment { $0
+                            .id()
+                            .ready()
+                        }
+                        .checkout { $0
+                            .id()
+                            .ready()
+                        }
+                        .checkoutUserErrors { $0
+                            .field()
+                            .message()
+                        }
+                    }
+                }
+
+                let task = client.mutateGraphWith(mutation) { result, error in
+                    guard error == nil else {
+                        // handle request error
+                        completionHandler(false, error, nil, nil, nil)
+                        return
+                    }
+
+                    guard result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors == nil || result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors.count == 0  else {
+                        // handle any user error
+                        completionHandler(false, nil, result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors, nil, nil)
+                        return
+                    }
+
+                    completionHandler(true, nil, nil, result?.checkoutCompleteWithTokenizedPaymentV2?.checkout, result?.checkoutCompleteWithTokenizedPaymentV2?.payment)
+                }
+                task.resume()
+                
             }
             task.resume()
             
         }
         task.resume()
-        
         
     }
     
