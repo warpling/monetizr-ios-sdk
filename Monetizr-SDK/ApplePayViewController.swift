@@ -9,16 +9,18 @@
 import UIKit
 import PassKit
 import Stripe
+import MobileBuySDK
 
 // Protocol used for sending data back to product view
 protocol ApplePayControllerDelegate: class {
-    func applePayFinishedWithCheckout(checkout: Checkout?)
+    func applePayFinishedWithCheckout(checkout: Storefront.Checkout?)
 }
 
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
     
     var selectedVariant: PurpleNode?
     var checkout: Checkout?
+    var shopifyCheckout: Storefront.Checkout?
     var tag: String?
     weak var delegate: ApplePayControllerDelegate? = nil
 
@@ -39,7 +41,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     func dismiss() {
         self.dismiss(animated: true, completion: nil)
-        delegate?.applePayFinishedWithCheckout(checkout: self.checkout)
+        delegate?.applePayFinishedWithCheckout(checkout: self.shopifyCheckout)
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
@@ -49,7 +51,8 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         Monetizr.shared.checkoutVarinatWithApplePayment(checkout: checkout!, selectedVariant: self.selectedVariant!, payment: payment, tag: self.tag ?? "", amount: amount) {success, error, userErrors, checkout, payment  in
             if success {
                 // Handle success response
-                
+                self.shopifyCheckout = checkout
+                completion(PKPaymentAuthorizationStatus.success)
             }
             else {
                 // Handle error
