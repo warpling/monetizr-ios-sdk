@@ -322,9 +322,9 @@ public class Monetizr {
                 
                 // Success
                 // Update shipping line
-                let shippingRateHandle = payment.shippingMethod?.identifier
+                let shippingRateHandle = payment.shippingMethod?.identifier ?? ""
                 let mutation = Storefront.buildMutation { $0
-                    .checkoutShippingLineUpdate(checkoutId: checkoutID, shippingRateHandle: shippingRateHandle!) { $0
+                    .checkoutShippingLineUpdate(checkoutId: checkoutID, shippingRateHandle: shippingRateHandle) { $0
                         .checkout { $0
                             .id()
                         }
