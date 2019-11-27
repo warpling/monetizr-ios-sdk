@@ -44,22 +44,12 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
         
-        // Update shipping address
-        Monetizr.shared.checkoutUpdateShippingAddressFromPayment(checkout: self.checkout!, payment: payment) {success, error, userErrors, checkout  in
+        // Pass data to Monetizr
+        let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
+        Monetizr.shared.checkoutVarinatWithApplePayment(checkout: checkout!, selectedVariant: self.selectedVariant!, payment: payment, tag: self.tag ?? "", amount: amount) {success, error, userErrors, checkout, payment  in
             if success {
                 // Handle success response
-                // Pass data to Monetizr
-                let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
-                Monetizr.shared.checkoutVarinatWithPayment(checkout: checkout!, selectedVariant: self.selectedVariant!, payment: payment, tag: self.tag ?? "", amount: amount) {success, error, userErrors, checkout, payment  in
-                    if success {
-                        // Handle success response
-                        
-                    }
-                    else {
-                        // Handle error
-                        completion(PKPaymentAuthorizationStatus.failure)
-                    }
-                }
+                
             }
             else {
                 // Handle error
