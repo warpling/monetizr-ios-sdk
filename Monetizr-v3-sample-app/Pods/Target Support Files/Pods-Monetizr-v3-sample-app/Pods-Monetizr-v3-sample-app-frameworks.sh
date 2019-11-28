@@ -166,7 +166,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/ImageSlideshow/ImageSlideshow.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/McPicker/McPicker.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Mobile-Buy-SDK/MobileBuySDK.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework"
@@ -174,7 +173,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/ImageSlideshow/ImageSlideshow.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/McPicker/McPicker.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Mobile-Buy-SDK/MobileBuySDK.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait
