@@ -236,8 +236,8 @@ public class Monetizr {
         
         // Configure Mobile Buy client
         let client = Graph.Client(
-            shopDomain: "pixelberry.myshopify.com",
-            apiKey:     "f8ee0cc95d2dd33b35e19a4a1d870d32"
+            shopDomain: "themonetizr.myshopify.com",
+            apiKey:     "3adca63cc172c5ae919e5a2529f4f2a8"
         )
         
         let checkoutID = GraphQL.ID(rawValue: checkout.data?.checkoutCreate?.checkout?.id ?? "")
