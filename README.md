@@ -11,6 +11,7 @@
 * [Alamofire - Elegant HTTP Networking in Swift] (https://github.com/Alamofire/Alamofire)
 * [AlamofireImage - an image component library for Alamofire] (https://github.com/Alamofire/AlamofireImage)
 * [ImageSlideshow - Swift image slideshow] (https://github.com/zvonicek/ImageSlideshow)
+* [Mobile Buy SDK - lets users buy products using Apple Pay] (https://github.com/Shopify/mobile-buy-sdk-ios)
 
 ### Installation
 Requires iOS 10.0+
@@ -18,7 +19,7 @@ Requires iOS 10.0+
 #### CocoaPods
 
 ```swift
-pod 'Monetizr', '~> 3.2'
+pod 'Monetizr', '~> 3.3'
 ```
 
 #### Manual
@@ -47,10 +48,10 @@ If Apple Pay support is planned in applicationDidFinishLaunching(_:) set Merchan
 Monetizr.shared.setApplePayMerchantID(id: String)
 ```
 
-Optioanlly you can override default company and app name used in payment sheet
+Optioanlly you can override default payment receiver name (app bundle name) used in  Apple payment sheet
 
 ```swift
-Monetizr.shared.setCompanyAndAppName(companyName: String, appName: String)
+Monetizr.shared.setCompanyName(companyName: String)
 ```
 
 ##### Themes:
