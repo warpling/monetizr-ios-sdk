@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Monetizr.shared.setTheme(theme: .black) // Optional - .system will be used by default
         // Monetizr.shared.setLanguage(language: "de_DE") // Optional - ask Monetizr team
         Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdk") // Optional, needed to setup Apple Pay
-        Monetizr.shared.setCompanyAndAppName(companyName: "Monetizing Solutions") // Optional to override default value - App name
+        Monetizr.shared.setCompanyName(companyName: "Monetizing Solutions") // Optional to override default value - App name
         
         return true
     }

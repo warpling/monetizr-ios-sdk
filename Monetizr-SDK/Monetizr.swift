@@ -63,12 +63,12 @@ public class Monetizr {
     public func setApplePayMerchantID(id: String) {
         self.applePayMerchantID = id
         if companyName == nil {
-            self.setCompanyAndAppName(companyName: Bundle.appName())
+            self.setCompanyName(companyName: Bundle.appName())
         }
     }
     
     // Set Company Name
-    public func setCompanyAndAppName(companyName: String) {
+    public func setCompanyName(companyName: String) {
         self.companyName = companyName
     }
     
