@@ -377,13 +377,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         checkoutBackgroundView.addArrangedSubview(checkoutButton)
         
         // Add Apple Pay button
-        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
+        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil {
             let applePayButton = PKPaymentButton().buyButtonWithTheme()
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(buyApplePayButtonAction), for: .touchUpInside)
             checkoutBackgroundView.addArrangedSubview(applePayButton)
         }
-        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
+        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil {
             let applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(setupApplePayButtonAction), for: .touchUpInside)

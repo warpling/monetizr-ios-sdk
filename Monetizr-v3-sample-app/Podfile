@@ -7,7 +7,6 @@ pod 'AlamofireImage'
 pod 'ImageSlideshow', '~> 1.6'
 pod "ImageSlideshow/Alamofire"
 pod "Mobile-Buy-SDK"
-pod 'Stripe'
 pod 'McPicker', '~> 2.0.0'
 end
 

@@ -8,7 +8,6 @@
 
 import UIKit
 import PassKit
-import Stripe
 import MobileBuySDK
 
 // Protocol used for sending data back to product view
@@ -60,44 +59,6 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
             }
         }
     }
-    
-    /*
-    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
-        
-        // Get Stripe token
-        //STPAPIClient.shared().stripeAccount = ""
-        STPAPIClient.shared().createToken(with: payment) {
-            (token, error) -> Void in
-            
-            if (error != nil) {
-                completion(PKPaymentAuthorizationStatus.failure)
-            }
-            else {
-                // Pass data to Monetizr
-                 let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
-                Monetizr.shared.checkoutVarinatWithPayment(checkout: self.checkout!, selectedVariant: self.selectedVariant!, payment: payment, token: token!, tag: self.tag ?? "", amount: amount) {success, error, checkout  in
-                 if success {
-                 // Handle success response
-                    self.checkout = checkout
-                    
-                    let paymentError = !(self.checkout?.data?.third?.payment?.errorMessage ?? "").isEmpty
-                    let hasPaymentID = !(self.checkout?.data?.third?.payment?.id ?? "").isEmpty
-                    if !paymentError && hasPaymentID {
-                        completion(PKPaymentAuthorizationStatus.success)
-                    }
-                    else {
-                        completion(PKPaymentAuthorizationStatus.failure)
-                    }
-                 }
-                 else {
-                 // Handle error
-                    completion(PKPaymentAuthorizationStatus.failure)
-                 }
-                }
-            }
-        }
-    }
-    */
     
     @available(iOS, deprecated:11.0, message:"Use PKPaymentRequestShippingContactUpdate")
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
@@ -189,7 +150,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         let amount = NSDecimalNumber(string: priceString)
         let currencyCode = selectedVariant?.priceV2?.currency ?? "USD"
         let productTitle = selectedVariant?.product?.title ?? ""
-        let merchantName = (Monetizr.shared.companyName ?? "") + " via " + (Monetizr.shared.appName ?? "")
+        let merchantName = (Monetizr.shared.companyName ?? "")
         
         // Create and configure request
         let request = PKPaymentRequest()
@@ -260,7 +221,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         let taxAmount = NSDecimalNumber(string: taxPriceString)
         
         // Total
-        let merchantName = (Monetizr.shared.companyName ?? "") + " via " + (Monetizr.shared.appName ?? "")
+        let merchantName = (Monetizr.shared.companyName ?? "")
         let totalPriceString = self.checkout?.data?.checkoutCreate?.checkout?.totalPriceV2?.amount ?? "0"
         var totalAmount = NSDecimalNumber(string: totalPriceString)
         totalAmount = totalAmount.adding(shippingPrice)
