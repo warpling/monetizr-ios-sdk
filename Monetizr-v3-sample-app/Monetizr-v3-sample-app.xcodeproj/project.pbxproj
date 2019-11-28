@@ -11,6 +11,7 @@
 		2810B1CD2358E85600E04235 /* expand-down-white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2810B1C92358E85600E04235 /* expand-down-white@2x.png */; };
 		2810B1CE2358E85600E04235 /* expand-down-white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2810B1CA2358E85600E04235 /* expand-down-white@3x.png */; };
 		2810B1CF2358E85600E04235 /* expand-down-black@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2810B1CB2358E85600E04235 /* expand-down-black@3x.png */; };
+		2824BFCB2390513D007DDD8C /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2824BFCA2390513D007DDD8C /* Stores.swift */; };
 		28591EB023564B4200611353 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28591EAF23564B4200611353 /* Styles.swift */; };
 		28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */; };
 		28A32D082337FD22004F1A5E /* VariantSelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */; };
@@ -37,6 +38,7 @@
 		2810B1C92358E85600E04235 /* expand-down-white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down-white@2x.png"; sourceTree = "<group>"; };
 		2810B1CA2358E85600E04235 /* expand-down-white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down-white@3x.png"; sourceTree = "<group>"; };
 		2810B1CB2358E85600E04235 /* expand-down-black@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down-black@3x.png"; sourceTree = "<group>"; };
+		2824BFCA2390513D007DDD8C /* Stores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
 		28591EAF23564B4200611353 /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
 		2897E16F2301DACB00C4A2DE /* Monetizr-v3-sample-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Monetizr-v3-sample-app.entitlements"; sourceTree = "<group>"; };
 		28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDescriptionScrollView.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				28591EAF23564B4200611353 /* Styles.swift */,
 				28AE865222C6D279005F2D2D /* Product.swift */,
 				28AE865322C6D279005F2D2D /* Checkout.swift */,
+				2824BFCA2390513D007DDD8C /* Stores.swift */,
 				28AE865422C6D279005F2D2D /* Device.swift */,
 				28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */,
 				28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */,
@@ -302,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2824BFCB2390513D007DDD8C /* Stores.swift in Sources */,
 				28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */,
 				28591EB023564B4200611353 /* Styles.swift in Sources */,
 				28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */,
@@ -472,7 +476,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2132;
+				CURRENT_PROJECT_VERSION = 2134;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -480,7 +484,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2.5;
+				MARKETING_VERSION = 3.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -495,7 +499,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2132;
+				CURRENT_PROJECT_VERSION = 2134;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -503,7 +507,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2.5;
+				MARKETING_VERSION = 3.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

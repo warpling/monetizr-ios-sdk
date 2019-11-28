@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Stripe
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,8 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Monetizr.shared.setTheme(theme: .black) // Optional - .system will be used by default
         // Monetizr.shared.setLanguage(language: "de_DE") // Optional - ask Monetizr team
         Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdk") // Optional, needed to setup Apple Pay
-        // Monetizr.shared.setCompanyAndAppName(companyName: "Monetizing Solutions", appName: "Idea Smash") // Optional to override default values set when .setApplePayMerchantID called
-        // Monetizr.shared.setStripeToken(token: "pk_live_CWmQoXocvis3aEFufn7R1CKf") // Optional to override default token .setApplePayMerchantID called
+        Monetizr.shared.setCompanyName(companyName: "Monetizing Solutions") // Optional to override default value - App name
         
         return true
     }

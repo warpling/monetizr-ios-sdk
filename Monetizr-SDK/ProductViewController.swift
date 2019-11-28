@@ -12,6 +12,7 @@ import Alamofire
 import ImageSlideshow
 import PassKit
 import SafariServices
+import MobileBuySDK
 
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate {
     
@@ -376,13 +377,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         checkoutBackgroundView.addArrangedSubview(checkoutButton)
         
         // Add Apple Pay button
-        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
+        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil {
             let applePayButton = PKPaymentButton().buyButtonWithTheme()
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(buyApplePayButtonAction), for: .touchUpInside)
             checkoutBackgroundView.addArrangedSubview(applePayButton)
         }
-        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && Monetizr.shared.haveStripeToken == true {
+        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil {
             let applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(setupApplePayButtonAction), for: .touchUpInside)
@@ -721,9 +722,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     // Apple Pay finished
-    func applePayFinishedWithCheckout(checkout: Checkout?) {
+    func applePayFinishedWithCheckout(checkout: Storefront.Checkout?) {
         // Show confiramtion alert
-        if !(checkout?.data?.third?.payment?.id ?? "").isEmpty {
+        guard checkout != nil else {
+            return
+        }
+        
+        if checkout!.ready {
             let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
             alert.view.tintColor = UIColor(hex: 0xE0093B)
             alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
@@ -732,7 +737,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             self.present(alert, animated: true, completion: nil)
         }
     }
-    
+ 
     // Cureency string preparation
     func getCurrencyFormat(price:String, currency:String)->String{
         let convertPrice = NSNumber(value: Double(price)!)
