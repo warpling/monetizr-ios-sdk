@@ -223,7 +223,7 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVarinatWithApplePayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, [Storefront.CheckoutUserError]?, Storefront.Checkout?, Storefront.Payment?) -> Void) {
+    public func checkoutVariantWithApplePayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, [Storefront.CheckoutUserError]?, Storefront.Checkout?, Storefront.Payment?) -> Void) {
         
         let urlString = apiUrl+"stores"
         

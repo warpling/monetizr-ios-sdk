@@ -47,7 +47,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         
         // Pass data to Monetizr
         let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
-        Monetizr.shared.checkoutVarinatWithApplePayment(checkout: checkout!, selectedVariant: self.selectedVariant!, payment: payment, tag: self.tag ?? "", amount: amount) {success, error, userErrors, checkout, payment  in
+        Monetizr.shared.checkoutVariantWithApplePayment(checkout: checkout!, selectedVariant: self.selectedVariant!, payment: payment, tag: self.tag ?? "", amount: amount) {success, error, userErrors, checkout, payment  in
             if success {
                 // Handle success response
                 self.shopifyCheckout = checkout
