@@ -1,0 +1,18 @@
+
+/* Class = "UIButton"; normalTitle = "Open product"; ObjectID = "Sc4-cT-s41"; */
+"Sc4-cT-s41.normalTitle" = "Producto abierto";
+
+/* Class = "UILabel"; text = "Default theme"; ObjectID = "g32-ns-AQh"; */
+"g32-ns-AQh.text" = "Default theme";
+
+/* Class = "UIButton"; normalTitle = "Change theme"; ObjectID = "i0t-oi-iIF"; */
+"i0t-oi-iIF.normalTitle" = "Cambiar de tema";
+
+/* Class = "UITextField"; placeholder = "Token"; ObjectID = "jzd-ie-6jq"; */
+"jzd-ie-6jq.placeholder" = "Token";
+
+/* Class = "UILabel"; text = "Device locale not set"; ObjectID = "tpb-Jz-ZxE"; */
+"tpb-Jz-ZxE.text" = "Configuración regional del dispositivo no establecida";
+
+/* Class = "UITextField"; placeholder = "Merchandise tag"; ObjectID = "z68-y5-jXC"; */
+"z68-y5-jXC.placeholder" = "Mercancías tag";

@@ -40,6 +40,8 @@
 		2810B1CB2358E85600E04235 /* expand-down-black@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down-black@3x.png"; sourceTree = "<group>"; };
 		2824BFCA2390513D007DDD8C /* Stores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stores.swift; sourceTree = "<group>"; };
 		28591EAF23564B4200611353 /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
+		285F7F2B23A8D912007A79FD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
+		285F7F2C23A8D912007A79FD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2897E16F2301DACB00C4A2DE /* Monetizr-v3-sample-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Monetizr-v3-sample-app.entitlements"; sourceTree = "<group>"; };
 		28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDescriptionScrollView.swift; sourceTree = "<group>"; };
 		28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantSelectionHeaderView.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = 28E6B7822262109300E43C83;
 			productRefGroup = 28E6B78C2262109300E43C83 /* Products */;
@@ -330,6 +333,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				28AE864C22C6D279005F2D2D /* en */,
+				285F7F2C23A8D912007A79FD /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -338,6 +342,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				28E6B7932262109300E43C83 /* Base */,
+				285F7F2B23A8D912007A79FD /* es */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -357,6 +362,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -418,6 +424,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -476,7 +483,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2136;
+				CURRENT_PROJECT_VERSION = 2137;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -499,7 +506,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2136;
+				CURRENT_PROJECT_VERSION = 2137;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
