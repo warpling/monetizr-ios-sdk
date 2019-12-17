@@ -20,6 +20,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
     @IBOutlet var merchTagField: UITextField!
     @IBOutlet var textLabel: UILabel!
     @IBOutlet var themeLabel: UILabel!
+    @IBOutlet var langCodeLabel: UILabel!
     
     @IBOutlet var openButton: UIButton!
     @IBOutlet var changeThemeButton: UIButton!
@@ -31,6 +32,8 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         // Do any additional setup after loading the view.
         tokenField.text = "3adca63cc172c5ae919e5a2529f4f2a8" //"4D2E54389EB489966658DDD83E2D1"
         merchTagField.text = "blackbox_alt_socks"//"monetizr-sample-t-shirt" //"30-credits"
+        // Show device locale
+        langCodeLabel.text = Monetizr.shared.localeCodeString
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
