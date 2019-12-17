@@ -19,12 +19,13 @@ public class Monetizr {
     public var token: String {
         didSet {
             self.createHeaders()
+            self.setLocale()
         }
     }
     var headers: HTTPHeaders = [:]
     var applePayMerchantID: String?
     var companyName: String?
-    var language: String?
+    var localeCodeString: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
     var dateSessionStarted: Date = Date()
     var dateSessionEnded: Date = Date()
@@ -73,8 +74,8 @@ public class Monetizr {
     }
     
     // Set language
-    public func setLanguage(language: String) {
-        self.language = language
+    public func setLocale() {
+        self.localeCodeString = localeIdentifier()
     }
     
     // Application become active
@@ -134,8 +135,8 @@ public class Monetizr {
     public func showProduct(tag: String, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
-        if language != nil {
-            urlString = urlString+"?language="+language!
+        if localeCodeString != nil {
+            urlString = urlString+"&locale="+localeCodeString!
             
         }
                 
@@ -188,8 +189,8 @@ public class Monetizr {
             "variantId" : selectedVariant.id!,
             "quantity" : "1",
         ]
-        if language != nil {
-            parameters["language"] = language
+        if localeCodeString != nil {
+            parameters["language"] = localeCodeString
         }
         
         let shippingParameters: [String: String] = [

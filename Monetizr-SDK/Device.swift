@@ -57,6 +57,10 @@ func deviceIdentifier() -> String {
     return UIDevice.current.identifierForVendor!.uuidString
 }
 
+func localeIdentifier() -> String {
+    return NSLocale.current.identifier
+}
+
 // Check if Apple pay is available
 public func applePayAvailable() -> Bool{
     return PKPaymentAuthorizationViewController.canMakePayments()

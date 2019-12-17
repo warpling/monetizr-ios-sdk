@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Setup Monetizr
         Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1" // set token
         // Monetizr.shared.setTheme(theme: .black) // Optional - .system will be used by default
-        // Monetizr.shared.setLanguage(language: "de_DE") // Optional - ask Monetizr team
         Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdk") // Optional, needed to setup Apple Pay
         Monetizr.shared.setCompanyName(companyName: "Monetizing Solutions") // Optional to override default value - App name
         
