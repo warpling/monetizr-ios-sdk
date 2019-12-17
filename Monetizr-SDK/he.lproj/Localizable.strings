@@ -1,0 +1,23 @@
+/* 
+  Localizable.strings
+  Monetizr-v3-sample-app
+
+  Created by Armands Avotins on 27/05/2019.
+  Copyright © 2019 Monetizr. All rights reserved.
+*/
+
+"Close" = "קרוב";
+"Close product" = "סגור מוצר";
+"Checkout" = "לבדוק";
+"Product title" = "כותרת מוצר";
+"Price" = "מחיר";
+"Original price" = "מחיר מקורי";
+"Product description" = "תיאור מוצר";
+"Product variant selection" = "בחירת גרסאות מוצר";
+"Tax" = "מס";
+"Shipping" = "משלוח";
+"Unknown" = "לא ידוע";
+"Selected" = "נבחר";
+"Thank you!" = "תודה";
+"Order confirmation" = "ההזמנה שלך בדרכה! עיין בדוא\"ל אישור ההזמנה לקבלת מידע על מעקב";
+"Select product variant" = "בחר גרסת מוצר";
