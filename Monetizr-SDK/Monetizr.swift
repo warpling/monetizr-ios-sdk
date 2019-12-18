@@ -25,7 +25,7 @@ public class Monetizr {
     var headers: HTTPHeaders = [:]
     var applePayMerchantID: String?
     var companyName: String?
-    var localeCodeString: String?
+    public var localeCodeString: String?
     let apiUrl = "https://api3.themonetizr.com/api/"
     var dateSessionStarted: Date = Date()
     var dateSessionEnded: Date = Date()
