@@ -760,7 +760,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     // Slideshow fullscreen
-    @objc func slideShowTap() {
+    @objc func slideShowTap() { // https://github.com/zvonicek/ImageSlideshow/issues/366
         if #available(iOS 13.0, *) {
             
         }

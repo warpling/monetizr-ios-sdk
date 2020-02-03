@@ -2,14 +2,14 @@ PODS:
   - Alamofire (4.9.1)
   - AlamofireImage (3.6.0):
     - Alamofire (~> 4.9)
-  - ImageSlideshow (1.8.1):
-    - ImageSlideshow/Core (= 1.8.1)
-  - ImageSlideshow/Alamofire (1.8.1):
+  - ImageSlideshow (1.8.3):
+    - ImageSlideshow/Core (= 1.8.3)
+  - ImageSlideshow/Alamofire (1.8.3):
     - AlamofireImage (~> 3.0)
     - ImageSlideshow/Core
-  - ImageSlideshow/Core (1.8.1)
+  - ImageSlideshow/Core (1.8.3)
   - McPicker (2.0.1)
-  - Mobile-Buy-SDK (3.6.1)
+  - Mobile-Buy-SDK (3.7.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.0)
@@ -30,9 +30,9 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   AlamofireImage: be9963c6582d68b39e89191f64c82a7d7bf40fdd
-  ImageSlideshow: 634865d7d4e96f21e3830a31b51bde768cc94cea
+  ImageSlideshow: 4694d7d699a1549582e7cc631fb392d8f91630f3
   McPicker: a0a6b8ece8f1642e05401a29867463aba501188b
-  Mobile-Buy-SDK: f70aec8869cddef45a6c0f69d71f65ee7e1cc93b
+  Mobile-Buy-SDK: 31e0e5b6d8373d66dbe09a80849d86ebd829135f
 
 PODFILE CHECKSUM: 0ce6d37f059282e13643a5f70d1ae63e24c15858
 
