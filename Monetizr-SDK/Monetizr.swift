@@ -139,6 +139,7 @@ public class Monetizr {
             urlString = urlString+"&locale="+localeCodeString!
             
         }
+        urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
                 
         Alamofire.request(URL(string: urlString)!, headers: headers).responseProduct { response in
             if let retrievedProduct = response.result.value {
