@@ -516,18 +516,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Description text view
         descriptionTextView.text = selectedVariant?.product?.description_ios
         
-        let imageSources = NSMutableArray()
-        // Image slide show
-        for url in imageLinks {
-            imageSources.add(AlamofireSource(urlString: url as! String)!)
-        }
-        slideShow.activityIndicator = DefaultActivityIndicator()
-        slideShow.preload = .fixed(offset: 1)
-        slideShow.setImageInputs(imageSources as! [InputSource])
-        
-        stackView.removeAllSubviews()
-        
         // Options selector show/hide
+        stackView.removeAllSubviews()
         if variants.count > 1 {
             optionsSelectorViewHeight = 65
             view.setNeedsUpdateConstraints()
@@ -555,6 +545,19 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 stackView.addArrangedSubview(optionView)
             }
         }
+        
+        // Load images in carousel
+        let imageSources = NSMutableArray()
+        if let selctedVariantImageLinkUrl = selectedVariant?.image?.transformedSrc {
+            imageLinks.remove(selctedVariantImageLinkUrl)
+            imageLinks.insert(selctedVariantImageLinkUrl, at: 0)
+        }
+        for url in imageLinks {
+            imageSources.add(AlamofireSource(urlString: url as! String)!)
+        }
+        slideShow.activityIndicator = DefaultActivityIndicator()
+        slideShow.preload = .fixed(offset: 1)
+        slideShow.setImageInputs(imageSources as! [InputSource])
     }
     
     func showOptionsSelector() {
