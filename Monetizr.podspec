@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Monetizr'
-  s.version          = '3.3.3'
+  s.version          = '3.3.4'
   s.summary          = 'Monetizr is a game reward engine, we drive revenue to your business and enhance the experience of your players!'
  
   s.description      = <<-DESC
