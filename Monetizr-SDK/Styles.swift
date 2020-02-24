@@ -125,9 +125,12 @@ extension UIButton {
         }
     }
     
-    func checkoutProductButtonStyle() {
+    func checkoutProductButtonStyle(title: String? = nil) {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)
+        if title != nil {
+            self.setTitle(title, for: .normal)
+        }
         self.setTitleColor(.lightGray, for: .highlighted)
         self.height(constant: 50)
         self.layer.cornerRadius = 5

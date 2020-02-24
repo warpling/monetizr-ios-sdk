@@ -372,18 +372,18 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Add checkout button
         let checkoutButton = UIButton()
         // Configure checkout button
-        checkoutButton.checkoutProductButtonStyle()
+        checkoutButton.checkoutProductButtonStyle(title: product?.data?.productByHandle?.button_title)
         checkoutButton.addTarget(self, action: #selector(checkoutButtonAction), for: .touchUpInside)
         checkoutBackgroundView.addArrangedSubview(checkoutButton)
         
         // Add Apple Pay button
-        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil {
+        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && product?.data?.productByHandle?.claimable == false {
             let applePayButton = PKPaymentButton().buyButtonWithTheme()
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(buyApplePayButtonAction), for: .touchUpInside)
             checkoutBackgroundView.addArrangedSubview(applePayButton)
         }
-        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil {
+        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && product?.data?.productByHandle?.claimable == false {
             let applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(setupApplePayButtonAction), for: .touchUpInside)
@@ -661,8 +661,16 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     @objc func checkoutButtonAction() {
         interaction = true
-        // Start checkout
-        self.checkoutSelectedVariant()
+        // Start checkout or claim item
+        let claimable = product?.data?.productByHandle?.claimable ?? false
+        if claimable {
+            // Proceed with claim
+        }
+        if !claimable  {
+            // Proceed with standart checkout
+            self.checkoutSelectedVariant()
+        }
+        
         if Monetizr.shared.checkoutCountInSession < 1 {
             Monetizr.shared.firstimpressioncheckoutCreate(firstImpressionCheckout: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }
