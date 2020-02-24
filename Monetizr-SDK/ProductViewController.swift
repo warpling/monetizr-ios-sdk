@@ -675,14 +675,20 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     @objc func buyApplePayButtonAction() {
-        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: self) {success, error in
-            // Show some error if needed
-            if success {
-                // Success
+        let priceCurrency = selectedVariant?.priceV2?.currency ?? "USD"
+        if priceCurrency.isValidCurrencyCode() {
+            Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: self) {success, error in
+                // Show some error if needed
+                if success {
+                    // Success
+                }
+                else {
+                    // Handle error
+                }
             }
-            else {
-                // Handle error
-            }
+        }
+        else {
+            print("Selected variant currency is not supported by Apple Pay")
         }
     }
     
