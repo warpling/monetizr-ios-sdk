@@ -665,6 +665,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         let claimable = product?.data?.productByHandle?.claimable ?? false
         if claimable {
             // Proceed with claim
+            self.claimSelectedVariant()
         }
         if !claimable  {
             // Proceed with standart checkout
@@ -697,6 +698,18 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
         else {
             print("Selected variant currency is not supported by Apple Pay")
+        }
+    }
+    
+    @objc func claimSelectedVariant() {
+        Monetizr.shared.claimItem(selectedVariant: selectedVariant!, tag: tag!, presenter: self) {success, error in
+            // Show some error if needed
+            if success {
+                // Success
+            }
+            else {
+                // Handle error
+            }
         }
     }
     
@@ -752,6 +765,26 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                   // Switch if needed handle buttons
             }))
             self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    // Apple Pay finished
+    func claimItemFinishedWithCheckout(claim: Claim?) {
+        // Show confiramtion alert
+        guard claim != nil else {
+            return
+        }
+        
+        if claim?.status == "success" {
+            let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
+            alert.view.tintColor = UIColor(hex: 0xE0093B)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+                  // Switch if needed handle buttons
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else if claim?.status == "error" {
+            
         }
     }
  

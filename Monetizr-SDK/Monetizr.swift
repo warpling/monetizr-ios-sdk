@@ -443,6 +443,11 @@ public class Monetizr {
         }
     }
     
+    // Claim free items
+    public func claimItem(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
+        
+    }
+    
     // Track app version
     public func trackAppVersion() {
         let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String

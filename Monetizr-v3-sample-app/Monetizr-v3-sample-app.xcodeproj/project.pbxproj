@@ -29,6 +29,8 @@
 		28E6B7942262109300E43C83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7922262109300E43C83 /* Main.storyboard */; };
 		28E6B7962262109500E43C83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7952262109500E43C83 /* Assets.xcassets */; };
 		28E6B7992262109500E43C83 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7972262109500E43C83 /* LaunchScreen.storyboard */; };
+		28E7C0DC240C120C00A6D9AE /* ClaimItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E7C0DB240C120C00A6D9AE /* ClaimItemViewController.swift */; };
+		28E7C0DE240C16BC00A6D9AE /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E7C0DD240C16BC00A6D9AE /* Claim.swift */; };
 		28F1AAA5230B11D30039FF7E /* ApplePayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */; };
 		F17B7801DCFCEB8AFD9A8583 /* Pods_Monetizr_v3_sample_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */; };
 /* End PBXBuildFile section */
@@ -87,6 +89,8 @@
 		28E6B7952262109500E43C83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		28E6B7982262109500E43C83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		28E6B79A2262109500E43C83 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		28E7C0DB240C120C00A6D9AE /* ClaimItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimItemViewController.swift; sourceTree = "<group>"; };
+		28E7C0DD240C16BC00A6D9AE /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayViewController.swift; sourceTree = "<group>"; };
 		36BF1201E621B75EEE391125 /* Pods-Monetizr-v3-sample-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.debug.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.debug.xcconfig"; sourceTree = "<group>"; };
 		65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Monetizr_v3_sample_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,10 +132,12 @@
 				28AE865122C6D279005F2D2D /* Extensions.swift */,
 				28591EAF23564B4200611353 /* Styles.swift */,
 				28AE865222C6D279005F2D2D /* Product.swift */,
+				28E7C0DD240C16BC00A6D9AE /* Claim.swift */,
 				28AE865322C6D279005F2D2D /* Checkout.swift */,
 				2824BFCA2390513D007DDD8C /* Stores.swift */,
 				28AE865422C6D279005F2D2D /* Device.swift */,
 				28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */,
+				28E7C0DB240C120C00A6D9AE /* ClaimItemViewController.swift */,
 				28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */,
 				28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */,
 			);
@@ -353,12 +359,14 @@
 				28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */,
 				28AE865B22C6D279005F2D2D /* Product.swift in Sources */,
 				28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */,
+				28E7C0DE240C16BC00A6D9AE /* Claim.swift in Sources */,
 				28AE865C22C6D279005F2D2D /* Checkout.swift in Sources */,
 				28E6B7912262109300E43C83 /* ViewController.swift in Sources */,
 				28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */,
 				28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */,
 				28AE865822C6D279005F2D2D /* VariantSelectionViewController.swift in Sources */,
 				28A32D082337FD22004F1A5E /* VariantSelectionHeaderView.swift in Sources */,
+				28E7C0DC240C120C00A6D9AE /* ClaimItemViewController.swift in Sources */,
 				28AE865A22C6D279005F2D2D /* Extensions.swift in Sources */,
 				28F1AAA5230B11D30039FF7E /* ApplePayViewController.swift in Sources */,
 				28AE865D22C6D279005F2D2D /* Device.swift in Sources */,
