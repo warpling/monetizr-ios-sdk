@@ -14,7 +14,7 @@ import PassKit
 import SafariServices
 import MobileBuySDK
 
-class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
@@ -768,7 +768,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
     }
     
-    // Apple Pay finished
+    // Claim finished
     func claimItemFinishedWithCheckout(claim: Claim?) {
         // Show confiramtion alert
         guard claim != nil else {

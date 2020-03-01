@@ -445,7 +445,13 @@ public class Monetizr {
     
     // Claim free items
     public func claimItem(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
-        
+        let claimItemViewController = ClaimItemViewController()
+        claimItemViewController.delegate = presenter as? ClaimItemControllerDelegate
+        claimItemViewController.modalPresentationStyle = .overCurrentContext
+        claimItemViewController.selectedVariant = selectedVariant
+        claimItemViewController.tag = tag
+        presenter.present(claimItemViewController, animated: true, completion: nil)
+        completionHandler(true, nil)
     }
     
     // Track app version
