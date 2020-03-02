@@ -33,7 +33,7 @@ class ClaimItemViewController: UIViewController, CNContactPickerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.startClaim()
+        self.showClaimForm()
     }
     
     func dismiss() {
@@ -41,10 +41,11 @@ class ClaimItemViewController: UIViewController, CNContactPickerDelegate {
         delegate?.claimItemFinishedWithCheckout(claim: self.claim)
     }
     
-    func startClaim() {
+    func showClaimForm() {
         
-        let alertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
         
+        /*
         alertController.addTextField { textField in
             textField.placeholder = "First Name"
         }
@@ -69,6 +70,11 @@ class ClaimItemViewController: UIViewController, CNContactPickerDelegate {
         alertController.addTextField { textField in
             textField.placeholder = "Province"
         }
+        */
+        
+        let updateShippingAction = UIAlertAction(title: "Update shipping address", style: .default) { (action:UIAlertAction) in
+            self.pickContact()
+        }
 
         let proceedAction = UIAlertAction(title: "Proceed", style: .default) { (action:UIAlertAction) in
             
@@ -87,10 +93,48 @@ class ClaimItemViewController: UIViewController, CNContactPickerDelegate {
             alertController.message = "Provide shipping address!"
             proceedAction.isEnabled = false
         }
-
+        
+        alertController.addAction(updateShippingAction)
         alertController.addAction(proceedAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    //MARK:- contact picker
+    func pickContact(){
+
+        let contactPicker = CNContactPickerViewController()
+        contactPicker.delegate = self
+        self.present(contactPicker, animated: true, completion: nil)
+
+    }
+
+    func contactPicker(_ picker: CNContactPickerViewController,
+                       didSelect contactProperty: CNContactProperty) {
+
+    }
+
+    func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
+        // So something with contact
+
+        // Open contact
+        /*
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+             let contactViewController = CNContactViewController(for: contact)
+             contactViewController.contactStore = CNContactStore()
+             contactViewController.delegate = self as? CNContactViewControllerDelegate
+             let navigationController = UINavigationController(rootViewController: contactViewController)
+             self.present(navigationController, animated: false) {}
+             //self.present(contactViewController, animated: true, completion: nil)
+        }
+        */
+    }
+
+    func contactPickerDidCancel(_ picker: CNContactPickerViewController) {
+        // Show claim form
+        DispatchQueue.main.async {
+            self.showClaimForm()
+        }
     }
 
 }
