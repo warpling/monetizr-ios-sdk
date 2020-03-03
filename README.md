@@ -78,7 +78,7 @@ Additionally, you can override the default payment receiver name (app bundle nam
 Monetizr.shared.setCompanyName(companyName: String)
 ```
 
-Learn more about setting up Apple Pay for Monetizr integrations [here][6]
+Learn more about setting up Apple Pay for Monetizr integrations [here][6].
 
 ### Themes
 
