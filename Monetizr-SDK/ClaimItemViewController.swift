@@ -14,7 +14,7 @@ protocol ClaimItemControllerDelegate: class {
     func claimItemFinishedWithCheckout(claim: Claim?)
 }
 
-class ClaimItemViewController: UIViewController, CNContactPickerDelegate {
+class ClaimItemViewController: UIViewController{
     
     var selectedVariant: PurpleNode?
     var checkout: Checkout?
@@ -22,18 +22,36 @@ class ClaimItemViewController: UIViewController, CNContactPickerDelegate {
     var tag: String?
     weak var delegate: ClaimItemControllerDelegate? = nil
     var shippingAddress: String?
+    
+    let addressInputFieldsContainerView = UIView()
+    
+    private var sharedConstraints: [NSLayoutConstraint] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        self.view.backgroundColor = .yellow
         
+        self.configureAddressInputFieldsContainerView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.accessibilityViewIsModal = true
+        // Setup constraints
+        if sharedConstraints.count < 1 {
+            // Configure initial constraints
+            self.configureSharedConstraints()
+        }
+        if (!sharedConstraints[0].isActive) {
+            NSLayoutConstraint.activate(sharedConstraints)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        self.showClaimForm()
+
     }
     
     func dismiss() {
@@ -41,39 +59,29 @@ class ClaimItemViewController: UIViewController, CNContactPickerDelegate {
         delegate?.claimItemFinishedWithCheckout(claim: self.claim)
     }
     
+    func configureAddressInputFieldsContainerView() {
+        // Close button
+        addressInputFieldsContainerView.translatesAutoresizingMaskIntoConstraints = false
+        addressInputFieldsContainerView.backgroundColor = .red
+        self.view.addSubview(addressInputFieldsContainerView)
+    }
+    
+    func configureSharedConstraints() {
+        // Create shared constraints array
+        sharedConstraints.append(contentsOf: [
+            addressInputFieldsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
+            addressInputFieldsContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
+            addressInputFieldsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
+            addressInputFieldsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10)
+            ])
+    }
+    
     func showClaimForm() {
         
         let alertController = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
         
-        /*
-        alertController.addTextField { textField in
-            textField.placeholder = "First Name"
-        }
-        alertController.addTextField { textField in
-            textField.placeholder = "Last Name"
-        }
-        alertController.addTextField { textField in
-            textField.placeholder = "Address line 1"
-        }
-        alertController.addTextField { textField in
-            textField.placeholder = "Address line 2"
-        }
-        alertController.addTextField { textField in
-            textField.placeholder = "City"
-        }
-        alertController.addTextField { textField in
-            textField.placeholder = "Country"
-        }
-        alertController.addTextField { textField in
-            textField.placeholder = "ZIP"
-        }
-        alertController.addTextField { textField in
-            textField.placeholder = "Province"
-        }
-        */
-        
         let updateShippingAction = UIAlertAction(title: "Update shipping address", style: .default) { (action:UIAlertAction) in
-            self.pickContact()
+            
         }
 
         let proceedAction = UIAlertAction(title: "Proceed", style: .default) { (action:UIAlertAction) in
@@ -97,44 +105,7 @@ class ClaimItemViewController: UIViewController, CNContactPickerDelegate {
         alertController.addAction(updateShippingAction)
         alertController.addAction(proceedAction)
         alertController.addAction(cancelAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    //MARK:- contact picker
-    func pickContact(){
-
-        let contactPicker = CNContactPickerViewController()
-        contactPicker.delegate = self
-        self.present(contactPicker, animated: true, completion: nil)
-
-    }
-
-    func contactPicker(_ picker: CNContactPickerViewController,
-                       didSelect contactProperty: CNContactProperty) {
-
-    }
-
-    func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
-        // So something with contact
-
-        // Open contact
-        /*
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-             let contactViewController = CNContactViewController(for: contact)
-             contactViewController.contactStore = CNContactStore()
-             contactViewController.delegate = self as? CNContactViewControllerDelegate
-             let navigationController = UINavigationController(rootViewController: contactViewController)
-             self.present(navigationController, animated: false) {}
-             //self.present(contactViewController, animated: true, completion: nil)
-        }
-        */
-    }
-
-    func contactPickerDidCancel(_ picker: CNContactPickerViewController) {
-        // Show claim form
-        DispatchQueue.main.async {
-            self.showClaimForm()
-        }
+       self.present(alertController, animated: true, completion: nil)
     }
 
 }
