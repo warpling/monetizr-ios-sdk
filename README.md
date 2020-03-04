@@ -1,218 +1,132 @@
 [![Version](https://img.shields.io/cocoapods/v/Monetizr.svg?style=flat)](http://cocoapods.org/pods/Monetizr)
 [![License](https://img.shields.io/cocoapods/l/Monetizr.svg?style=flat)](http://cocoapods.org/pods/Monetizr)
 [![Platform](https://img.shields.io/cocoapods/p/Monetizr.svg?style=flat)](http://cocoapods.org/pods/Monetizr)
-# TheMonetizr SDK
-### Useful links
 
-* [API reference] (https://api3.themonetizr.com/docs)
-* [API Integration guide] (https://docs.themonetizr.com/api/index.html)
+## What is Monetizr?
+Monetizr is a turn-key platform for game developers enabling to sell or give-away game gear right inside the game's UI. You can use this SDK in your game to let players purchase products or claim gifts within the game.  All orders made with Monetizr automatically initiates fulfillment and shipping. More info: https://docs.themonetizr.com/docs/get-started.
+ 
+## Monetizr iOS SDK
+Monetizr iOS SDK is a plugin with the built-in functionality of:
+- showing image carousel and fullscreen pictures in offers to end-users;
+- HTML texts for descriptions;
+- allowing end-users to select product variant options;
+- displaying price in real or in-game currency (including discounts);
+- checkout and payment support;
+- Apple Pay support (optional).
 
-### Dependencies
-* [Alamofire - Elegant HTTP Networking in Swift] (https://github.com/Alamofire/Alamofire)
-* [AlamofireImage - an image component library for Alamofire] (https://github.com/Alamofire/AlamofireImage)
-* [ImageSlideshow - Swift image slideshow] (https://github.com/zvonicek/ImageSlideshow)
-* [Mobile Buy SDK - lets users buy products using Apple Pay] (https://github.com/Shopify/mobile-buy-sdk-ios)
+Monetizr uses oAuth 2 authentication behind the scenes for all payment and order related processes. The SDK takes care of managing oAuth 2. To use SDK and connect to Monetizr servers, all you need is a single API key. It can be retrieved via Monetizr web [Console][1]. API is a public two-way, it does not expose any useful information, but you should be aware of this.
 
-### Installation
+Read the Monetizr's [iOS documentation][2] to find out more.
+
+## Installation
 Requires iOS 10.0+
 
-#### CocoaPods
+### Dependencies
+* [Alamofire][8] - Elegant HTTP Networking in Swift;
+* [AlamofireImage][9] - an image component library for Alamofire;
+* [ImageSlideshow][10] - Swift image slideshow;
+* [Mobile Buy SDK][11] - lets users buy products using Apple Pay.
+
+### Option 1 (suggested)
+**CocoaPods:**
 
 ```swift
 pod 'Monetizr', '~> 3.3'
 ```
 
-#### Manual
-```swift
-Copy "Monetizr-SDK" folder to your project and resolve dependencies
-```
+### Option 2
 
-Import "Monetizr" to your project
+Copy "Monetizr-SDK" folder to your project and resolve dependencies. Import "Monetizr" to your project:
 
 ```swift
 import Monetizr
 ```
 
-### Usage
+## Using the library in your app
 
-In applicationDidFinishLaunching(_:) do the initialization with token provided to you
+To use the SDK you need an [API key][3]. For testing purposes, you can use public test key **4D2E54389EB489966658DDD83E2D1**.
+
+In applicationDidFinishLaunching(_:) do the initialization with the API key:
 
 ```swift
-Monetizr.shared.token = String
+Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1"
 ```
-##### Apple Pay
 
-If Apple Pay support is planned in applicationDidFinishLaunching(_:) set Merchant
+To show a product in an [Offer View][4], you need to call a specific product_tag. Product tags represent a specific product, and they are managed in the web Console. For testing purposes, you can use public test product **Sample shirt**.
+
+Show an Offer View inside your app:
+
+```swift
+Monetizr.shared.showProduct(tag: Sample shirt, presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
+```
+
+If you choose to show a product in an Offer View provided in the SDK, you should provide a presenter view and presentation style. If presentation style is not provided it will default to `UIModalPresentationStyle.automatic` for iOS 13.x or `UIModalPresentationStyle.overCurrentContext` for other iOS versions.
+
+## Optional settings
+
+### Apple Pay
+
+To use Apple Pay payments in applicationDidFinishLaunching(_:) set your [Merchant ID][5]:
 
 ```swift
 Monetizr.shared.setApplePayMerchantID(id: String)
 ```
 
-Optioanlly you can override default payment receiver name (app bundle name) used in  Apple payment sheet
+Additionally, you can override the default payment receiver name (app bundle name) that is used in the Apple payment sheet. It changes the displayed payment receiver that end-users see on their receipts.
 
 ```swift
 Monetizr.shared.setCompanyName(companyName: String)
 ```
 
-##### Themes:
+Learn more about setting up Apple Pay for Monetizr integrations [here][6].
 
-Also you can set Product View theme (if not set Default .system would be used)
+### Themes
+
+Set to .system by default. You can customize Offer View theme:
 
 ```swift
 Monetizr.shared.setTheme(theme: ProductViewControllerTheme)
 ```
 
+Versions up to iOS13 .system uses light theme with globalTint elements.
+Versions iOS13+ uses .system uses Dark/Light mode preference and adapts to user selection.
 
-*.system - prior to iOS13 will be light theme with globalTint elements, on iOS13+ theme will use system Dark/Light mode preference and adopt to user selection.*
+*.black - on all iOS versions and modes is set to dark with red elements.*
 
-*.black - on all iOS versions and modes will look the same, it would be dark with red elements.*
+### Monetizr.shared customization
 
-#### Show product or get product data and show in your custom view. 
-
-```swift
-Monetizr.shared.showProduct(tag: String, presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
-```
-
-If you choose to show product in a view provided in SDK you should provide presenter view and presentation style. If presentation style not provided it will be `UIModalPresentationStyle.automatic` for iOS 13.x or `UIModalPresentationStyle.overCurrentContext` for other iOS versions 
-
-### Manual usage of *Monetizr.shared* with custom product views
-
-Create Product View Controller
-
-```func productViewForProduct(product: Product, tag: String) -> ProductViewController```
-
-Present product View
-
-```func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle)```
-
-Checkout variant for product with tag
+Create ProductView Controller:
 
 ```swift
-func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void)
+func productViewForProduct(product: Product, tag: Sample shirt) -> ProductViewController
 ```
 
-Checkout with Apple Pay
+Present ProductView:
 
 ```swift
-Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: UIViewController) { success, error in ()}
+func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle)
 ```
 
-Increase impression count for session
+Checkout for product [variant][7].
 
 ```swift
-func increaseImpressionCount()
+func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: Sample shirt, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void)
 ```
 
-Increase click count for session
+Checkout with Apple Pay:
 
 ```swift
-func increaseClickCountInSession()
+Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: Sample shirt!, presenter: UIViewController) { success, error in ()}
 ```
 
-Increase checkout count for session
-
-```swift
-func increaseCheckoutCountInSession()
-```
-
-Get session duration in seconds
-
-```swift
-func sessionDurationSeconds() -> Int
-```
-
-Get session duration in miliseconds
-
-```swift
-func sessionDurationMiliseconds() -> Int
-```
-
-Telemetrics - Create a new entry for impressionvisible
-
-```swift
-func impressionvisibleCreate(tag: String?, fromDate:Date?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for clickreward
-
-```swift
-func clickrewardCreate(tag: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for design
-
-```swift
-func designCreate(numberOfTriggers: Int?, funnelTriggerList: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for dismiss
-
-```swift
-func dismissCreate(tag: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for install
-
-```swift
-func installCreate(deviceIdentifier: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for update
-
-```swift
-func updateCreate(deviceIdentifier: String, bundleVersion: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for firstimpression
-
-```swift
-func firstimpressionCreate(sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for playerbehaviour
-
-```swift
-func playerbehaviourCreate(deviceIdentifier: String, gameProgress: Int?, sessionDuration: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for purchase
-
-```swift
-func purchaseCreate(deviceIdentifier: String, triggerTag: String?, productPrice: String?, currency: String?, country: String?, city: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for session end
-
-```swift
-func sessionEnd(deviceIdentifier: String, startDate: String?, endDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for session start
-
-```swift
-func sessionCreate(deviceIdentifier: String, startDate: String?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for encounter
-
-```swift
-func encounterCreate(triggerType: String?, completionStatus: Int?, triggerTag: String?, levelName: String?, difficultyLevelName: String?, difficultyEstimation: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for firstimpressionclick
-
-```swift
-func firstimpressionclickCreate(firstImpressionClick: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for firstimpressioncheckout
-
-```swift
-func firstimpressioncheckoutCreate(firstImpressionCheckout: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
-
-Telemetrics - Create a new entry for firstimpressionpurchase
-
-```swift
-func firstimpressionpurchaseCreate(firstImpressionPurchase: Int?, completionHandler: @escaping (Bool, Error?, Any?) -> Void)
-```
+[1]: https://app.themonetizr.com/
+[2]: https://docs.themonetizr.com/docs/ios
+[3]: https://docs.themonetizr.com/docs/creating-account#section-your-unique-access-token
+[4]: https://docs.themonetizr.com/docs/offer-view
+[5]: https://developer.apple.com/documentation/passkit/apple_pay/setting_up_apple_pay_requirements
+[6]: https://docs.themonetizr.com/docs/apple-pay-setup
+[7]: https://docs.themonetizr.com/docs/creating-offer-view#section-create-product-option-selectors
+[8]: https://github.com/Alamofire/Alamofire
+[9]: https://github.com/Alamofire/AlamofireImage
+[10]: https://github.com/zvonicek/ImageSlideshow
+[11]: https://github.com/Shopify/mobile-buy-sdk-ios
