@@ -311,6 +311,39 @@ extension UITextView {
     }
 }
 
+extension UITextField {
+    func addressInputFieldStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .gray
+        self.setLeftPaddingPoints(10)
+        self.setRightPaddingPoints(10)
+        //self.font = .systemFont(ofSize: 16, weight: UIFont.Weight.light)
+        
+        if Monetizr.shared.chosenTheme == .black {
+            self.textColor = .white
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.textColor = .label
+            } else {
+                // Fallback on earlier versions
+                self.textColor = .black
+            }
+        }
+    }
+    
+    func setLeftPaddingPoints(_ amount:CGFloat){
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.leftView = paddingView
+        self.leftViewMode = .always
+    }
+    func setRightPaddingPoints(_ amount:CGFloat) {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.rightView = paddingView
+        self.rightViewMode = .always
+    }
+}
+
 extension String {
     func expandDownImageName()->String {
         if Monetizr.shared.chosenTheme == .black {

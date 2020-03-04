@@ -24,6 +24,10 @@ class ClaimItemViewController: UIViewController{
     var shippingAddress: String?
     
     let addressInputFieldsContainerView = UIView()
+    let actionButtonsContainerView = UIView()
+    let firstNameTextField = UITextField()
+    let lastNameTextField = UITextField()
+    let cancelButton = UIButton()
     
     private var sharedConstraints: [NSLayoutConstraint] = []
 
@@ -31,9 +35,13 @@ class ClaimItemViewController: UIViewController{
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.view.backgroundColor = .yellow
+        self.view.addBlurEffect(style: UIBlurEffect.Style.dark)
         
         self.configureAddressInputFieldsContainerView()
+        self.configureActionButtonsContainerView()
+        self.configureFirstNameTextField()
+        self.configureLastNameTextField()
+        self.configureCancelButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,7 +62,7 @@ class ClaimItemViewController: UIViewController{
 
     }
     
-    func dismiss() {
+    @objc func dismissView() {
         self.dismiss(animated: true, completion: nil)
         delegate?.claimItemFinishedWithCheckout(claim: self.claim)
     }
@@ -62,50 +70,66 @@ class ClaimItemViewController: UIViewController{
     func configureAddressInputFieldsContainerView() {
         // Close button
         addressInputFieldsContainerView.translatesAutoresizingMaskIntoConstraints = false
-        addressInputFieldsContainerView.backgroundColor = .red
         self.view.addSubview(addressInputFieldsContainerView)
+    }
+    
+    func configureActionButtonsContainerView() {
+        actionButtonsContainerView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(actionButtonsContainerView)
+    }
+    
+    func configureFirstNameTextField() {
+        firstNameTextField.addressInputFieldStyle()
+        firstNameTextField.placeholder = "First name"
+        addressInputFieldsContainerView.addSubview(firstNameTextField)
+    }
+    
+    func configureLastNameTextField() {
+        lastNameTextField.addressInputFieldStyle()
+        lastNameTextField.placeholder = "Last name"
+        addressInputFieldsContainerView.addSubview(lastNameTextField)
+    }
+    
+    func configureCancelButton() {
+        // Configure cancel button
+        cancelButton.checkoutProductButtonStyle(title: "Cancel")
+        cancelButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
+        actionButtonsContainerView.addSubview(cancelButton)
     }
     
     func configureSharedConstraints() {
         // Create shared constraints array
+        
         sharedConstraints.append(contentsOf: [
-            addressInputFieldsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
-            addressInputFieldsContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
-            addressInputFieldsContainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
-            addressInputFieldsContainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10)
+            // addressInputFieldsContainerView
+            addressInputFieldsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            addressInputFieldsContainerView.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
+            addressInputFieldsContainerView.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: -20),
+            addressInputFieldsContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
+            
+            // actionButtonsContainerView
+            actionButtonsContainerView.heightAnchor.constraint(equalToConstant: 110),
+            actionButtonsContainerView.leftAnchor.constraint(equalTo: addressInputFieldsContainerView.leftAnchor),
+            actionButtonsContainerView.rightAnchor.constraint(equalTo: addressInputFieldsContainerView.rightAnchor),
+            actionButtonsContainerView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor, constant: -10),
+            
+            // firstNameTextField
+            firstNameTextField.topAnchor.constraint(equalTo: addressInputFieldsContainerView.topAnchor, constant: 0),
+            firstNameTextField.leftAnchor.constraint(equalTo: addressInputFieldsContainerView.leftAnchor, constant: 0),
+            firstNameTextField.rightAnchor.constraint(equalTo: addressInputFieldsContainerView.rightAnchor, constant: 0),
+            firstNameTextField.heightAnchor.constraint(equalToConstant: 35),
+            
+            // lastNameTextField
+            lastNameTextField.topAnchor.constraint(equalTo: firstNameTextField.bottomAnchor, constant: 10),
+            lastNameTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            lastNameTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            lastNameTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            
+            // cancelButton
+            cancelButton.leftAnchor.constraint(equalTo: actionButtonsContainerView.leftAnchor, constant: 0),
+            cancelButton.rightAnchor.constraint(equalTo: actionButtonsContainerView.rightAnchor, constant: 0),
+            cancelButton.heightAnchor.constraint(equalToConstant: 50),
+            cancelButton.bottomAnchor.constraint(equalTo: actionButtonsContainerView.bottomAnchor, constant: 0)
             ])
     }
-    
-    func showClaimForm() {
-        
-        let alertController = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
-        
-        let updateShippingAction = UIAlertAction(title: "Update shipping address", style: .default) { (action:UIAlertAction) in
-            
-        }
-
-        let proceedAction = UIAlertAction(title: "Proceed", style: .default) { (action:UIAlertAction) in
-            
-        }
-
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction) in
-            self.dismiss()
-        }
-        
-        if shippingAddress != nil {
-            alertController.title = "Shipping address:"
-            alertController.message = shippingAddress
-        }
-        
-        if shippingAddress == nil {
-            alertController.message = "Provide shipping address!"
-            proceedAction.isEnabled = false
-        }
-        
-        alertController.addAction(updateShippingAction)
-        alertController.addAction(proceedAction)
-        alertController.addAction(cancelAction)
-       self.present(alertController, animated: true, completion: nil)
-    }
-
 }
