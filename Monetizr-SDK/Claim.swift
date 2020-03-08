@@ -1,3 +1,6 @@
+//  Created by Armands Avotins on 03/03/2020.
+//  Copyright © 2020 Monetizr. All rights reserved.
+
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
@@ -16,7 +19,7 @@ import Foundation
 import Alamofire
 
 // MARK: - Claim
-struct Claim: Codable {
+public struct Claim: Codable {
     let status, message: String?
 }
 

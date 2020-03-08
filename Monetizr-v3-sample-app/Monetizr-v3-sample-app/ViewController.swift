@@ -62,7 +62,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
                 presentationStyle = UIModalPresentationStyle.automatic
             }
             
-            Monetizr.shared.showProduct(tag: merchTagField.text!, presenter: self, presentationStyle: presentationStyle) { success, error, product  in
+            Monetizr.shared.showProduct(tag: merchTagField.text!, playerID: "Test Player", presenter: self, presentationStyle: presentationStyle) { success, error, product  in
                 self.hideActivityIndicator()
                 // Show some error if needed
                 if success {

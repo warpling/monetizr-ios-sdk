@@ -132,7 +132,7 @@ public class Monetizr {
     }
     
     // Load product data
-    public func showProduct(tag: String, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
+    public func showProduct(tag: String, playerID: String? = nil, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
         if localeCodeString != nil {
@@ -150,7 +150,7 @@ public class Monetizr {
                         if #available(iOS 13.0, *) {
                             targetStyle = presentationStyle ?? UIModalPresentationStyle.automatic
                         }
-                        self.presentProductView(productViewController: self.productViewForProduct(product: product, tag: tag), presenter: presenter!, presentationStyle: targetStyle)
+                        self.presentProductView(productViewController: self.productViewForProduct(product: product, tag: tag, playerID: playerID), presenter: presenter!, presentationStyle: targetStyle)
                     }
                     completionHandler(true, nil, retrievedProduct)
                 }
@@ -169,10 +169,11 @@ public class Monetizr {
     }
     
     // Create product View
-    func productViewForProduct(product: Product, tag: String) -> ProductViewController {
+    func productViewForProduct(product: Product, tag: String, playerID: String?) -> ProductViewController {
         let productViewController = ProductViewController()
         productViewController.product = product
         productViewController.tag = tag
+        productViewController.playerID = playerID
         return productViewController
     }
     
@@ -183,7 +184,7 @@ public class Monetizr {
     }
     
     // Checkout variant for product
-    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, shippingAddress: CNPostalAddress? = nil, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, shippingAddress: CheckoutAddress? = nil, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
         let urlString = apiUrl+"products/checkout"
         var parameters: [String: Any] = [
             "product_handle" : tag,
@@ -195,10 +196,12 @@ public class Monetizr {
         }
         
         let shippingParameters: [String: String] = [
+            "firstName" : shippingAddress?.firstName ?? "",
+            "lastName" : shippingAddress?.lastName ?? "",
             "city" : shippingAddress?.city ?? "",
-            "zip" : shippingAddress?.postalCode ?? "",
+            "zip" : shippingAddress?.zip ?? "",
             "country" : shippingAddress?.country ?? "",
-            "province" : shippingAddress?.state ?? ""
+            "province" : shippingAddress?.province ?? ""
         ]
  
         if shippingAddress != nil {
@@ -209,6 +212,56 @@ public class Monetizr {
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
                     completionHandler(true, nil, responseCheckout)
+                }
+                else {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
+                    completionHandler(false, error, nil)
+                }
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Update checkout
+    public func updateCheckout(request: UpdateCheckoutRequest, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+        let urlString = apiUrl+"products/updatecheckout"
+        let parameters = request.dictionaryRepresentation
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
+            if let responseCheckout = response.result.value {
+                if responseCheckout.data != nil {
+                    completionHandler(true, nil, responseCheckout)
+                }
+                else {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
+                    completionHandler(false, error, nil)
+                }
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.result.error!, nil)
+            }
+        }
+    }
+    
+    // Claim order
+    public func claimOrder(checkout: Checkout?, player_id: String, price: String, completionHandler: @escaping (Bool, Error?, Claim?) -> Void) {
+        let urlString = apiUrl+"products/claimorder"
+        let parameters: [String: String] = [
+            "checkoutId" : checkout?.data?.checkoutCreate?.checkout?.id ?? "",
+            "player_id" : player_id,
+            "in_game_currency_amount" : price
+        ]
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseClaim { response in
+            if let responseClaim = response.result.value {
+                if responseClaim.message != nil {
+                    completionHandler(true, nil, responseClaim)
                 }
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
@@ -443,13 +496,15 @@ public class Monetizr {
         }
     }
     
-    // Claim free items
-    public func claimItem(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
+    // Claim free items view
+    public func claimCheckout(selectedVariant: PurpleNode, tag: String, playerID: String, price: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
         let claimItemViewController = ClaimItemViewController()
         claimItemViewController.delegate = presenter as? ClaimItemControllerDelegate
         claimItemViewController.modalPresentationStyle = .overCurrentContext
         claimItemViewController.selectedVariant = selectedVariant
         claimItemViewController.tag = tag
+        claimItemViewController.playerID = playerID
+        claimItemViewController.price = price
         presenter.present(claimItemViewController, animated: true, completion: nil)
         completionHandler(true, nil)
     }

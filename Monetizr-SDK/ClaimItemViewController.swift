@@ -14,10 +14,12 @@ protocol ClaimItemControllerDelegate: class {
     func claimItemFinishedWithCheckout(claim: Claim?)
 }
 
-class ClaimItemViewController: UIViewController{
+class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
     
+    var activityIndicator = UIActivityIndicatorView()
     var selectedVariant: PurpleNode?
-    var checkout: Checkout?
+    var playerID: String?
+    var price: String?
     var claim: Claim?
     var tag: String?
     weak var delegate: ClaimItemControllerDelegate? = nil
@@ -27,6 +29,14 @@ class ClaimItemViewController: UIViewController{
     let actionButtonsContainerView = UIView()
     let firstNameTextField = UITextField()
     let lastNameTextField = UITextField()
+    let emailTextField = UITextField()
+    let address1TextField = UITextField()
+    let address2TextField = UITextField()
+    let cityTextField = UITextField()
+    let countryTextField = UITextField()
+    let provinceTextField = UITextField()
+    let zipTextField = UITextField()
+    let submitButton = UIButton()
     let cancelButton = UIButton()
     
     private var sharedConstraints: [NSLayoutConstraint] = []
@@ -41,6 +51,14 @@ class ClaimItemViewController: UIViewController{
         self.configureActionButtonsContainerView()
         self.configureFirstNameTextField()
         self.configureLastNameTextField()
+        self.configureEmailTextField()
+        self.configureAddress1TextField()
+        self.configureAddress2TextField()
+        self.configureCityTextField()
+        self.configureCountryTextField()
+        self.configureProvinceTextField()
+        self.configureZipTextField()
+        self.configureSumbitButton()
         self.configureCancelButton()
     }
     
@@ -90,6 +108,55 @@ class ClaimItemViewController: UIViewController{
         addressInputFieldsContainerView.addSubview(lastNameTextField)
     }
     
+    func configureEmailTextField() {
+        emailTextField.addressInputFieldStyle()
+        emailTextField.placeholder = "E-mail"
+        addressInputFieldsContainerView.addSubview(emailTextField)
+    }
+    
+    func configureAddress1TextField() {
+        address1TextField.addressInputFieldStyle()
+        address1TextField.placeholder = "Address"
+        addressInputFieldsContainerView.addSubview(address1TextField)
+    }
+    
+    func configureAddress2TextField() {
+        address2TextField.addressInputFieldStyle()
+        address2TextField.placeholder = "Apartment, suite, etc (optional)"
+        addressInputFieldsContainerView.addSubview(address2TextField)
+    }
+    
+    func configureCityTextField() {
+        cityTextField.addressInputFieldStyle()
+        cityTextField.placeholder = "City"
+        addressInputFieldsContainerView.addSubview(cityTextField)
+    }
+    
+    func configureCountryTextField() {
+        countryTextField.addressInputFieldStyle()
+        countryTextField.placeholder = "Country"
+        addressInputFieldsContainerView.addSubview(countryTextField)
+    }
+    
+    func configureProvinceTextField() {
+        provinceTextField.addressInputFieldStyle()
+        provinceTextField.placeholder = "State/Province"
+        addressInputFieldsContainerView.addSubview(provinceTextField)
+    }
+    
+    func configureZipTextField() {
+        zipTextField.addressInputFieldStyle()
+        zipTextField.placeholder = "ZIP/Postal/PIN code"
+        addressInputFieldsContainerView.addSubview(zipTextField)
+    }
+    
+    func configureSumbitButton() {
+        // Configure cancel button
+        submitButton.checkoutProductButtonStyle(title: "Submit")
+        submitButton.addTarget(self, action: #selector(checkoutSelectedVariant), for: .touchUpInside)
+        actionButtonsContainerView.addSubview(submitButton)
+    }
+    
     func configureCancelButton() {
         // Configure cancel button
         cancelButton.checkoutProductButtonStyle(title: "Cancel")
@@ -125,11 +192,118 @@ class ClaimItemViewController: UIViewController{
             lastNameTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
             lastNameTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
             
+            // emailTextField
+            emailTextField.topAnchor.constraint(equalTo: lastNameTextField.bottomAnchor, constant: 10),
+            emailTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            emailTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            emailTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            
+            // address1TextField
+            address1TextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 10),
+            address1TextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            address1TextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            address1TextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            
+            // address2TextField
+            address2TextField.topAnchor.constraint(equalTo: address1TextField.bottomAnchor, constant: 10),
+            address2TextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            address2TextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            address2TextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            
+            // cityTextField
+            cityTextField.topAnchor.constraint(equalTo: address2TextField.bottomAnchor, constant: 10),
+            cityTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            cityTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            cityTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            
+            // countryTextField
+            countryTextField.topAnchor.constraint(equalTo: cityTextField.bottomAnchor, constant: 10),
+            countryTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            countryTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            countryTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            
+            // provinceTextField
+            provinceTextField.topAnchor.constraint(equalTo: countryTextField.bottomAnchor, constant: 10),
+            provinceTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            provinceTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            provinceTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            
+            // zipTextField
+            zipTextField.topAnchor.constraint(equalTo: provinceTextField.bottomAnchor, constant: 10),
+            zipTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            zipTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            zipTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            
+            // submitButton
+            submitButton.leftAnchor.constraint(equalTo: actionButtonsContainerView.leftAnchor, constant: 0),
+            submitButton.rightAnchor.constraint(equalTo: actionButtonsContainerView.rightAnchor, constant: 0),
+            submitButton.heightAnchor.constraint(equalToConstant: 50),
+            submitButton.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -10),
+            
             // cancelButton
             cancelButton.leftAnchor.constraint(equalTo: actionButtonsContainerView.leftAnchor, constant: 0),
             cancelButton.rightAnchor.constraint(equalTo: actionButtonsContainerView.rightAnchor, constant: 0),
             cancelButton.heightAnchor.constraint(equalToConstant: 50),
             cancelButton.bottomAnchor.constraint(equalTo: actionButtonsContainerView.bottomAnchor, constant: 0)
             ])
+    }
+    
+    @objc func checkoutSelectedVariant() {
+        self.showActivityIndicator()
+        Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: self.createShippingAddress()) { success, error, checkout in
+            if success {
+                // Update checkout
+                let request = UpdateCheckoutRequest(productHandle: self.tag ?? "", checkoutID: checkout?.data?.checkoutCreate?.checkout?.id ?? "", email: self.emailTextField.text ?? "", shippingRateHandle: checkout?.data?.checkoutCreate?.checkout?.availableShippingRates?.shippingRates?[0].handle ?? "", shippingAddress: self.createShippingAddress(), billingAddress: self.createShippingAddress())
+                
+                Monetizr.shared.updateCheckout(request: request) { success, error, checkout in
+                    if success {
+                        // Handle success
+                        Monetizr.shared.claimOrder(checkout: checkout, player_id: self.playerID ?? "", price: self.price ?? "") { success, error, claim in
+                            self.hideActivityIndicator()
+                            if success {
+                                // Handle success
+                                self.claim = claim
+                                self.dismissView()
+                            }
+                            else {
+                                // Handle error
+                                self.showAlert(error: error)
+                            }
+                        }
+                    }
+                    else {
+                        self.hideActivityIndicator()
+                        // Handle error
+                        self.showAlert(error: error)
+                    }
+                }
+            }
+            else {
+                self.hideActivityIndicator()
+                // Handle error
+                self.showAlert(error: error)
+            }
+        }
+    }
+    
+    func createShippingAddress() -> (CheckoutAddress) {
+        let address = CheckoutAddress(firstName: self.firstNameTextField.text ?? "", lastName: self.lastNameTextField.text ?? "", address1: self.address1TextField.text ?? "", address2: self.address2TextField.text ?? "", city: self.cityTextField.text ?? "", country: self.countryTextField.text ?? "", zip: self.zipTextField.text ?? "", province: self.provinceTextField.text ?? "")
+        return address
+    }
+    
+    func showAlert(error: Error?) {
+        let alert = UIAlertController(title: "", message: error?.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                print("default")
+            case .cancel:
+                print("cancel")
+            case .destructive:
+                print("destructive")
+            @unknown default:
+                break
+            }}))
+        self.present(alert, animated: true, completion: nil)
     }
 }
