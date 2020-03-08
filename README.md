@@ -44,7 +44,7 @@ import Monetizr
 
 ## Using the library in your app
 
-To use the SDK you need an [API key][3]. For testing purposes, you can use public test key **4D2E54389EB489966658DDD83E2D1**.
+To use the SDK you need an [API key][3]. For testing purposes, you can use public test key `4D2E54389EB489966658DDD83E2D1`.
 
 In applicationDidFinishLaunching(_:) do the initialization with the API key:
 
@@ -52,7 +52,7 @@ In applicationDidFinishLaunching(_:) do the initialization with the API key:
 Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1"
 ```
 
-To show a product in an [Offer View][4], you need to call a specific product_tag. Product tags represent a specific product, and they are managed in the web Console. For testing purposes, you can use public test product **Sample shirt**.
+To show a product in an [Offer View][4], you need to call a specific product_tag. Product tags represent a specific product, and they are managed in the web Console. For testing purposes, you can use public test product `Sample shirt`.
 
 Show an Offer View inside your app:
 
