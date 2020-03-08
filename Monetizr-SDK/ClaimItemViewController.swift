@@ -180,7 +180,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         
         sharedConstraints.append(contentsOf: [
             // addressInputFieldsContainerView
-            addressInputFieldsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
+            addressInputFieldsContainerView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 20),
             addressInputFieldsContainerView.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
             addressInputFieldsContainerView.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: -20),
             addressInputFieldsContainerView.bottomAnchor.constraint(equalTo: actionButtonsContainerView.topAnchor, constant: -20),
@@ -325,10 +325,16 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         let userInfo = notification.userInfo!
         var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
-
-        var contentInset:UIEdgeInsets = self.addressInputFieldsContainerView.contentInset
-        contentInset.bottom = keyboardFrame.size.height
-        addressInputFieldsContainerView.contentInset = contentInset
+        
+        let fieldsBottom = self.addressInputFieldsContainerView.frame.maxY
+        let totalHeight = self.view.frame.height
+        let distanceFromBottom = totalHeight-fieldsBottom
+        let keyboardHeight = keyboardFrame.size.height
+        if keyboardHeight > distanceFromBottom {
+            var contentInset:UIEdgeInsets = self.addressInputFieldsContainerView.contentInset
+            contentInset.bottom = keyboardHeight-distanceFromBottom
+            addressInputFieldsContainerView.contentInset = contentInset
+        }
     }
 
     @objc func keyboardWillHide(notification:NSNotification){
