@@ -14,7 +14,7 @@ protocol ClaimItemControllerDelegate: class {
     func claimItemFinishedWithCheckout(claim: Claim?)
 }
 
-class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
+class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UITextFieldDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var selectedVariant: PurpleNode?
@@ -25,7 +25,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
     weak var delegate: ClaimItemControllerDelegate? = nil
     var shippingAddress: String?
     
-    let addressInputFieldsContainerView = UIView()
+    let addressInputFieldsContainerView = UIScrollView()
     let actionButtonsContainerView = UIView()
     let firstNameTextField = UITextField()
     let lastNameTextField = UITextField()
@@ -60,6 +60,12 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
         self.configureZipTextField()
         self.configureSumbitButton()
         self.configureCancelButton()
+        
+        self.hideKeyboardWhenTappedAround()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:
+            UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:
+            UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,6 +83,11 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
 
     }
     
@@ -169,10 +180,10 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
         
         sharedConstraints.append(contentsOf: [
             // addressInputFieldsContainerView
-            addressInputFieldsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            addressInputFieldsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
             addressInputFieldsContainerView.leftAnchor.constraint(equalTo: view.safeLeftAnchor, constant: 20),
             addressInputFieldsContainerView.rightAnchor.constraint(equalTo: view.safeRightAnchor, constant: -20),
-            addressInputFieldsContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
+            addressInputFieldsContainerView.bottomAnchor.constraint(equalTo: actionButtonsContainerView.topAnchor, constant: -20),
             
             // actionButtonsContainerView
             actionButtonsContainerView.heightAnchor.constraint(equalToConstant: 110),
@@ -185,6 +196,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
             firstNameTextField.leftAnchor.constraint(equalTo: addressInputFieldsContainerView.leftAnchor, constant: 0),
             firstNameTextField.rightAnchor.constraint(equalTo: addressInputFieldsContainerView.rightAnchor, constant: 0),
             firstNameTextField.heightAnchor.constraint(equalToConstant: 35),
+            firstNameTextField.widthAnchor.constraint(equalTo: addressInputFieldsContainerView.widthAnchor),
             
             // lastNameTextField
             lastNameTextField.topAnchor.constraint(equalTo: firstNameTextField.bottomAnchor, constant: 10),
@@ -233,6 +245,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
             zipTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
             zipTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
             zipTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            zipTextField.bottomAnchor.constraint(equalTo: addressInputFieldsContainerView.bottomAnchor, constant: -20),
             
             // submitButton
             submitButton.leftAnchor.constraint(equalTo: actionButtonsContainerView.leftAnchor, constant: 0),
@@ -305,5 +318,21 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter {
                 break
             }}))
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK: Handle Keyboard
+    @objc func keyboardWillShow(notification:NSNotification){
+        let userInfo = notification.userInfo!
+        var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+
+        var contentInset:UIEdgeInsets = self.addressInputFieldsContainerView.contentInset
+        contentInset.bottom = keyboardFrame.size.height
+        addressInputFieldsContainerView.contentInset = contentInset
+    }
+
+    @objc func keyboardWillHide(notification:NSNotification){
+        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+        addressInputFieldsContainerView.contentInset = contentInset
     }
 }
