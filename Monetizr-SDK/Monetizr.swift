@@ -194,18 +194,30 @@ public class Monetizr {
         if localeCodeString != nil {
             parameters["language"] = localeCodeString
         }
-        
-        let shippingParameters: [String: String] = [
-            "firstName" : shippingAddress?.firstName ?? "",
-            "lastName" : shippingAddress?.lastName ?? "",
-            "city" : shippingAddress?.city ?? "",
-            "zip" : shippingAddress?.zip ?? "",
-            "country" : shippingAddress?.country ?? "",
-            "province" : shippingAddress?.province ?? ""
-        ]
  
         if shippingAddress != nil {
-            parameters["shippingAddress"] = shippingParameters
+            var shippingParameters: [String: String] = [:]
+            if let firstName = shippingAddress?.firstName {
+                shippingParameters["firstName"] = firstName
+            }
+            if let lastName = shippingAddress?.lastName {
+                shippingParameters["lastName"] = lastName
+            }
+            if let city = shippingAddress?.city {
+                shippingParameters["city"] = city
+            }
+            if let zip = shippingAddress?.zip {
+                shippingParameters["zip"] = zip
+            }
+            if let country = shippingAddress?.country {
+                shippingParameters["country"] = country
+            }
+            if let province = shippingAddress?.province {
+                shippingParameters["province"] = province
+            }
+            if shippingParameters.count > 0 {
+                parameters["shippingAddress"] = shippingParameters
+            }
         }
  
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in

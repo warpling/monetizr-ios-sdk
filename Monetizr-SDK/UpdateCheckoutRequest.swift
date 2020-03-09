@@ -19,8 +19,8 @@ public struct UpdateCheckoutRequest: Codable {
     
     var dictionaryRepresentation: [String: Any] {
         return [
-            "productHandle" : productHandle,
-            "checkoutID" : checkoutID,
+            "product_handle" : productHandle,
+            "checkoutId" : checkoutID,
             "email" : email,
             "shippingRateHandle" : shippingRateHandle,
             "shippingAddress" : shippingAddress.dictionaryRepresentation,
