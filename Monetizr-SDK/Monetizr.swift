@@ -184,7 +184,7 @@ public class Monetizr {
     }
     
     // Checkout variant for product
-    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, shippingAddress: CheckoutAddress? = nil, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: String, shippingAddress: CheckoutAddress? = nil, completionHandler: @escaping (Bool, Error?, CheckoutResponse?) -> Void) {
         let urlString = apiUrl+"products/checkout"
         var parameters: [String: Any] = [
             "product_handle" : tag,
@@ -240,7 +240,7 @@ public class Monetizr {
     }
     
     // Update checkout
-    public func updateCheckout(request: UpdateCheckoutRequest, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void) {
+    public func updateCheckout(request: UpdateCheckoutRequest, completionHandler: @escaping (Bool, Error?, CheckoutResponse?) -> Void) {
         let urlString = apiUrl+"products/updatecheckout"
         let parameters = request.dictionaryRepresentation
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
@@ -263,7 +263,7 @@ public class Monetizr {
     }
     
     // Claim order
-    public func claimOrder(checkout: Checkout?, player_id: String, price: String, completionHandler: @escaping (Bool, Error?, Claim?) -> Void) {
+    public func claimOrder(checkout: CheckoutResponse?, player_id: String, price: String, completionHandler: @escaping (Bool, Error?, Claim?) -> Void) {
         let urlString = apiUrl+"products/claimorder"
         let parameters: [String: String] = [
             "checkoutId" : checkout?.data?.checkoutCreate?.checkout?.id ?? "",
@@ -290,7 +290,7 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVariantWithApplePayment(checkout: Checkout, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, [Storefront.CheckoutUserError]?, Storefront.Checkout?, Storefront.Payment?) -> Void) {
+    public func checkoutVariantWithApplePayment(checkout: CheckoutResponse, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, [Storefront.CheckoutUserError]?, Storefront.Checkout?, Storefront.Payment?) -> Void) {
         
         let urlString = apiUrl+"stores"
         

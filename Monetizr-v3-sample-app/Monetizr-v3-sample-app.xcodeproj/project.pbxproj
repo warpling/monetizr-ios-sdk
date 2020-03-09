@@ -24,7 +24,7 @@
 		28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865022C6D279005F2D2D /* Monetizr.swift */; };
 		28AE865A22C6D279005F2D2D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865122C6D279005F2D2D /* Extensions.swift */; };
 		28AE865B22C6D279005F2D2D /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865222C6D279005F2D2D /* Product.swift */; };
-		28AE865C22C6D279005F2D2D /* Checkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865322C6D279005F2D2D /* Checkout.swift */; };
+		28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865322C6D279005F2D2D /* CheckoutResponse.swift */; };
 		28AE865D22C6D279005F2D2D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865422C6D279005F2D2D /* Device.swift */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
@@ -84,7 +84,7 @@
 		28AE865022C6D279005F2D2D /* Monetizr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Monetizr.swift; sourceTree = "<group>"; };
 		28AE865122C6D279005F2D2D /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		28AE865222C6D279005F2D2D /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
-		28AE865322C6D279005F2D2D /* Checkout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkout.swift; sourceTree = "<group>"; };
+		28AE865322C6D279005F2D2D /* CheckoutResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutResponse.swift; sourceTree = "<group>"; };
 		28AE865422C6D279005F2D2D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -139,7 +139,7 @@
 				28E7C0DD240C16BC00A6D9AE /* Claim.swift */,
 				2800F2D42412E28700FF7A8A /* UpdateCheckoutRequest.swift */,
 				2800F2D62415083B00FF7A8A /* CheckoutAddress.swift */,
-				28AE865322C6D279005F2D2D /* Checkout.swift */,
+				28AE865322C6D279005F2D2D /* CheckoutResponse.swift */,
 				2824BFCA2390513D007DDD8C /* Stores.swift */,
 				28AE865422C6D279005F2D2D /* Device.swift */,
 				28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */,
@@ -366,7 +366,7 @@
 				28AE865B22C6D279005F2D2D /* Product.swift in Sources */,
 				28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */,
 				28E7C0DE240C16BC00A6D9AE /* Claim.swift in Sources */,
-				28AE865C22C6D279005F2D2D /* Checkout.swift in Sources */,
+				28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */,
 				2800F2D72415083B00FF7A8A /* CheckoutAddress.swift in Sources */,
 				28E6B7912262109300E43C83 /* ViewController.swift in Sources */,
 				28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */,

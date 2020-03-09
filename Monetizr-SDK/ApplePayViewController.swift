@@ -18,7 +18,7 @@ protocol ApplePayControllerDelegate: class {
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
     
     var selectedVariant: PurpleNode?
-    var checkout: Checkout?
+    var checkout: CheckoutResponse?
     var shopifyCheckout: Storefront.Checkout?
     var tag: String?
     weak var delegate: ApplePayControllerDelegate? = nil
