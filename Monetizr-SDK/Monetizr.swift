@@ -223,7 +223,14 @@ public class Monetizr {
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
-                    completionHandler(true, nil, responseCheckout)
+                    if responseCheckout.data?.checkoutCreate?.checkoutUserErrors?.count ?? 0 < 1 {
+                        completionHandler(true, nil, responseCheckout)
+                    }
+                    else {
+                        let message = responseCheckout.data?.checkoutCreate?.checkoutUserErrors?[0].message
+                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : message ?? "API error, contact Monetizr for details"])
+                        completionHandler(false, error, nil)
+                    }
                 }
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
@@ -246,7 +253,14 @@ public class Monetizr {
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
             if let responseCheckout = response.result.value {
                 if responseCheckout.data != nil {
-                    completionHandler(true, nil, responseCheckout)
+                    if responseCheckout.data?.updateShippingLine?.checkoutUserErrors?.count ?? 0 < 1 {
+                        completionHandler(true, nil, responseCheckout)
+                    }
+                    else {
+                        let message = responseCheckout.data?.updateShippingLine?.checkoutUserErrors?[0].message
+                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : message ?? "API error, contact Monetizr for details"])
+                        completionHandler(false, error, nil)
+                    }
                 }
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
