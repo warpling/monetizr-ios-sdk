@@ -271,7 +271,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                 Monetizr.shared.updateCheckout(request: request) { success, error, checkout in
                     if success {
                         // Handle success
-                        Monetizr.shared.claimOrder(checkout: checkout, player_id: self.playerID ?? "", price: self.price ?? "") { success, error, claim in
+                        Monetizr.shared.claimOrder(shippingLine: checkout?.data?.updateShippingLine, player_id: self.playerID ?? "", price: self.price ?? "") { success, error, claim in
                             self.hideActivityIndicator()
                             if success {
                                 // Handle success
