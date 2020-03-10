@@ -109,54 +109,81 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     func configureFirstNameTextField() {
         firstNameTextField.addressInputFieldStyle()
+        firstNameTextField.delegate = self
+        firstNameTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         firstNameTextField.placeholder = "First name"
         addressInputFieldsContainerView.addSubview(firstNameTextField)
     }
     
     func configureLastNameTextField() {
         lastNameTextField.addressInputFieldStyle()
+        lastNameTextField.delegate = self
+        lastNameTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         lastNameTextField.placeholder = "Last name"
         addressInputFieldsContainerView.addSubview(lastNameTextField)
     }
     
     func configureEmailTextField() {
         emailTextField.addressInputFieldStyle()
+        emailTextField.delegate = self
+        emailTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         emailTextField.placeholder = "E-mail"
         addressInputFieldsContainerView.addSubview(emailTextField)
     }
     
     func configureAddress1TextField() {
         address1TextField.addressInputFieldStyle()
+        address1TextField.delegate = self
+        address1TextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         address1TextField.placeholder = "Address"
         addressInputFieldsContainerView.addSubview(address1TextField)
     }
     
     func configureAddress2TextField() {
         address2TextField.addressInputFieldStyle()
+        address2TextField.delegate = self
+        address2TextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         address2TextField.placeholder = "Apartment, suite, etc (optional)"
         addressInputFieldsContainerView.addSubview(address2TextField)
     }
     
     func configureCityTextField() {
         cityTextField.addressInputFieldStyle()
+        cityTextField.delegate = self
+        cityTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         cityTextField.placeholder = "City"
         addressInputFieldsContainerView.addSubview(cityTextField)
     }
     
     func configureCountryTextField() {
         countryTextField.addressInputFieldStyle()
+        countryTextField.delegate = self
+        countryTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         countryTextField.placeholder = "Country"
         addressInputFieldsContainerView.addSubview(countryTextField)
     }
     
     func configureProvinceTextField() {
         provinceTextField.addressInputFieldStyle()
+        provinceTextField.delegate = self
+        provinceTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         provinceTextField.placeholder = "State/Province"
         addressInputFieldsContainerView.addSubview(provinceTextField)
     }
     
     func configureZipTextField() {
         zipTextField.addressInputFieldStyle()
+        zipTextField.delegate = self
+        zipTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
+        for: .editingChanged)
         zipTextField.placeholder = "ZIP/Postal/PIN code"
         addressInputFieldsContainerView.addSubview(zipTextField)
     }
@@ -165,6 +192,8 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         // Configure cancel button
         submitButton.checkoutProductButtonStyle(title: "Submit")
         submitButton.addTarget(self, action: #selector(checkoutSelectedVariant), for: .touchUpInside)
+        submitButton.isEnabled = false
+        submitButton.layer.borderColor = UIColor.red.cgColor
         actionButtonsContainerView.addSubview(submitButton)
     }
     
@@ -340,5 +369,51 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     @objc func keyboardWillHide(notification:NSNotification){
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         addressInputFieldsContainerView.contentInset = contentInset
+    }
+    
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        //set Button to false whenever they begin editing
+        submitButton.isEnabled = false
+        submitButton.layer.borderColor = UIColor.red.cgColor
+        
+        if firstNameTextField.text == "" {
+            return
+        }
+        if lastNameTextField.text == "" {
+            return
+        }
+        if !(emailTextField.text?.isValidEmail() ?? true) {
+            return
+        }
+        if address1TextField.text == "" {
+            return
+        }
+        if cityTextField.text == "" {
+            return
+        }
+        if countryTextField.text == "" {
+            return
+        }
+        if provinceTextField.text == "" {
+            return
+        }
+        if zipTextField.text == "" {
+            return
+        }
+      
+        // set button to true whenever all textfield criteria is met.
+        submitButton.isEnabled = true
+        submitButton.layer.borderColor = UIColor.systemGreen.cgColor
+
     }
 }

@@ -314,20 +314,23 @@ extension UITextView {
 extension UITextField {
     func addressInputFieldStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .gray
         self.setLeftPaddingPoints(10)
         self.setRightPaddingPoints(10)
         //self.font = .systemFont(ofSize: 16, weight: UIFont.Weight.light)
-        
+        self.returnKeyType = .done
+        self.layer.cornerRadius = 4
         if Monetizr.shared.chosenTheme == .black {
             self.textColor = .white
+            self.backgroundColor = UIColor.white.withAlphaComponent(0.2)
         }
         else {
             if #available(iOS 13.0, *) {
                 self.textColor = .label
+                self.backgroundColor = UIColor.white.withAlphaComponent(0.2)
             } else {
                 // Fallback on earlier versions
                 self.textColor = .black
+                self.backgroundColor = UIColor.white.withAlphaComponent(0.6)
             }
         }
     }
