@@ -36,7 +36,7 @@ public struct CheckoutResponse: Codable {
 
 // MARK: - DataClass
 public struct DataClass: Codable {
-    let checkoutCreate, first, second, third: CheckoutCreate?
+    let checkoutCreate, first, second, third, updateShippingAddress, updateShippingLine: CheckoutCreate?
 }
 
 //

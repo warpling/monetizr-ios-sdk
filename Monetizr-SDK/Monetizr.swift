@@ -266,7 +266,7 @@ public class Monetizr {
     public func claimOrder(checkout: CheckoutResponse?, player_id: String, price: String, completionHandler: @escaping (Bool, Error?, Claim?) -> Void) {
         let urlString = apiUrl+"products/claimorder"
         let parameters: [String: String] = [
-            "checkoutId" : checkout?.data?.checkoutCreate?.checkout?.id ?? "",
+            "checkoutId" : checkout?.data?.updateShippingLine?.checkout?.id ?? "",
             "player_id" : player_id,
             "in_game_currency_amount" : price
         ]
