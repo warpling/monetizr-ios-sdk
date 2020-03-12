@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Monetizr'
-  s.version          = '3.3.4'
+  s.version          = '3.4.1'
   s.summary          = 'Monetizr is a game reward engine, we drive revenue to your business and enhance the experience of your players!'
  
   s.description      = <<-DESC
@@ -23,5 +23,6 @@ Monetizr rewards your users with an opportunity to unlock and buy your own game 
   s.dependency 'ImageSlideshow/Alamofire'
   s.dependency 'ImageSlideshow', '~> 1.8'
   s.dependency 'Mobile-Buy-SDK'
+  s.dependency 'McPicker'
  
 end
