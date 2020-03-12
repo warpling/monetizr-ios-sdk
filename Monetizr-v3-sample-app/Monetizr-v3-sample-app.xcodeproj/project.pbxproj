@@ -26,6 +26,7 @@
 		28AE865B22C6D279005F2D2D /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865222C6D279005F2D2D /* Product.swift */; };
 		28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865322C6D279005F2D2D /* CheckoutResponse.swift */; };
 		28AE865D22C6D279005F2D2D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865422C6D279005F2D2D /* Device.swift */; };
+		28E5BB63241AC94B00529823 /* AddressInputLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E5BB62241AC94B00529823 /* AddressInputLabel.swift */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
 		28E6B7942262109300E43C83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28E6B7922262109300E43C83 /* Main.storyboard */; };
@@ -86,6 +87,7 @@
 		28AE865222C6D279005F2D2D /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		28AE865322C6D279005F2D2D /* CheckoutResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutResponse.swift; sourceTree = "<group>"; };
 		28AE865422C6D279005F2D2D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		28E5BB62241AC94B00529823 /* AddressInputLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInputLabel.swift; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		28E6B7902262109300E43C83 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				28AE865022C6D279005F2D2D /* Monetizr.swift */,
 				28AE865122C6D279005F2D2D /* Extensions.swift */,
 				28591EAF23564B4200611353 /* Styles.swift */,
+				28E5BB62241AC94B00529823 /* AddressInputLabel.swift */,
 				28AE865222C6D279005F2D2D /* Product.swift */,
 				28E7C0DD240C16BC00A6D9AE /* Claim.swift */,
 				2800F2D42412E28700FF7A8A /* UpdateCheckoutRequest.swift */,
@@ -367,6 +370,7 @@
 				28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */,
 				28E7C0DE240C16BC00A6D9AE /* Claim.swift in Sources */,
 				28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */,
+				28E5BB63241AC94B00529823 /* AddressInputLabel.swift in Sources */,
 				2800F2D72415083B00FF7A8A /* CheckoutAddress.swift in Sources */,
 				28E6B7912262109300E43C83 /* ViewController.swift in Sources */,
 				28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */,
@@ -564,7 +568,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2141;
+				CURRENT_PROJECT_VERSION = 2145;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -572,7 +576,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.3.4;
+				MARKETING_VERSION = 3.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -587,7 +591,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2141;
+				CURRENT_PROJECT_VERSION = 2145;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -595,7 +599,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.3.4;
+				MARKETING_VERSION = 3.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

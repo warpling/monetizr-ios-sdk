@@ -8,6 +8,7 @@
 
 import UIKit
 import ContactsUI
+import McPicker
 
 // Protocol used for sending data back to product view
 protocol ClaimItemControllerDelegate: class {
@@ -34,7 +35,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     let address1TextField = UITextField()
     let address2TextField = UITextField()
     let cityTextField = UITextField()
-    let countryTextField = UITextField()
+    let countryLabel = AddressInputLabel()
     let provinceTextField = UITextField()
     let zipTextField = UITextField()
     let submitButton = UIButton()
@@ -170,12 +171,12 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     }
     
     func configureCountryTextField() {
-        countryTextField.addressInputFieldStyle()
-        countryTextField.delegate = self
-        countryTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
-        for: .editingChanged)
-        countryTextField.placeholder = NSLocalizedString("Country", comment: "Country")
-        addressInputFieldsContainerView.addSubview(countryTextField)
+        countryLabel.addressInputLabelStyle()
+        countryLabel.text = countryName()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(pickCountry))
+        countryLabel.isUserInteractionEnabled = true
+        countryLabel.addGestureRecognizer(tap)
+        addressInputFieldsContainerView.addSubview(countryLabel)
     }
     
     func configureProvinceTextField() {
@@ -272,13 +273,13 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             cityTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
             
             // countryTextField
-            countryTextField.topAnchor.constraint(equalTo: cityTextField.bottomAnchor, constant: 10),
-            countryTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
-            countryTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
-            countryTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            countryLabel.topAnchor.constraint(equalTo: cityTextField.bottomAnchor, constant: 10),
+            countryLabel.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            countryLabel.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            countryLabel.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
             
             // provinceTextField
-            provinceTextField.topAnchor.constraint(equalTo: countryTextField.bottomAnchor, constant: 10),
+            provinceTextField.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: 10),
             provinceTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
             provinceTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
             provinceTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
@@ -343,7 +344,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     }
     
     func createShippingAddress() -> (CheckoutAddress) {
-        let address = CheckoutAddress(firstName: self.firstNameTextField.text ?? "", lastName: self.lastNameTextField.text ?? "", address1: self.address1TextField.text ?? "", address2: self.address2TextField.text ?? "", city: self.cityTextField.text ?? "", country: self.countryTextField.text ?? "", zip: self.zipTextField.text ?? "", province: self.provinceTextField.text ?? "")
+        let address = CheckoutAddress(firstName: self.firstNameTextField.text ?? "", lastName: self.lastNameTextField.text ?? "", address1: self.address1TextField.text ?? "", address2: self.address2TextField.text ?? "", city: self.cityTextField.text ?? "", country: self.countryLabel.text ?? "", zip: self.zipTextField.text ?? "", province: self.provinceTextField.text ?? "")
         return address
     }
     
@@ -364,6 +365,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     }
     
     // MARK: Handle Keyboard
+    
     @objc func keyboardWillShow(notification:NSNotification){
         let userInfo = notification.userInfo!
         var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
@@ -415,7 +417,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         if cityTextField.text == "" {
             return
         }
-        if countryTextField.text == "" {
+        if countryLabel.text == "" {
             return
         }
         if provinceTextField.text == "" {
@@ -429,5 +431,40 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         submitButton.isEnabled = true
         submitButton.layer.borderColor = UIColor.systemGreen.cgColor
 
+    }
+    
+    // MARK: Pickers
+    
+    func countrylist()->[String] {
+        var countries: [String] = []
+
+        for code in NSLocale.isoCountryCodes  {
+            let id = NSLocale.localeIdentifier(fromComponents: [NSLocale.Key.countryCode.rawValue: code])
+            let name = NSLocale(localeIdentifier: "en_UK").displayName(forKey: NSLocale.Key.identifier, value: id) ?? "Country not found for code: \(code)"
+            countries.append(name)
+        }
+        return countries
+    }
+    
+    @objc func pickCountry() {
+        let data: [[String]] = [
+            self.countrylist()
+        ]
+        let mcPicker = McPicker(data: data)
+        if #available(iOS 13.0, *) {
+            mcPicker.pickerBackgroundColor = .systemBackground
+        } else {
+            // Fallback on earlier versions
+            mcPicker.pickerBackgroundColor = .white
+        }
+        mcPicker.show(doneHandler: { [weak self] (selections: [Int : String]) -> Void in
+            if let name = selections[0] {
+                self?.countryLabel.text = name
+            }
+        }, cancelHandler: {
+           
+        }, selectionChangedHandler: { (selections: [Int:String], componentThatChanged: Int) -> Void  in
+            
+        })
     }
 }
