@@ -111,7 +111,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     func configureTitlelabel() {
         titleLabel.claimTitleLabelStyle()
-        titleLabel.text = "Shipping address:"
+        titleLabel.text = NSLocalizedString("Shipping address:", comment: "Shipping address")
         addressInputFieldsContainerView.addSubview(titleLabel)
     }
     
@@ -120,7 +120,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         firstNameTextField.delegate = self
         firstNameTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        firstNameTextField.placeholder = "First name"
+        firstNameTextField.placeholder = NSLocalizedString("First name", comment: "First name")
         addressInputFieldsContainerView.addSubview(firstNameTextField)
     }
     
@@ -129,7 +129,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         lastNameTextField.delegate = self
         lastNameTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        lastNameTextField.placeholder = "Last name"
+        lastNameTextField.placeholder = NSLocalizedString("Last name", comment: "Last name")
         addressInputFieldsContainerView.addSubview(lastNameTextField)
     }
     
@@ -138,7 +138,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         emailTextField.delegate = self
         emailTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        emailTextField.placeholder = "E-mail"
+        emailTextField.placeholder = NSLocalizedString("E-mail", comment: "E-mail")
         addressInputFieldsContainerView.addSubview(emailTextField)
     }
     
@@ -147,7 +147,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         address1TextField.delegate = self
         address1TextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        address1TextField.placeholder = "Address"
+        address1TextField.placeholder = NSLocalizedString("Address", comment: "Address")
         addressInputFieldsContainerView.addSubview(address1TextField)
     }
     
@@ -156,7 +156,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         address2TextField.delegate = self
         address2TextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        address2TextField.placeholder = "Apartment, suite, etc (optional)"
+        address2TextField.placeholder = NSLocalizedString("Apartment, suite, etc (optional)", comment: "Apartment, suite, etc (optional)")
         addressInputFieldsContainerView.addSubview(address2TextField)
     }
     
@@ -165,7 +165,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         cityTextField.delegate = self
         cityTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        cityTextField.placeholder = "City"
+        cityTextField.placeholder = NSLocalizedString("City", comment: "City")
         addressInputFieldsContainerView.addSubview(cityTextField)
     }
     
@@ -174,7 +174,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         countryTextField.delegate = self
         countryTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        countryTextField.placeholder = "Country"
+        countryTextField.placeholder = NSLocalizedString("Country", comment: "Country")
         addressInputFieldsContainerView.addSubview(countryTextField)
     }
     
@@ -183,7 +183,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         provinceTextField.delegate = self
         provinceTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        provinceTextField.placeholder = "State/Province"
+        provinceTextField.placeholder = NSLocalizedString("State/Province", comment: "State/Province")
         addressInputFieldsContainerView.addSubview(provinceTextField)
     }
     
@@ -192,13 +192,13 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         zipTextField.delegate = self
         zipTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
-        zipTextField.placeholder = "ZIP/Postal/PIN code"
+        zipTextField.placeholder = NSLocalizedString("ZIP/Postal/PIN code", comment: "ZIP/Postal/PIN code")
         addressInputFieldsContainerView.addSubview(zipTextField)
     }
     
     func configureSumbitButton() {
         // Configure cancel button
-        submitButton.checkoutProductButtonStyle(title: "Submit")
+        submitButton.checkoutProductButtonStyle(title: NSLocalizedString("Submit", comment: "Submit"))
         submitButton.addTarget(self, action: #selector(checkoutSelectedVariant), for: .touchUpInside)
         submitButton.isEnabled = false
         submitButton.layer.borderColor = UIColor.red.cgColor
@@ -207,7 +207,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     func configureCancelButton() {
         // Configure cancel button
-        cancelButton.checkoutProductButtonStyle(title: "Cancel")
+        cancelButton.checkoutProductButtonStyle(title: NSLocalizedString("Cancel", comment: "Cancel")) 
         cancelButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         actionButtonsContainerView.addSubview(cancelButton)
     }

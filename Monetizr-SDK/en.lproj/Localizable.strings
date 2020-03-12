@@ -21,3 +21,15 @@
 "Thank you!" = "Thank you!";
 "Order confirmation" = "Your order is on its way! \nCheck the order confirmation email for tracking information.";
 "Select product variant" = "Select product variant";
+"Shipping address:" = "Shipping address:";
+"First name" = "First name";
+"Last name" = "Last name";
+"E-mail" = "E-mail";
+"Address" = "Address";
+"Apartment, suite, etc (optional)" = "Apartment, suite, etc (optional)";
+"City" = "City";
+"Country" = "Country";
+"State/Province" = "State/Province";
+"ZIP/Postal/PIN code" = "ZIP/Postal/PIN code";
+"Submit" = "Submit";
+"Cancel" = "Cancel";
