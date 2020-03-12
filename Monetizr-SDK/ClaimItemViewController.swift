@@ -455,8 +455,17 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             mcPicker.pickerBackgroundColor = .systemBackground
         } else {
             // Fallback on earlier versions
-            mcPicker.pickerBackgroundColor = .white
+            mcPicker.pickerBackgroundColor = .lightGray
         }
+        mcPicker.toolbarButtonsColor = .white
+        mcPicker.toolbarBarTintColor = .darkGray
+        mcPicker.backgroundColorAlpha = 0.50
+        
+        let selectedCountry = data[0].firstIndex(of: countryLabel.text ?? "United States")
+        mcPicker.pickerSelectRowsForComponents = [
+            0: [selectedCountry ?? 0: true]
+        ]
+
         mcPicker.show(doneHandler: { [weak self] (selections: [Int : String]) -> Void in
             if let name = selections[0] {
                 self?.countryLabel.text = name
