@@ -444,7 +444,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     func configureTitleLabel() {
         // Configure product title
-        titleLabel.titleLabelStyle()
+        titleLabel.productTitleLabelStyle()
         titleLabel.accessibilityLabel = NSLocalizedString("Product title", comment: "Product title")
         descriptionContainerView.addSubview(titleLabel)
     }

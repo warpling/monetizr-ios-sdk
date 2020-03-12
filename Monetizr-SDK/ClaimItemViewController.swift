@@ -27,6 +27,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     let addressInputFieldsContainerView = UIScrollView()
     let actionButtonsContainerView = UIView()
+    let titleLabel = UILabel()
     let firstNameTextField = UITextField()
     let lastNameTextField = UITextField()
     let emailTextField = UITextField()
@@ -49,6 +50,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         
         self.configureAddressInputFieldsContainerView()
         self.configureActionButtonsContainerView()
+        self.configureTitlelabel()
         self.configureFirstNameTextField()
         self.configureLastNameTextField()
         self.configureEmailTextField()
@@ -105,6 +107,12 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     func configureActionButtonsContainerView() {
         actionButtonsContainerView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(actionButtonsContainerView)
+    }
+    
+    func configureTitlelabel() {
+        titleLabel.claimTitleLabelStyle()
+        titleLabel.text = "Shipping address:"
+        addressInputFieldsContainerView.addSubview(titleLabel)
     }
     
     func configureFirstNameTextField() {
@@ -220,12 +228,18 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             actionButtonsContainerView.rightAnchor.constraint(equalTo: addressInputFieldsContainerView.rightAnchor),
             actionButtonsContainerView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor, constant: -10),
             
+            // titleLabel
+            titleLabel.topAnchor.constraint(equalTo: addressInputFieldsContainerView.topAnchor, constant: 10),
+            titleLabel.leftAnchor.constraint(equalTo: addressInputFieldsContainerView.leftAnchor, constant: 0),
+            titleLabel.rightAnchor.constraint(equalTo: addressInputFieldsContainerView.rightAnchor, constant: 0),
+            titleLabel.heightAnchor.constraint(equalToConstant: 35),
+            titleLabel.widthAnchor.constraint(equalTo: addressInputFieldsContainerView.widthAnchor),
+            
             // firstNameTextField
-            firstNameTextField.topAnchor.constraint(equalTo: addressInputFieldsContainerView.topAnchor, constant: 0),
+            firstNameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             firstNameTextField.leftAnchor.constraint(equalTo: addressInputFieldsContainerView.leftAnchor, constant: 0),
             firstNameTextField.rightAnchor.constraint(equalTo: addressInputFieldsContainerView.rightAnchor, constant: 0),
             firstNameTextField.heightAnchor.constraint(equalToConstant: 35),
-            firstNameTextField.widthAnchor.constraint(equalTo: addressInputFieldsContainerView.widthAnchor),
             
             // lastNameTextField
             lastNameTextField.topAnchor.constraint(equalTo: firstNameTextField.bottomAnchor, constant: 10),

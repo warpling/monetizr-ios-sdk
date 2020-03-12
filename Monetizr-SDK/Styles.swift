@@ -265,7 +265,7 @@ extension UILabel {
         self.minimumScaleFactor = 0.7
     }
     
-    func titleLabelStyle() {
+    func productTitleLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.medium)
@@ -283,6 +283,28 @@ extension UILabel {
             } else {
                 // Fallback on earlier versions
                 self.textColor = .black
+            }
+        }
+    }
+    
+    func claimTitleLabelStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.backgroundColor = .clear
+        self.font = UIFont.systemFont(ofSize: 22, weight: UIFont.Weight.medium)
+        self.numberOfLines = 0
+        self.textAlignment = .left
+        self.adjustsFontSizeToFitWidth = true
+        self.minimumScaleFactor = 0.7
+        
+        if Monetizr.shared.chosenTheme == .black {
+            self.textColor = .white
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.textColor = .label
+            } else {
+                // Fallback on earlier versions
+                self.textColor = .white
             }
         }
     }
