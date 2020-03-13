@@ -447,6 +447,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     }
     
     @objc func pickCountry() {
+        view.endEditing(true)
         let data: [[String]] = [
             self.countrylist()
         ]
