@@ -63,6 +63,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         self.configureZipTextField()
         self.configureSumbitButton()
         self.configureCancelButton()
+        self.fillFormFromSavedData()
         
         self.hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:
@@ -95,6 +96,8 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     }
     
     @objc func dismissView() {
+        self.saveAddress()
+        self.saveEmail()
         self.dismiss(animated: true, completion: nil)
         delegate?.claimItemFinishedWithCheckout(claim: self.claim)
     }
@@ -305,6 +308,19 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             ])
     }
     
+    func fillFormFromSavedData() {
+        let savedAddress = retrieveAddress()
+        firstNameTextField.text = savedAddress?.firstName
+        lastNameTextField.text = savedAddress?.lastName
+        emailTextField.text = retrieveEmail()
+        address1TextField.text = savedAddress?.address1
+        address2TextField.text = savedAddress?.address2
+        cityTextField.text = savedAddress?.city
+        countryLabel.text = savedAddress?.country
+        provinceTextField.text = savedAddress?.province
+        zipTextField.text = savedAddress?.zip
+    }
+    
     @objc func checkoutSelectedVariant() {
         self.showActivityIndicator()
         Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: self.createShippingAddress()) { success, error, checkout in
@@ -476,5 +492,35 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         }, selectionChangedHandler: { (selections: [Int:String], componentThatChanged: Int) -> Void  in
             
         })
+    }
+    
+    // MARK: Save and Retrieve data
+    
+    func saveAddress() {
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(createShippingAddress()), forKey:"claimShippingAddress")
+    }
+    
+    func saveEmail() {
+        if (emailTextField.text?.isValidEmail() ?? false) {
+            UserDefaults.standard.set(emailTextField.text, forKey: "claimShippingEmail")
+        }
+        else {
+            UserDefaults.standard.set("", forKey: "claimShippingEmail")
+        }
+    }
+    
+    func retrieveAddress()->CheckoutAddress? {
+        if let data = UserDefaults.standard.value(forKey:"claimShippingAddress") as? Data {
+            let checkoutAddress = try? PropertyListDecoder().decode(CheckoutAddress.self, from: data)
+            return checkoutAddress
+        }
+        return nil
+    }
+    
+    func retrieveEmail()->String? {
+        if let email = UserDefaults.standard.value(forKey:"claimShippingEmail") as? String? {
+            return email
+        }
+        return ""
     }
 }

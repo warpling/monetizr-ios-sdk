@@ -4,7 +4,7 @@ def shared_pods
 use_frameworks! 
 pod 'Alamofire', '~> 4.0'
 pod 'AlamofireImage'
-pod 'ImageSlideshow', '~> 1.6'
+pod 'ImageSlideshow', '~> 1.8'
 pod "ImageSlideshow/Alamofire"
 pod "Mobile-Buy-SDK"
 pod 'McPicker'
