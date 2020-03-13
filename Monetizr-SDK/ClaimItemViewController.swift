@@ -175,10 +175,10 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     func configureCountryTextField() {
         countryLabel.addressInputLabelStyle()
-        countryLabel.text = countryName()
         let tap = UITapGestureRecognizer(target: self, action: #selector(pickCountry))
         countryLabel.isUserInteractionEnabled = true
         countryLabel.addGestureRecognizer(tap)
+        countryLabel.text = countryName()
         addressInputFieldsContainerView.addSubview(countryLabel)
     }
     
@@ -316,7 +316,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         address1TextField.text = savedAddress?.address1
         address2TextField.text = savedAddress?.address2
         cityTextField.text = savedAddress?.city
-        countryLabel.text = savedAddress?.country
+        if savedAddress?.country != nil {
+            countryLabel.text = savedAddress?.country
+        }
         provinceTextField.text = savedAddress?.province
         zipTextField.text = savedAddress?.zip
     }
