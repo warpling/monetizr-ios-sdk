@@ -59,7 +59,7 @@ func countryName() -> String {
         return name
     } else {
         // Country name cannot be found
-       return ""
+       return "United States"
     }
 }
 

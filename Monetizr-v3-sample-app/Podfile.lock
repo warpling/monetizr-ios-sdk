@@ -14,9 +14,9 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 4.0)
   - AlamofireImage
-  - ImageSlideshow (~> 1.6)
+  - ImageSlideshow (~> 1.8)
   - ImageSlideshow/Alamofire
-  - McPicker (~> 2.0.0)
+  - McPicker
   - Mobile-Buy-SDK
 
 SPEC REPOS:
@@ -34,6 +34,6 @@ SPEC CHECKSUMS:
   McPicker: a0a6b8ece8f1642e05401a29867463aba501188b
   Mobile-Buy-SDK: 31e0e5b6d8373d66dbe09a80849d86ebd829135f
 
-PODFILE CHECKSUM: 0ce6d37f059282e13643a5f70d1ae63e24c15858
+PODFILE CHECKSUM: f03a24a23244069b0953e7b7df54652eea1e336f
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

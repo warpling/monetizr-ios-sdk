@@ -204,8 +204,8 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         // Configure cancel button
         submitButton.checkoutProductButtonStyle(title: NSLocalizedString("Submit", comment: "Submit"))
         submitButton.addTarget(self, action: #selector(checkoutSelectedVariant), for: .touchUpInside)
-        submitButton.isEnabled = false
-        submitButton.layer.borderColor = UIColor.red.cgColor
+        submitButton.isEnabled = true
+        submitButton.layer.borderColor = UIColor.darkGray.cgColor
         actionButtonsContainerView.addSubview(submitButton)
     }
     
@@ -321,7 +321,41 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         zipTextField.text = savedAddress?.zip
     }
     
+    func isAllFieldsValid()->Bool {
+        if firstNameTextField.text == "" {
+            return false
+        }
+        if lastNameTextField.text == "" {
+            return false
+        }
+        if !(emailTextField.text?.isValidEmail() ?? true) {
+            showAlert(title: "", message: NSLocalizedString("Invalid e-mail", comment: "Invalid e-mail"))
+            return false
+        }
+        if address1TextField.text == "" {
+            return false
+        }
+        if cityTextField.text == "" {
+            return false
+        }
+        if countryLabel.text == "" {
+            return false
+        }
+        if provinceTextField.text == "" {
+            return false
+        }
+        if zipTextField.text == "" {
+            return false
+        }
+        return true
+    }
+    
     @objc func checkoutSelectedVariant() {
+        if !isAllFieldsValid() {
+            submitButton.layer.borderColor = UIColor.red.cgColor
+            return
+        }
+        submitButton.layer.borderColor = UIColor.green.cgColor
         self.showActivityIndicator()
         Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: self.createShippingAddress()) { success, error, checkout in
             if success {
@@ -336,24 +370,33 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                             if success {
                                 // Handle success
                                 self.claim = claim
-                                self.dismissView()
+                                if claim?.status == "error" {
+                                    self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
+                                    self.showAlert(title: "", message: claim?.message)
+                                }
+                                else {
+                                    self.dismissView()
+                                }
                             }
                             else {
                                 // Handle error
+                                self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
                                 self.showAlert(error: error)
                             }
                         }
                     }
                     else {
-                        self.hideActivityIndicator()
                         // Handle error
+                        self.hideActivityIndicator()
+                        self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
                         self.showAlert(error: error)
                     }
                 }
             }
             else {
-                self.hideActivityIndicator()
                 // Handle error
+                self.hideActivityIndicator()
+                self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
                 self.showAlert(error: error)
             }
         }
@@ -366,6 +409,22 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     func showAlert(error: Error?) {
         let alert = UIAlertController(title: "", message: error?.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                print("default")
+            case .cancel:
+                print("cancel")
+            case .destructive:
+                print("destructive")
+            @unknown default:
+                break
+            }}))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func showAlert(title: String?, message: String?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
             switch action.style{
             case .default:
@@ -415,9 +474,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         //set Button to false whenever they begin editing
-        submitButton.isEnabled = false
-        submitButton.layer.borderColor = UIColor.red.cgColor
-        
+        submitButton.isEnabled = true
+        submitButton.layer.borderColor = UIColor.darkGray.cgColor
+        /*
         if firstNameTextField.text == "" {
             return
         }
@@ -442,10 +501,11 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         if zipTextField.text == "" {
             return
         }
+        */
       
         // set button to true whenever all textfield criteria is met.
-        submitButton.isEnabled = true
-        submitButton.layer.borderColor = UIColor.systemGreen.cgColor
+        //submitButton.isEnabled = true
+        //submitButton.layer.borderColor = UIColor.systemGreen.cgColor
 
     }
     

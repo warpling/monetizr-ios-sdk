@@ -808,7 +808,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     // Slideshow fullscreen
     @objc func slideShowTap() { // https://github.com/zvonicek/ImageSlideshow/issues/366
         if #available(iOS 13.0, *) {
-            
+            // slideShow.presentFullScreenController(from: self)
         }
         else {
             slideShow.presentFullScreenController(from: self)
