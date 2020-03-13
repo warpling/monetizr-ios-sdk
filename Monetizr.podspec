@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name             = 'Monetizr'
   s.version          = '3.4.1'
-  s.summary          = 'Monetizr is a game reward engine, we drive revenue to your business and enhance the experience of your players!'
+  s.summary          = 'Platform to Sell Game Gear from Inside the Game UI'
  
   s.description      = <<-DESC
-Monetizr rewards your users with an opportunity to unlock and buy your own game merchandise (t-shirts, hats, 3d-figurines, decals, and 40+ other products), gift cards (Amazon, Apple, etc.), and even brand sponsored rewards (from brands that fit your core audience and goes well with the narrative of the game). How you want to monetize, you decide!
+Monetizr™ is a turn-key solution enabling game developers and game IP holders to sell personalized game gear from inside the game’s UI and create meta-experiences for high-value players. Give players more than they expect!
                        DESC
  
   s.homepage         = 'https://www.themonetizr.com'
