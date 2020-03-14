@@ -15,6 +15,8 @@
 		2810B1CF2358E85600E04235 /* expand-down-black@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2810B1CB2358E85600E04235 /* expand-down-black@3x.png */; };
 		2824BFCB2390513D007DDD8C /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2824BFCA2390513D007DDD8C /* Stores.swift */; };
 		28591EB023564B4200611353 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28591EAF23564B4200611353 /* Styles.swift */; };
+		2866FC7E241C44610053CE4A /* country-data.json in Resources */ = {isa = PBXBuildFile; fileRef = 2866FC7D241C44610053CE4A /* country-data.json */; };
+		2866FC80241C46020053CE4A /* CountryCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2866FC7F241C46020053CE4A /* CountryCatalog.swift */; };
 		28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */; };
 		28A32D082337FD22004F1A5E /* VariantSelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */; };
 		28AE865522C6D279005F2D2D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 28AE864B22C6D279005F2D2D /* Localizable.strings */; };
@@ -75,6 +77,8 @@
 		285F7F4423A94AA4007A79FD /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		285F7F4523A94B06007A79FD /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
 		285F7F4623A94B06007A79FD /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2866FC7D241C44610053CE4A /* country-data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "country-data.json"; sourceTree = "<group>"; };
+		2866FC7F241C46020053CE4A /* CountryCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCatalog.swift; sourceTree = "<group>"; };
 		2897E16F2301DACB00C4A2DE /* Monetizr-v3-sample-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Monetizr-v3-sample-app.entitlements"; sourceTree = "<group>"; };
 		28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDescriptionScrollView.swift; sourceTree = "<group>"; };
 		28A32D072337FD22004F1A5E /* VariantSelectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantSelectionHeaderView.swift; sourceTree = "<group>"; };
@@ -131,6 +135,8 @@
 			children = (
 				2847C68223422BCD004EE18B /* Assets */,
 				28AE864B22C6D279005F2D2D /* Localizable.strings */,
+				2866FC7D241C44610053CE4A /* country-data.json */,
+				2866FC7F241C46020053CE4A /* CountryCatalog.swift */,
 				28AE864D22C6D279005F2D2D /* ProductViewController.swift */,
 				28AE864E22C6D279005F2D2D /* ActivityIndicatorPresenter.swift */,
 				28AE864F22C6D279005F2D2D /* VariantSelectionViewController.swift */,
@@ -292,6 +298,7 @@
 				2810B1CF2358E85600E04235 /* expand-down-black@3x.png in Resources */,
 				2810B1CC2358E85600E04235 /* expand-down-black@2x.png in Resources */,
 				28E6B7942262109300E43C83 /* Main.storyboard in Resources */,
+				2866FC7E241C44610053CE4A /* country-data.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,6 +388,7 @@
 				28E7C0DC240C120C00A6D9AE /* ClaimItemViewController.swift in Sources */,
 				28AE865A22C6D279005F2D2D /* Extensions.swift in Sources */,
 				28F1AAA5230B11D30039FF7E /* ApplePayViewController.swift in Sources */,
+				2866FC80241C46020053CE4A /* CountryCatalog.swift in Sources */,
 				28AE865D22C6D279005F2D2D /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

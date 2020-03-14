@@ -25,6 +25,8 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     var tag: String?
     weak var delegate: ClaimItemControllerDelegate? = nil
     var shippingAddress: String?
+    var countryCatalog: CountryCatalog = []
+    var selectedCountryRegions: [Region] = []
     
     let addressInputFieldsContainerView = UIScrollView()
     let actionButtonsContainerView = UIView()
@@ -48,6 +50,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
 
         // Do any additional setup after loading the view.
         self.view.addBlurEffect(style: UIBlurEffect.Style.dark)
+        self.prepareCountryCatalog()
         
         self.configureAddressInputFieldsContainerView()
         self.configureActionButtonsContainerView()
@@ -308,6 +311,20 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             ])
     }
     
+    func prepareCountryCatalog() {
+        if let path = Bundle.main.path(forResource: "country-data", ofType: "json") {
+            do {
+                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped)
+                countryCatalog = try CountryCatalog(data: data)
+                //print(countryCatalog ?? "")
+            } catch let error {
+                print("parse error: \(error.localizedDescription)")
+            }
+        } else {
+            print("Invalid filename/path.")
+        }
+    }
+    
     func fillFormFromSavedData() {
         let savedAddress = retrieveAddress()
         firstNameTextField.text = savedAddress?.firstName
@@ -513,6 +530,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     // MARK: Pickers
     
+    /*
     func countrylist()->[String] {
         var countries: [String] = []
 
@@ -523,11 +541,14 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         }
         return countries
     }
+    */
     
     @objc func pickCountry() {
         view.endEditing(true)
+    
         let data: [[String]] = [
-            self.countrylist()
+            //self.countrylist()
+            (self.countryCatalog.map{$0.countryName})
         ]
         let mcPicker = McPicker(data: data)
         if #available(iOS 13.0, *) {
@@ -541,13 +562,20 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         mcPicker.backgroundColorAlpha = 0.50
         
         let selectedCountry = data[0].firstIndex(of: countryLabel.text ?? "United States")
+        
         mcPicker.pickerSelectRowsForComponents = [
             0: [selectedCountry ?? 0: true]
         ]
 
         mcPicker.show(doneHandler: { [weak self] (selections: [Int : String]) -> Void in
             if let name = selections[0] {
+                
                 self?.countryLabel.text = name
+                
+                let indexOfCountry = self?.countryCatalog.firstIndex(where: {$0.countryName == name})
+                self?.selectedCountryRegions = self?.countryCatalog[indexOfCountry!].regions ?? []
+                let regionName = self?.selectedCountryRegions[0].name
+                self?.provinceTextField.text = regionName
             }
         }, cancelHandler: {
            

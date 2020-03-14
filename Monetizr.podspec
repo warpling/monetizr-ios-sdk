@@ -15,7 +15,7 @@ Monetizr™ is a turn-key solution enabling game developers and game IP holders 
   s.swift_version = "5.0"
   s.ios.deployment_target = '10.0'
   s.source_files = 'Monetizr-SDK/*'
-  s.resources = ['Monetizr-SDK/*.lproj', 'Monetizr-SDK/Assets/*']
+  s.resources = ['Monetizr-SDK/*.lproj', 'Monetizr-SDK/*.json', 'Monetizr-SDK/Assets/*']
 
   s.framework = "UIKit"
   s.framework = "PassKit"
