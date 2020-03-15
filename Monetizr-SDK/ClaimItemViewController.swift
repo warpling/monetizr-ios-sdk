@@ -393,6 +393,8 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             return
         }
         submitButton.layer.borderColor = UIColor.green.cgColor
+        submitButton.isEnabled = false
+        cancelButton.isEnabled = false
         self.showActivityIndicator()
         Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: self.createShippingAddress()) { success, error, checkout in
             if success {
@@ -404,6 +406,8 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                         // Handle success
                         Monetizr.shared.claimOrder(shippingLine: checkout?.data?.updateShippingLine, player_id: self.playerID ?? "", price: self.price ?? "") { success, error, claim in
                             self.hideActivityIndicator()
+                            self.submitButton.isEnabled = true
+                            self.cancelButton.isEnabled = true
                             if success {
                                 // Handle success
                                 self.claim = claim
@@ -425,6 +429,8 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                     else {
                         // Handle error
                         self.hideActivityIndicator()
+                        self.submitButton.isEnabled = true
+                        self.cancelButton.isEnabled = true
                         self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
                         self.showAlert(error: error)
                     }
@@ -433,6 +439,8 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             else {
                 // Handle error
                 self.hideActivityIndicator()
+                self.submitButton.isEnabled = true
+                self.cancelButton.isEnabled = true
                 self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
                 self.showAlert(error: error)
             }
@@ -511,7 +519,6 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         //set Button to false whenever they begin editing
-        submitButton.isEnabled = true
         submitButton.layer.borderColor = UIColor.darkGray.cgColor
     }
     
@@ -549,8 +556,10 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                 
                 let indexOfCountry = self?.countryCatalog.firstIndex(where: {$0.countryName == name})
                 self?.selectedCountryRegions = self?.countryCatalog[indexOfCountry!].regions ?? []
-                let regionName = self?.selectedCountryRegions[0].name
-                self?.provinceLabel.text = regionName
+                if !(self?.selectedCountryRegions.contains(where: {$0.name == self?.provinceLabel.text}))! {
+                    let regionName = self?.selectedCountryRegions[0].name
+                    self?.provinceLabel.text = regionName
+                }
             }
         }, cancelHandler: {
            
