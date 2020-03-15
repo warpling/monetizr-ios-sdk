@@ -517,26 +517,12 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     // MARK: Pickers
     
-    /*
-    func countrylist()->[String] {
-        var countries: [String] = []
-
-        for code in NSLocale.isoCountryCodes  {
-            let id = NSLocale.localeIdentifier(fromComponents: [NSLocale.Key.countryCode.rawValue: code])
-            let name = NSLocale(localeIdentifier: "en_UK").displayName(forKey: NSLocale.Key.identifier, value: id) ?? "Country not found for code: \(code)"
-            countries.append(name)
-        }
-        return countries
-    }
-    */
-    
     @objc func pickCountry() {
         view.endEditing(true)
         if self.countryCatalog.count < 1 {
             return
         }
         let data: [[String]] = [
-            //self.countrylist()
             (self.countryCatalog.map{$0.countryName})
         ]
         let mcPicker = McPicker(data: data)
