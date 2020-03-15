@@ -38,7 +38,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     let address2TextField = UITextField()
     let cityTextField = UITextField()
     let countryLabel = AddressInputLabel()
-    let provinceTextField = UITextField()
+    let provinceLabel = AddressInputLabel()
     let zipTextField = UITextField()
     let submitButton = UIButton()
     let cancelButton = UIButton()
@@ -66,7 +66,6 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         self.configureZipTextField()
         self.configureSumbitButton()
         self.configureCancelButton()
-        self.fillFormFromSavedData()
         
         self.hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:
@@ -128,6 +127,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         firstNameTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
         firstNameTextField.placeholder = NSLocalizedString("First name", comment: "First name")
+        if let firstName = retrieveAddress()?.firstName {
+            firstNameTextField.text = firstName
+        }
         addressInputFieldsContainerView.addSubview(firstNameTextField)
     }
     
@@ -137,15 +139,22 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         lastNameTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
         lastNameTextField.placeholder = NSLocalizedString("Last name", comment: "Last name")
+        if let lastName = retrieveAddress()?.lastName {
+            lastNameTextField.text = lastName
+        }
         addressInputFieldsContainerView.addSubview(lastNameTextField)
     }
     
     func configureEmailTextField() {
         emailTextField.addressInputFieldStyle()
+        emailTextField.keyboardType = .emailAddress
         emailTextField.delegate = self
         emailTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
         emailTextField.placeholder = NSLocalizedString("E-mail", comment: "E-mail")
+        if let email = retrieveEmail() {
+            emailTextField.text = email
+        }
         addressInputFieldsContainerView.addSubview(emailTextField)
     }
     
@@ -155,6 +164,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         address1TextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
         address1TextField.placeholder = NSLocalizedString("Address", comment: "Address")
+        if let address1 = retrieveAddress()?.address1 {
+            address1TextField.text = address1
+        }
         addressInputFieldsContainerView.addSubview(address1TextField)
     }
     
@@ -164,6 +176,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         address2TextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
         address2TextField.placeholder = NSLocalizedString("Apartment, suite, etc (optional)", comment: "Apartment, suite, etc (optional)")
+        if let address2 = retrieveAddress()?.address2 {
+            address2TextField.text = address2
+        }
         addressInputFieldsContainerView.addSubview(address2TextField)
     }
     
@@ -173,6 +188,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         cityTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
         cityTextField.placeholder = NSLocalizedString("City", comment: "City")
+        if let city = retrieveAddress()?.city {
+            cityTextField.text = city
+        }
         addressInputFieldsContainerView.addSubview(cityTextField)
     }
     
@@ -181,17 +199,29 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         let tap = UITapGestureRecognizer(target: self, action: #selector(pickCountry))
         countryLabel.isUserInteractionEnabled = true
         countryLabel.addGestureRecognizer(tap)
-        countryLabel.text = countryName()
+        if let country = retrieveAddress()?.country {
+            countryLabel.text = country
+        }
+        else {
+            countryLabel.text = countryName()
+        }
         addressInputFieldsContainerView.addSubview(countryLabel)
     }
     
     func configureProvinceTextField() {
-        provinceTextField.addressInputFieldStyle()
-        provinceTextField.delegate = self
-        provinceTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
-        for: .editingChanged)
-        provinceTextField.placeholder = NSLocalizedString("State/Province", comment: "State/Province")
-        addressInputFieldsContainerView.addSubview(provinceTextField)
+        provinceLabel.addressInputLabelStyle()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(pickRegion))
+        provinceLabel.isUserInteractionEnabled = true
+        provinceLabel.addGestureRecognizer(tap)
+        let indexOfCountry = self.countryCatalog.firstIndex(where: {$0.countryName == countryLabel.text})
+        self.selectedCountryRegions = self.countryCatalog[indexOfCountry!].regions
+        if let region = retrieveAddress()?.province {
+            provinceLabel.text = region
+        }
+        else {
+            self.provinceLabel.text = self.selectedCountryRegions[0].name
+        }
+        addressInputFieldsContainerView.addSubview(provinceLabel)
     }
     
     func configureZipTextField() {
@@ -200,6 +230,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         zipTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)),
         for: .editingChanged)
         zipTextField.placeholder = NSLocalizedString("ZIP/Postal/PIN code", comment: "ZIP/Postal/PIN code")
+        if let zip = retrieveAddress()?.zip {
+            zipTextField.text = zip
+        }
         addressInputFieldsContainerView.addSubview(zipTextField)
     }
     
@@ -285,13 +318,13 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             countryLabel.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
             
             // provinceTextField
-            provinceTextField.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: 10),
-            provinceTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
-            provinceTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
-            provinceTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
+            provinceLabel.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: 10),
+            provinceLabel.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
+            provinceLabel.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
+            provinceLabel.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
             
             // zipTextField
-            zipTextField.topAnchor.constraint(equalTo: provinceTextField.bottomAnchor, constant: 10),
+            zipTextField.topAnchor.constraint(equalTo: provinceLabel.bottomAnchor, constant: 10),
             zipTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor),
             zipTextField.rightAnchor.constraint(equalTo: firstNameTextField.rightAnchor),
             zipTextField.heightAnchor.constraint(equalTo: firstNameTextField.heightAnchor),
@@ -325,21 +358,6 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         }
     }
     
-    func fillFormFromSavedData() {
-        let savedAddress = retrieveAddress()
-        firstNameTextField.text = savedAddress?.firstName
-        lastNameTextField.text = savedAddress?.lastName
-        emailTextField.text = retrieveEmail()
-        address1TextField.text = savedAddress?.address1
-        address2TextField.text = savedAddress?.address2
-        cityTextField.text = savedAddress?.city
-        if savedAddress?.country != nil {
-            countryLabel.text = savedAddress?.country
-        }
-        provinceTextField.text = savedAddress?.province
-        zipTextField.text = savedAddress?.zip
-    }
-    
     func isAllFieldsValid()->Bool {
         if firstNameTextField.text == "" {
             return false
@@ -360,7 +378,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         if countryLabel.text == "" {
             return false
         }
-        if provinceTextField.text == "" {
+        if provinceLabel.text == "" {
             return false
         }
         if zipTextField.text == "" {
@@ -422,7 +440,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     }
     
     func createShippingAddress() -> (CheckoutAddress) {
-        let address = CheckoutAddress(firstName: self.firstNameTextField.text ?? "", lastName: self.lastNameTextField.text ?? "", address1: self.address1TextField.text ?? "", address2: self.address2TextField.text ?? "", city: self.cityTextField.text ?? "", country: self.countryLabel.text ?? "", zip: self.zipTextField.text ?? "", province: self.provinceTextField.text ?? "")
+        let address = CheckoutAddress(firstName: self.firstNameTextField.text ?? "", lastName: self.lastNameTextField.text ?? "", address1: self.address1TextField.text ?? "", address2: self.address2TextField.text ?? "", city: self.cityTextField.text ?? "", country: self.countryLabel.text ?? "", zip: self.zipTextField.text ?? "", province: self.provinceLabel.text ?? "")
         return address
     }
     
@@ -495,37 +513,6 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         //set Button to false whenever they begin editing
         submitButton.isEnabled = true
         submitButton.layer.borderColor = UIColor.darkGray.cgColor
-        /*
-        if firstNameTextField.text == "" {
-            return
-        }
-        if lastNameTextField.text == "" {
-            return
-        }
-        if !(emailTextField.text?.isValidEmail() ?? true) {
-            return
-        }
-        if address1TextField.text == "" {
-            return
-        }
-        if cityTextField.text == "" {
-            return
-        }
-        if countryLabel.text == "" {
-            return
-        }
-        if provinceTextField.text == "" {
-            return
-        }
-        if zipTextField.text == "" {
-            return
-        }
-        */
-      
-        // set button to true whenever all textfield criteria is met.
-        //submitButton.isEnabled = true
-        //submitButton.layer.borderColor = UIColor.systemGreen.cgColor
-
     }
     
     // MARK: Pickers
@@ -545,7 +532,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     @objc func pickCountry() {
         view.endEditing(true)
-    
+        if self.countryCatalog.count < 1 {
+            return
+        }
         let data: [[String]] = [
             //self.countrylist()
             (self.countryCatalog.map{$0.countryName})
@@ -561,12 +550,12 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         mcPicker.toolbarBarTintColor = .darkGray
         mcPicker.backgroundColorAlpha = 0.50
         
-        let selectedCountry = data[0].firstIndex(of: countryLabel.text ?? "United States")
+        if let selectedCountry = data[0].firstIndex(of: countryLabel.text ?? "United States") {
+            mcPicker.pickerSelectRowsForComponents = [
+                0: [selectedCountry : true]
+            ]
+        }
         
-        mcPicker.pickerSelectRowsForComponents = [
-            0: [selectedCountry ?? 0: true]
-        ]
-
         mcPicker.show(doneHandler: { [weak self] (selections: [Int : String]) -> Void in
             if let name = selections[0] {
                 
@@ -575,7 +564,43 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                 let indexOfCountry = self?.countryCatalog.firstIndex(where: {$0.countryName == name})
                 self?.selectedCountryRegions = self?.countryCatalog[indexOfCountry!].regions ?? []
                 let regionName = self?.selectedCountryRegions[0].name
-                self?.provinceTextField.text = regionName
+                self?.provinceLabel.text = regionName
+            }
+        }, cancelHandler: {
+           
+        }, selectionChangedHandler: { (selections: [Int:String], componentThatChanged: Int) -> Void  in
+            
+        })
+    }
+    
+    @objc func pickRegion() {
+        view.endEditing(true)
+        if self.selectedCountryRegions.count < 1 {
+            return
+        }
+        let data: [[String]] = [
+            (self.selectedCountryRegions.map{$0.name})
+        ]
+        let mcPicker = McPicker(data: data)
+        if #available(iOS 13.0, *) {
+            mcPicker.pickerBackgroundColor = .systemBackground
+        } else {
+            // Fallback on earlier versions
+            mcPicker.pickerBackgroundColor = .lightGray
+        }
+        mcPicker.toolbarButtonsColor = .white
+        mcPicker.toolbarBarTintColor = .darkGray
+        mcPicker.backgroundColorAlpha = 0.50
+        
+        let selectedRegion = data[0].firstIndex(of: provinceLabel.text ?? "")
+        
+        mcPicker.pickerSelectRowsForComponents = [
+            0: [selectedRegion ?? 0: true]
+        ]
+
+        mcPicker.show(doneHandler: { [weak self] (selections: [Int : String]) -> Void in
+            if let name = selections[0] {
+                self?.provinceLabel.text = name
             }
         }, cancelHandler: {
            
