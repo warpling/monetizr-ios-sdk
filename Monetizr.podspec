@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary          = 'Platform to Sell Game Gear from Inside the Game UI'
  
   s.description      = <<-DESC
-Monetizr™ is a turn-key solution enabling game developers and game IP holders to sell personalized game gear from inside the game’s UI and create meta-experiences for high-value players. Give players more than they expect!
+Monetizr is a turn-key platform for game developers enabling to sell or give-away game gear right inside the game's UI. You can use this SDK in your game to let players purchase products or claim gifts within the game. All orders made with Monetizr automatically initiates fulfillment and shipping. More info: https://docs.themonetizr.com/docs/get-started.
                        DESC
  
   s.homepage         = 'https://www.themonetizr.com'
