@@ -25,13 +25,14 @@ Requires iOS 10.0+
 * [Alamofire][8] - Elegant HTTP Networking in Swift;
 * [AlamofireImage][9] - an image component library for Alamofire;
 * [ImageSlideshow][10] - Swift image slideshow;
-* [Mobile Buy SDK][11] - lets users buy products using Apple Pay.
+* [Mobile Buy SDK][11] - lets users buy products using Apple Pay;
+* [McPicker][12] - UIPickerView drop-in solution.
 
 ### Option 1 (suggested)
 **CocoaPods:**
 
 ```swift
-pod 'Monetizr', '~> 3.3'
+pod 'Monetizr', '~> 3.4'
 ```
 
 ### Option 2
@@ -57,7 +58,7 @@ To show a product in an [Offer View][4], you need to call a specific product_tag
 Show an Offer View inside your app:
 
 ```swift
-Monetizr.shared.showProduct(tag: Sample shirt, presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
+Monetizr.shared.showProduct(tag: Sample shirt, playerID: String(Optional) presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
 ```
 
 If you choose to show a product in an Offer View provided in the SDK, you should provide a presenter view and presentation style. If presentation style is not provided it will default to `UIModalPresentationStyle.automatic` for iOS 13.x or `UIModalPresentationStyle.overCurrentContext` for other iOS versions.
@@ -98,7 +99,7 @@ Versions iOS13+ uses .system uses Dark/Light mode preference and adapts to user 
 Create ProductView Controller:
 
 ```swift
-func productViewForProduct(product: Product, tag: Sample shirt) -> ProductViewController
+func productViewForProduct(product: Product, tag: Sample shirt, playerID: String(Optional)) -> ProductViewController
 ```
 
 Present ProductView:
@@ -110,7 +111,19 @@ func presentProductView(productViewController: ProductViewController, presenter:
 Checkout for product [variant][7].
 
 ```swift
-func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: Sample shirt, completionHandler: @escaping (Bool, Error?, Checkout?) -> Void)
+func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: Sample shirt, shippingAddress: CheckoutAddress(Optional) completionHandler: @escaping (Bool, Error?, Checkout?) -> Void)
+```
+
+Update checkout
+
+```swift
+func updateCheckout(request: UpdateCheckoutRequest, completionHandler: @escaping (Bool, Error?, CheckoutResponse?) -> Void)
+```
+
+Claim order
+
+```swift
+func claimOrder(shippingLine: CheckoutData?, player_id: String, price: String, completionHandler: @escaping (Bool, Error?, Claim?) -> Void)
 ```
 
 Checkout with Apple Pay:
@@ -130,3 +143,4 @@ Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: Sample s
 [9]: https://github.com/Alamofire/AlamofireImage
 [10]: https://github.com/zvonicek/ImageSlideshow
 [11]: https://github.com/Shopify/mobile-buy-sdk-ios
+[12]: https://github.com/kmcgill88/McPicker-iOS
