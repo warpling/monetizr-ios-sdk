@@ -199,11 +199,11 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         let tap = UITapGestureRecognizer(target: self, action: #selector(pickCountry))
         countryLabel.isUserInteractionEnabled = true
         countryLabel.addGestureRecognizer(tap)
+        countryLabel.text = countryName()
         if let country = retrieveAddress()?.country {
-            countryLabel.text = country
-        }
-        else {
-            countryLabel.text = countryName()
+            if country != "" {
+                countryLabel.text = country
+            }
         }
         addressInputFieldsContainerView.addSubview(countryLabel)
     }
@@ -215,11 +215,11 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         provinceLabel.addGestureRecognizer(tap)
         let indexOfCountry = self.countryCatalog.firstIndex(where: {$0.countryName == countryLabel.text})
         self.selectedCountryRegions = self.countryCatalog[indexOfCountry!].regions
+        self.provinceLabel.text = self.selectedCountryRegions[0].name
         if let region = retrieveAddress()?.province {
-            provinceLabel.text = region
-        }
-        else {
-            self.provinceLabel.text = self.selectedCountryRegions[0].name
+            if region != "" {
+                provinceLabel.text = region
+            }
         }
         addressInputFieldsContainerView.addSubview(provinceLabel)
     }
@@ -238,10 +238,9 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     
     func configureSumbitButton() {
         // Configure cancel button
-        submitButton.checkoutProductButtonStyle(title: NSLocalizedString("Submit", comment: "Submit"))
+        submitButton.submitClaimButtonStyle()
         submitButton.addTarget(self, action: #selector(checkoutSelectedVariant), for: .touchUpInside)
         submitButton.isEnabled = true
-        submitButton.layer.borderColor = UIColor.darkGray.cgColor
         actionButtonsContainerView.addSubview(submitButton)
     }
     
@@ -366,7 +365,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
             return false
         }
         if !(emailTextField.text?.isValidEmail() ?? true) {
-            showAlert(title: "", message: NSLocalizedString("Invalid e-mail", comment: "Invalid e-mail"))
+            //showAlert(title: "", message: NSLocalizedString("Invalid e-mail", comment: "Invalid e-mail"))
             return false
         }
         if address1TextField.text == "" {
@@ -387,12 +386,41 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         return true
     }
     
+    func highliteInvalidFields() {
+        if firstNameTextField.text == "" {
+            firstNameTextField.addressInputFieldErrorStyle()
+        }
+        if lastNameTextField.text == "" {
+            lastNameTextField.addressInputFieldErrorStyle()
+        }
+        if !(emailTextField.text?.isValidEmail() ?? true) {
+            // showAlert(title: "", message: NSLocalizedString("Invalid e-mail", comment: "Invalid e-mail"))
+            emailTextField.addressInputFieldErrorStyle()
+        }
+        if address1TextField.text == "" {
+            address1TextField.addressInputFieldErrorStyle()
+        }
+        if cityTextField.text == "" {
+            cityTextField.addressInputFieldErrorStyle()
+        }
+        if countryLabel.text == "" {
+            
+        }
+        if provinceLabel.text == "" {
+            
+        }
+        if zipTextField.text == "" {
+            zipTextField.addressInputFieldErrorStyle()
+        }
+    }
+    
     @objc func checkoutSelectedVariant() {
         if !isAllFieldsValid() {
-            submitButton.layer.borderColor = UIColor.red.cgColor
+            submitButton.submitClaimButtonErrorStyle()
+            self.highliteInvalidFields()
             return
         }
-        submitButton.layer.borderColor = UIColor.green.cgColor
+        submitButton.submitClaimButtonValidStyle()
         submitButton.isEnabled = false
         cancelButton.isEnabled = false
         self.showActivityIndicator()
@@ -412,7 +440,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                                 // Handle success
                                 self.claim = claim
                                 if claim?.status == "error" {
-                                    self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
+                                    self.submitButton.submitClaimButtonStyle()
                                     self.showAlert(title: "", message: claim?.message)
                                 }
                                 else {
@@ -421,7 +449,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                             }
                             else {
                                 // Handle error
-                                self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
+                                self.submitButton.submitClaimButtonStyle()
                                 self.showAlert(error: error)
                             }
                         }
@@ -431,7 +459,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                         self.hideActivityIndicator()
                         self.submitButton.isEnabled = true
                         self.cancelButton.isEnabled = true
-                        self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
+                        self.submitButton.submitClaimButtonStyle()
                         self.showAlert(error: error)
                     }
                 }
@@ -441,7 +469,7 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
                 self.hideActivityIndicator()
                 self.submitButton.isEnabled = true
                 self.cancelButton.isEnabled = true
-                self.submitButton.layer.borderColor = UIColor.darkGray.cgColor
+                self.submitButton.submitClaimButtonStyle()
                 self.showAlert(error: error)
             }
         }
@@ -518,8 +546,34 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
-        //set Button to false whenever they begin editing
-        submitButton.layer.borderColor = UIColor.darkGray.cgColor
+        submitButton.submitClaimButtonStyle()
+        if firstNameTextField.text != "" {
+            firstNameTextField.addressInputFieldStyle()
+        }
+        if lastNameTextField.text != "" {
+            lastNameTextField.addressInputFieldStyle()
+        }
+        if (emailTextField.text?.isValidEmail())! {
+            emailTextField.addressInputFieldStyle()
+        }
+        if address1TextField.text != "" {
+            address1TextField.addressInputFieldStyle()
+        }
+        if cityTextField.text != "" {
+            cityTextField.addressInputFieldStyle()
+        }
+        if countryLabel.text != "" {
+            
+        }
+        if provinceLabel.text != "" {
+            
+        }
+        if zipTextField.text != "" {
+            zipTextField.addressInputFieldStyle()
+        }
+        if !isAllFieldsValid() {
+            return
+        }
     }
     
     // MARK: Pickers

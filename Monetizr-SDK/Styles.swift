@@ -157,6 +157,93 @@ extension UIButton {
             }
         }
     }
+    
+    func submitClaimButtonStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.setTitle(NSLocalizedString("Submit", comment: "Submit"), for: .normal)
+        self.setTitleColor(.lightGray, for: .highlighted)
+        self.height(constant: 50)
+        self.layer.cornerRadius = 5
+        self.layer.borderWidth = 1
+        if Monetizr.shared.chosenTheme == .black {
+            self.backgroundColor = UIColor(hex: 0x121212)
+            self.layer.borderColor = UIColor.white.cgColor
+            self.setTitleColor(.white, for: .normal)
+            self.setTitleColor(.lightGray, for: .highlighted)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.backgroundColor = .systemBackground
+                self.layer.borderColor = UIColor.label.cgColor
+                self.setTitleColor(.label, for: .normal)
+                self.setTitleColor(.label, for: .highlighted)
+            } else {
+                // Fallback on earlier versions
+                self.backgroundColor = .white
+                self.layer.borderColor = UIColor.globalTint.cgColor
+                self.setTitleColor(.globalTint, for: .normal)
+                self.setTitleColor(.globalTint, for: .highlighted)
+            }
+        }
+    }
+    
+    func submitClaimButtonErrorStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.setTitle(NSLocalizedString("Submit", comment: "Submit"), for: .normal)
+        self.setTitleColor(.lightGray, for: .highlighted)
+        self.height(constant: 50)
+        self.layer.cornerRadius = 5
+        self.layer.borderWidth = 2
+        if Monetizr.shared.chosenTheme == .black {
+            self.backgroundColor = UIColor(hex: 0x121212)
+            self.layer.borderColor = UIColor.red.cgColor
+            self.setTitleColor(.white, for: .normal)
+            self.setTitleColor(.lightGray, for: .highlighted)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.backgroundColor = .systemBackground
+                self.layer.borderColor = UIColor.red.cgColor
+                self.setTitleColor(.label, for: .normal)
+                self.setTitleColor(.label, for: .highlighted)
+            } else {
+                // Fallback on earlier versions
+                self.backgroundColor = .white
+                self.layer.borderColor = UIColor.red.cgColor
+                self.setTitleColor(.globalTint, for: .normal)
+                self.setTitleColor(.globalTint, for: .highlighted)
+            }
+        }
+    }
+    
+    func submitClaimButtonValidStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.setTitle(NSLocalizedString("Submit", comment: "Submit"), for: .normal)
+        self.setTitleColor(.lightGray, for: .highlighted)
+        self.height(constant: 50)
+        self.layer.cornerRadius = 5
+        self.layer.borderWidth = 2
+        if Monetizr.shared.chosenTheme == .black {
+            self.backgroundColor = UIColor(hex: 0x121212)
+            self.layer.borderColor = UIColor.green.cgColor
+            self.setTitleColor(.white, for: .normal)
+            self.setTitleColor(.lightGray, for: .highlighted)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.backgroundColor = .systemBackground
+                self.layer.borderColor = UIColor.green.cgColor
+                self.setTitleColor(.label, for: .normal)
+                self.setTitleColor(.label, for: .highlighted)
+            } else {
+                // Fallback on earlier versions
+                self.backgroundColor = .white
+                self.layer.borderColor = UIColor.green.cgColor
+                self.setTitleColor(.globalTint, for: .normal)
+                self.setTitleColor(.globalTint, for: .highlighted)
+            }
+        }
+    }
 }
 
 extension PKPaymentButton {
@@ -361,6 +448,33 @@ extension UITextField {
         //self.font = .systemFont(ofSize: 16, weight: UIFont.Weight.light)
         self.returnKeyType = .done
         self.layer.cornerRadius = 4
+        self.layer.borderWidth = 0
+        self.layer.borderColor = UIColor.white.cgColor
+        if Monetizr.shared.chosenTheme == .black {
+            self.textColor = .white
+            self.backgroundColor = UIColor.white.withAlphaComponent(0.2)
+        }
+        else {
+            if #available(iOS 13.0, *) {
+                self.textColor = .label
+                self.backgroundColor = UIColor.white.withAlphaComponent(0.2)
+            } else {
+                // Fallback on earlier versions
+                self.textColor = .black
+                self.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+            }
+        }
+    }
+    
+    func addressInputFieldErrorStyle() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.setLeftPaddingPoints(10)
+        self.setRightPaddingPoints(10)
+        //self.font = .systemFont(ofSize: 16, weight: UIFont.Weight.light)
+        self.returnKeyType = .done
+        self.layer.cornerRadius = 4
+        self.layer.borderWidth = 2
+        self.layer.borderColor = UIColor.red.cgColor
         if Monetizr.shared.chosenTheme == .black {
             self.textColor = .white
             self.backgroundColor = UIColor.white.withAlphaComponent(0.2)
