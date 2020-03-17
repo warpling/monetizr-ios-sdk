@@ -14,10 +14,11 @@ import PassKit
 import SafariServices
 import MobileBuySDK
 
-class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
+    var playerID: String?
     var product: Product?
     var selectedVariant: PurpleNode?
     var variantCount = 0
@@ -372,18 +373,18 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         // Add checkout button
         let checkoutButton = UIButton()
         // Configure checkout button
-        checkoutButton.checkoutProductButtonStyle()
+        checkoutButton.checkoutProductButtonStyle(title: product?.data?.productByHandle?.button_title)
         checkoutButton.addTarget(self, action: #selector(checkoutButtonAction), for: .touchUpInside)
         checkoutBackgroundView.addArrangedSubview(checkoutButton)
         
         // Add Apple Pay button
-        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil {
+        if applePayAvailable() && applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && product?.data?.productByHandle?.claimable == false {
             let applePayButton = PKPaymentButton().buyButtonWithTheme()
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(buyApplePayButtonAction), for: .touchUpInside)
             checkoutBackgroundView.addArrangedSubview(applePayButton)
         }
-        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil {
+        if applePayAvailable() && !applePayCanMakePayments() && Monetizr.shared.applePayMerchantID != nil && product?.data?.productByHandle?.claimable == false {
             let applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
             applePayButton.height(constant: 50)
             applePayButton.addTarget(self, action: #selector(setupApplePayButtonAction), for: .touchUpInside)
@@ -443,7 +444,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     func configureTitleLabel() {
         // Configure product title
-        titleLabel.titleLabelStyle()
+        titleLabel.productTitleLabelStyle()
         titleLabel.accessibilityLabel = NSLocalizedString("Product title", comment: "Product title")
         descriptionContainerView.addSubview(titleLabel)
     }
@@ -661,8 +662,17 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     @objc func checkoutButtonAction() {
         interaction = true
-        // Start checkout
-        self.checkoutSelectedVariant()
+        // Start checkout or claim item
+        let claimable = product?.data?.productByHandle?.claimable ?? false
+        if claimable {
+            // Proceed with claim
+            self.claimSelectedVariant()
+        }
+        if !claimable  {
+            // Proceed with standart checkout
+            self.checkoutSelectedVariant()
+        }
+        
         if Monetizr.shared.checkoutCountInSession < 1 {
             Monetizr.shared.firstimpressioncheckoutCreate(firstImpressionCheckout: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }
@@ -675,7 +685,25 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     @objc func buyApplePayButtonAction() {
-        Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: self) {success, error in
+        let priceCurrency = selectedVariant?.priceV2?.currency ?? "USD"
+        if priceCurrency.isValidCurrencyCode() {
+            Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: tag!, presenter: self) {success, error in
+                // Show some error if needed
+                if success {
+                    // Success
+                }
+                else {
+                    // Handle error
+                }
+            }
+        }
+        else {
+            print("Selected variant currency is not supported by Apple Pay")
+        }
+    }
+    
+    @objc func claimSelectedVariant() {
+        Monetizr.shared.claimCheckout(selectedVariant: selectedVariant!, tag: tag!, playerID: playerID ?? "", price: selectedVariant?.priceV2?.amount ?? "0", presenter: self) {success, error in
             // Show some error if needed
             if success {
                 // Success
@@ -740,6 +768,21 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    // Claim finished
+    func claimItemFinishedWithCheckout(claim: Claim?) {
+        // Show confiramtion alert
+        guard claim != nil else {
+            return
+        }
+        
+        let alert = UIAlertController(title: "", message: claim?.message, preferredStyle: .alert)
+        alert.view.tintColor = UIColor(hex: 0xE0093B)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+              // Switch if needed handle buttons
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
  
     // Cureency string preparation
     func getCurrencyFormat(price:String, currency:String)->String{
@@ -765,7 +808,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     // Slideshow fullscreen
     @objc func slideShowTap() { // https://github.com/zvonicek/ImageSlideshow/issues/366
         if #available(iOS 13.0, *) {
-            
+            // slideShow.presentFullScreenController(from: self)
         }
         else {
             slideShow.presentFullScreenController(from: self)

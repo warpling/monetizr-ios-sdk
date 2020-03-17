@@ -53,6 +53,16 @@ func regionCode() -> String? {
     return NSLocale.current.regionCode
 }
 
+func countryName() -> String {
+    if let name = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: regionCode() as Any) {
+        // Country name was found
+        return name
+    } else {
+        // Country name cannot be found
+       return "United States"
+    }
+}
+
 func deviceIdentifier() -> String {
     return UIDevice.current.identifierForVendor!.uuidString
 }

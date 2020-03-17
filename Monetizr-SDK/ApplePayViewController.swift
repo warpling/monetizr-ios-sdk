@@ -18,7 +18,7 @@ protocol ApplePayControllerDelegate: class {
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
     
     var selectedVariant: PurpleNode?
-    var checkout: Checkout?
+    var checkout: CheckoutResponse?
     var shopifyCheckout: Storefront.Checkout?
     var tag: String?
     weak var delegate: ApplePayControllerDelegate? = nil
@@ -62,10 +62,11 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     @available(iOS, deprecated:11.0, message:"Use PKPaymentRequestShippingContactUpdate")
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didSelectShippingContact contact: PKContact, completion: @escaping (PKPaymentAuthorizationStatus, [PKShippingMethod], [PKPaymentSummaryItem]) -> Void) {
-        let shippingAddress = contact.postalAddress
-        switch (shippingAddress?.city, shippingAddress?.country) {
+        let contactAddress = contact.postalAddress
+        switch (contactAddress?.city, contactAddress?.country) {
         case (.some, .some):
-            if shippingAddress?.city != "" && shippingAddress?.country != "" {
+            let shippingAddress = CheckoutAddress(firstName: "", lastName: "", address1: contactAddress?.street ?? "", address2: "", city: contactAddress?.city ?? "", country: contactAddress?.country ?? "", zip: contactAddress?.postalCode ?? "", province: contactAddress?.state ?? "")
+            if shippingAddress.city != "" && shippingAddress.country != "" {
                 // Address OK, validate against checkout
                 Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: shippingAddress) { success, error, checkout in
                     if success {
@@ -106,11 +107,11 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         
         // Create shipping error update
         let shippingContactErrorUpdate = PKPaymentRequestShippingContactUpdate.init(errors: [shippingAddressError], paymentSummaryItems: [], shippingMethods: [])
-        
-        let shippingAddress = contact.postalAddress
-        switch (shippingAddress?.city, shippingAddress?.country) {
+        let contactAddress = contact.postalAddress
+        switch (contactAddress?.city, contactAddress?.country) {
         case (.some, .some):
-            if shippingAddress?.city != "" && shippingAddress?.country != "" {
+            let shippingAddress = CheckoutAddress(firstName: "", lastName: "", address1: contactAddress?.street ?? "", address2: "", city: contactAddress?.city ?? "", country: contactAddress?.country ?? "", zip: contactAddress?.postalCode ?? "", province: contactAddress?.state ?? "")
+            if shippingAddress.city != "" && shippingAddress.country != "" {
                 // Address OK, validate against checkout
                 Monetizr.shared.checkoutSelectedVariantForProduct(selectedVariant: selectedVariant!, tag: tag!, shippingAddress: shippingAddress) { success, error, checkout in
                     if success {

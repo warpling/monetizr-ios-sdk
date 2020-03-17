@@ -31,7 +31,9 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         tokenField.text = "4D2E54389EB489966658DDD83E2D1" //"3adca63cc172c5ae919e5a2529f4f2a8" //"4D2E54389EB489966658DDD83E2D1"
-        merchTagField.text = "Sample shirt" //"Sample pin" //"Sample shirt" //"blackbox_alt_socks"//"monetizr-sample-t-shirt" //"30-credits"
+        merchTagField.text = "free_t_shirt"
+        // Test tags - "free_t_shirt", "Sample pin", "Sample shirt", "blackbox_alt_socks",
+        
         // Show device locale
         langCodeLabel.text = Monetizr.shared.localeCodeString
     }
@@ -60,7 +62,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
                 presentationStyle = UIModalPresentationStyle.automatic
             }
             
-            Monetizr.shared.showProduct(tag: merchTagField.text!, presenter: self, presentationStyle: presentationStyle) { success, error, product  in
+            Monetizr.shared.showProduct(tag: merchTagField.text!, playerID: "Test Player", presenter: self, presentationStyle: presentationStyle) { success, error, product  in
                 self.hideActivityIndicator()
                 // Show some error if needed
                 if success {
@@ -103,19 +105,6 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         }, selectionChangedHandler: { (selections: [Int:String], componentThatChanged: Int) -> Void  in
             
         })
-    }
-}
-
-// Extension to dismiss keyboard when tapped in blank space
-extension UIViewController {
-    func hideKeyboardWhenTappedAround() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
     }
 }
 

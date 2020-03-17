@@ -6,13 +6,13 @@
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let checkout = try? newJSONDecoder().decode(Checkout.self, from: jsonData)
+//   let checkout = try? newJSONDecoder().decode(CheckoutResponse.self, from: jsonData)
 
 //
 // To parse values from Alamofire responses:
 //
 //   Alamofire.request(url).responseCheckout { response in
-//     if let checkout = response.result.value {
+//     if let CheckoutResponse = response.result.value {
 //       ...
 //     }
 //   }
@@ -20,8 +20,8 @@
 import Foundation
 import Alamofire
 
-// MARK: - Checkout
-public struct Checkout: Codable {
+// MARK: - CheckoutResponse
+public struct CheckoutResponse: Codable {
     let data: DataClass?
 }
 
@@ -36,7 +36,7 @@ public struct Checkout: Codable {
 
 // MARK: - DataClass
 public struct DataClass: Codable {
-    let checkoutCreate, first, second, third: CheckoutCreate?
+    let checkoutCreate, first, second, third, updateShippingAddress, updateShippingLine: CheckoutData?
 }
 
 //
@@ -49,7 +49,7 @@ public struct DataClass: Codable {
 //   }
 
 // MARK: - CheckoutCreate
-public struct CheckoutCreate: Codable {
+public struct CheckoutData: Codable {
     let checkoutUserErrors: [CheckoutUserError]?
     let payment: Payment?
     let checkout: CheckoutClass?
@@ -239,7 +239,7 @@ extension DataRequest {
     }
     
     @discardableResult
-    func responseCheckout(queue: DispatchQueue? = nil, completionHandler: @escaping (DataResponse<Checkout>) -> Void) -> Self {
+    func responseCheckout(queue: DispatchQueue? = nil, completionHandler: @escaping (DataResponse<CheckoutResponse>) -> Void) -> Self {
         return responseDecodable(queue: queue, completionHandler: completionHandler)
     }
 }

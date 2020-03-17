@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name             = 'Monetizr'
-  s.version          = '3.3.4'
-  s.summary          = 'Monetizr is a game reward engine, we drive revenue to your business and enhance the experience of your players!'
+  s.version          = '3.4.1'
+  s.summary          = 'Platform to Sell Game Gear from Inside the Game UI'
  
   s.description      = <<-DESC
-Monetizr rewards your users with an opportunity to unlock and buy your own game merchandise (t-shirts, hats, 3d-figurines, decals, and 40+ other products), gift cards (Amazon, Apple, etc.), and even brand sponsored rewards (from brands that fit your core audience and goes well with the narrative of the game). How you want to monetize, you decide!
+Monetizr is a turn-key platform for game developers enabling to sell or give-away game gear right inside the game's UI. You can use this SDK in your game to let players purchase products or claim gifts within the game. All orders made with Monetizr automatically initiates fulfillment and shipping. More info: https://docs.themonetizr.com/docs/get-started.
                        DESC
  
   s.homepage         = 'https://www.themonetizr.com'
@@ -15,7 +15,7 @@ Monetizr rewards your users with an opportunity to unlock and buy your own game 
   s.swift_version = "5.0"
   s.ios.deployment_target = '10.0'
   s.source_files = 'Monetizr-SDK/*'
-  s.resources = ['Monetizr-SDK/*.lproj', 'Monetizr-SDK/Assets/*']
+  s.resources = ['Monetizr-SDK/*.lproj', 'Monetizr-SDK/*.json', 'Monetizr-SDK/Assets/*']
 
   s.framework = "UIKit"
   s.framework = "PassKit"
@@ -23,5 +23,6 @@ Monetizr rewards your users with an opportunity to unlock and buy your own game 
   s.dependency 'ImageSlideshow/Alamofire'
   s.dependency 'ImageSlideshow', '~> 1.8'
   s.dependency 'Mobile-Buy-SDK'
+  s.dependency 'McPicker'
  
 end
