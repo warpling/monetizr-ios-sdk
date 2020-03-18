@@ -213,9 +213,11 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
         let tap = UITapGestureRecognizer(target: self, action: #selector(pickRegion))
         provinceLabel.isUserInteractionEnabled = true
         provinceLabel.addGestureRecognizer(tap)
-        let indexOfCountry = self.countryCatalog.firstIndex(where: {$0.countryName == countryLabel.text})
-        self.selectedCountryRegions = self.countryCatalog[indexOfCountry!].regions
-        self.provinceLabel.text = self.selectedCountryRegions[0].name
+        if let indexOfCountry = self.countryCatalog.firstIndex(where: {$0.countryName == countryLabel.text}) {
+            self.selectedCountryRegions = self.countryCatalog[indexOfCountry].regions
+            self.provinceLabel.text = self.selectedCountryRegions[0].name
+        }
+        
         if let region = retrieveAddress()?.province {
             if region != "" {
                 provinceLabel.text = region
