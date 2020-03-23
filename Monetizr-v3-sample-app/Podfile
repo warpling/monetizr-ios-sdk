@@ -8,6 +8,7 @@ pod 'ImageSlideshow', '~> 1.8'
 pod "ImageSlideshow/Alamofire"
 pod "Mobile-Buy-SDK"
 pod 'McPicker'
+pod 'Stripe'
 end
 
 target 'Monetizr-v3-sample-app' do
