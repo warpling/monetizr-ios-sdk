@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Alamofire
 import PassKit
+import Stripe
 import MobileBuySDK
 
 public class Monetizr {
@@ -131,6 +132,25 @@ public class Monetizr {
         return duration
     }
     
+    // Track app version
+    public func trackAppVersion() {
+        let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        let versionOfLastRun = UserDefaults.standard.object(forKey: "MonetizrAppVersionOfLastRun") as? String
+        if versionOfLastRun == nil {
+            // First start after installing the app
+            self.installCreate(deviceIdentifier: deviceIdentifier(), completionHandler: {_,_,_ in })
+        } else if versionOfLastRun != currentVersion {
+            // App was updated since last run
+            self.updateCreate(deviceIdentifier: deviceIdentifier(), bundleVersion: currentVersion!, completionHandler: {_,_,_ in })
+        } else {
+            // nothing changed
+        }
+        UserDefaults.standard.set(currentVersion, forKey: "MonetizrAppVersionOfLastRun")
+        UserDefaults.standard.synchronize()
+    }
+    
+    // MARK: Monetizr API
+    
     // Load product data
     public func showProduct(tag: String, playerID: String? = nil, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
@@ -166,21 +186,6 @@ public class Monetizr {
                 completionHandler(false, response.result.error!, nil)
             }
         }
-    }
-    
-    // Create product View
-    func productViewForProduct(product: Product, tag: String, playerID: String?) -> ProductViewController {
-        let productViewController = ProductViewController()
-        productViewController.product = product
-        productViewController.tag = tag
-        productViewController.playerID = playerID
-        return productViewController
-    }
-    
-    // Present product View
-    func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
-        productViewController.modalPresentationStyle = presentationStyle
-        presenter.present(productViewController, animated: true, completion: nil)
     }
     
     // Checkout variant for product
@@ -505,6 +510,23 @@ public class Monetizr {
         }
     }
     
+    // MARK: ViewController presentation
+    
+    // Create product View
+    func productViewForProduct(product: Product, tag: String, playerID: String?) -> ProductViewController {
+        let productViewController = ProductViewController()
+        productViewController.product = product
+        productViewController.tag = tag
+        productViewController.playerID = playerID
+        return productViewController
+    }
+    
+    // Present product View
+    func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
+        productViewController.modalPresentationStyle = presentationStyle
+        presenter.present(productViewController, animated: true, completion: nil)
+    }
+    
     // Buy product-variant with Apple Pay
     public func buyWithApplePay(selectedVariant: PurpleNode, tag: String, presenter: UIViewController, completionHandler: @escaping (Bool, Error?) -> Void) {
         if applePayCanMakePayments() && applePayMerchantID != nil {
@@ -535,24 +557,8 @@ public class Monetizr {
         completionHandler(true, nil)
     }
     
-    // Track app version
-    public func trackAppVersion() {
-        let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-        let versionOfLastRun = UserDefaults.standard.object(forKey: "MonetizrAppVersionOfLastRun") as? String
-        if versionOfLastRun == nil {
-            // First start after installing the app
-            self.installCreate(deviceIdentifier: deviceIdentifier(), completionHandler: {_,_,_ in })
-        } else if versionOfLastRun != currentVersion {
-            // App was updated since last run
-            self.updateCreate(deviceIdentifier: deviceIdentifier(), bundleVersion: currentVersion!, completionHandler: {_,_,_ in })
-        } else {
-            // nothing changed
-        }
-        UserDefaults.standard.set(currentVersion, forKey: "MonetizrAppVersionOfLastRun")
-        UserDefaults.standard.synchronize()
-    }
+    // MARK: Telemetric
     
-    /* Metrics section */
     // Create a new entry for device data
     public func devicedataCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         let data = deviceData()

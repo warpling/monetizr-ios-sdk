@@ -8,6 +8,7 @@
 
 import UIKit
 import PassKit
+import Stripe
 import MobileBuySDK
 
 // Protocol used for sending data back to product view
