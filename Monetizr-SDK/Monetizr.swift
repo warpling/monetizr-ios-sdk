@@ -319,12 +319,16 @@ public class Monetizr {
         
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responsePaymentResponse { response in
             if let paymentResponse = response.result.value {
-                
+                if paymentResponse.status == "error" {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : paymentResponse.message ?? "Unknown error"])
+                    completionHandler(false, error)
+                }
             }
             else if let error = response.result.error as? URLError {
                 completionHandler(false, error)
             }
             else {
+                
                 completionHandler(false, nil)
             }
         }
