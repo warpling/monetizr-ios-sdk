@@ -16,7 +16,11 @@ protocol ApplePayControllerDelegate: class {
     func applePayFinishedWithCheckout(checkout: Storefront.Checkout?)
 }
 
-class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
+class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate, STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
+    }
+    
     
     var selectedVariant: PurpleNode?
     var checkout: CheckoutResponse?
@@ -46,19 +50,33 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
         
-        // Pass data to Monetizr
-        let amount = self.paymentSummaryItems(shippingMethodIdentifier: payment.shippingMethod?.identifier).last?.amount ?? 0.00
-        Monetizr.shared.checkoutVariantWithApplePayment(checkout: checkout!, selectedVariant: self.selectedVariant!, payment: payment, tag: self.tag ?? "", amount: amount) {success, error  in
+        self.updateCheckout(payment: payment) {
+            success in
             if success {
-                // Handle success response
-                //self.shopifyCheckout = checkout
-                completion(PKPaymentAuthorizationStatus.success)
+                self.getPaymentIntent() {
+                    success, intent in
+                    if success {
+                        self.confirmPaymentWithStripe(payment: payment, intent: intent ?? "") {
+                            success in
+                            if success {
+                                // Payment status check here
+                                
+                            }
+                            else {
+                                completion(PKPaymentAuthorizationStatus.failure)
+                            }
+                        }
+                    }
+                    else {
+                        completion(PKPaymentAuthorizationStatus.failure)
+                    }
+                }
             }
             else {
-                // Handle error
                 completion(PKPaymentAuthorizationStatus.failure)
             }
         }
+        
     }
     
     @available(iOS, deprecated:11.0, message:"Use PKPaymentRequestShippingContactUpdate")
@@ -233,5 +251,89 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
         
         return paymentSummaryItems
     }
+    
+    func updateCheckout(payment: PKPayment, completionHandler: @escaping (Bool) -> Void) {
+        // Update Checkout
+        let shippingStreet = payment.shippingContact?.postalAddress?.street ?? ""
+        let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
+        var shippingSubLocality = ""
+        var billingSubLocality = ""
+        if #available(iOS 10.3, *) {
+            shippingSubLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
+            billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
+        } else {
+            // Fallback on earlier versions
+        }
+        var shippingSubAdministrativeArea = ""
+        var billingSubAdministrativeArea = ""
+        if #available(iOS 10.3, *) {
+            shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
+            billingSubAdministrativeArea = payment.billingContact?.postalAddress?.subAdministrativeArea ?? ""
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        let shippingAddress = CheckoutAddress(firstName: payment.shippingContact?.name?.givenName ?? "", lastName: payment.shippingContact?.name?.familyName ?? "", address1: shippingStreet + shippingSubLocality + shippingSubAdministrativeArea, address2: "", city: payment.shippingContact?.postalAddress?.city ?? "", country: payment.shippingContact?.postalAddress?.country ?? "", zip: payment.shippingContact?.postalAddress?.postalCode ?? "", province: payment.shippingContact?.postalAddress?.state ?? "")
+        
+        let billingAddress = CheckoutAddress(firstName: payment.billingContact?.name?.givenName ?? "", lastName: payment.billingContact?.name?.familyName ?? "", address1: billingStreet + billingSubLocality + billingSubAdministrativeArea, address2: "", city: payment.billingContact?.postalAddress?.city ?? "", country: payment.billingContact?.postalAddress?.country ?? "", zip: payment.billingContact?.postalAddress?.postalCode ?? "", province: payment.billingContact?.postalAddress?.state ?? "")
+        
+        let updateCheckoutRequest = UpdateCheckoutRequest(productHandle: self.tag ?? "", checkoutID: checkout?.data?.checkoutCreate?.checkout?.id ?? "", email: payment.shippingContact?.emailAddress ?? "", shippingRateHandle: payment.shippingMethod?.identifier ?? "", shippingAddress: shippingAddress, billingAddress: billingAddress)
+        
+        Monetizr.shared.updateCheckout(request: updateCheckoutRequest) { success, error, checkout in
+            if success {
+                self.checkout = checkout
+                // Handle success
+                completionHandler(true)
+            }
+            else {
+                // Handle error
+                completionHandler(false)
+            }
+        }
+    }
+    
+    func getPaymentIntent(completionHandler: @escaping (Bool, String?) -> Void) {
+        Monetizr.shared.Payment(checkout: checkout!, selectedVariant: self.selectedVariant!, tag: self.tag ?? "") {success, error, intentString in
+            if success {
+                // Handle success response
+                completionHandler(true, intentString)
+            }
+            else {
+                // Handle error
+                completionHandler(false, nil)
+            }
+        }
+    }
+    
+    func confirmPaymentWithStripe(payment: PKPayment, intent: String, completionHandler: @escaping (Bool) -> Void) {
+        // Convert the PKPayment into a PaymentMethod
+        STPAPIClient.shared().createPaymentMethod(with: payment) { (paymentMethod: STPPaymentMethod?, error: Error?) in
+            guard let paymentMethod = paymentMethod, error == nil else {
+                // Present error to customer...
+                return
+            }
+            let paymentIntentParams = STPPaymentIntentParams(clientSecret: intent)
+            paymentIntentParams.paymentMethodId = paymentMethod.stripeId
 
+            // Confirm the PaymentIntent with the payment method
+            STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: self) { (status, paymentIntent, error) in
+                switch (status) {
+                case .succeeded:
+                    completionHandler(true)
+                case .canceled:
+                    completionHandler(false)
+                case .failed:
+                    if #available(iOS 11.0, *) {
+                        let errors = [STPAPIClient.pkPaymentError(forStripeError: error)].compactMap({ $0 })
+                        print(errors)
+                    } else {
+                        // Fallback on earlier versions
+                    }
+                    completionHandler(false)
+                @unknown default:
+                    completionHandler(false)
+                }
+            }
+        }
+    }
 }

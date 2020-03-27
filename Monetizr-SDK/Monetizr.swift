@@ -22,6 +22,13 @@ public class Monetizr {
             self.setLocale()
         }
     }
+    
+    var isTestMode: Bool? {
+        didSet {
+            self.setStripeToken()
+        }
+    }
+    
     var headers: HTTPHeaders = [:]
     var applePayMerchantID: String?
     var companyName: String?
@@ -34,6 +41,8 @@ public class Monetizr {
     var checkoutCountInSession: Int = 0
     var chosenTheme: ProductViewControllerTheme? = .system
     
+    
+    
     public enum ProductViewControllerTheme {
         case system
         case black
@@ -42,6 +51,7 @@ public class Monetizr {
     // Initialization
     private init(token: String) {
         self.token = token
+        self.setStripeToken()
         DispatchQueue.main.async { self.trackAppVersion() }
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -76,6 +86,22 @@ public class Monetizr {
     // Set language
     public func setLocale() {
         self.localeCodeString = localeIdentifier()
+    }
+    
+    // Set stripe token
+    public func setStripeToken() {
+        if isTestMode ?? false {
+            Stripe.setDefaultPublishableKey("pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu")
+        }
+        else {
+            Stripe.setDefaultPublishableKey("pk_live_CWmQoXocvis3aEFufn7R1CKf")
+        }
+        
+    }
+    
+    // Test mode
+    public func testMode(enabled: Bool) {
+        isTestMode = enabled
     }
     
     // Application become active
@@ -308,28 +334,35 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVariantWithApplePayment(checkout: CheckoutResponse, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?) -> Void) {
+    public func Payment(checkout: CheckoutResponse, selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, String?) -> Void) {
         
         let urlString = apiUrl+"products/payment"
-        let parameters: [String: String] = [
+        let parameters: [String: Any] = [
             "product_handle" : tag,
-            "checkoutId" : checkout.data?.checkoutCreate?.checkout?.id ?? "",
-            "type" : "apple_pay"
+            "checkoutId" : checkout.data?.updateShippingLine?.checkout?.id ?? "",
+            "type" : "apple_pay",
+            "test": isTestMode ?? false
         ]
         
         Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responsePaymentResponse { response in
             if let paymentResponse = response.result.value {
+                if paymentResponse.status == "success" {
+                    completionHandler(true, nil, paymentResponse.intent)
+                    return
+                }
                 if paymentResponse.status == "error" {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : paymentResponse.message ?? "Unknown error"])
-                    completionHandler(false, error)
+                    completionHandler(false, error, nil)
+                    return
                 }
+                completionHandler(false, nil, nil)
             }
             else if let error = response.result.error as? URLError {
-                completionHandler(false, error)
+                completionHandler(false, error, nil)
             }
             else {
                 
-                completionHandler(false, nil)
+                completionHandler(false, nil, nil)
             }
         }
         
