@@ -122,7 +122,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                             completion(shippingContactErrorUpdate)
                         }
                         else {
-                            // No errors update price etc.
+                            // No errors update price etc. - also checkout update need to be called
                              let shippingContactSuccessUpdate = PKPaymentRequestShippingContactUpdate.init(errors: [], paymentSummaryItems: self.paymentSummaryItems(), shippingMethods: self.shippingMethods())
                             completion(shippingContactSuccessUpdate)
                         }

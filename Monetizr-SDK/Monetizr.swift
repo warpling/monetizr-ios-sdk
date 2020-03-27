@@ -233,7 +233,7 @@ public class Monetizr {
                     else {
                         let message = responseCheckout.data?.checkoutCreate?.checkoutUserErrors?[0].message
                         let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : message ?? "API error, contact Monetizr for details"])
-                        completionHandler(false, error, nil)
+                        completionHandler(false, error, responseCheckout)
                     }
                 }
                 else {
