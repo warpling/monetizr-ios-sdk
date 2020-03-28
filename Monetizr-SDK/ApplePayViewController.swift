@@ -59,8 +59,15 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                         self.confirmPaymentWithStripe(payment: payment, intent: intent ?? "") {
                             success in
                             if success {
-                                // Payment status check here
-                                
+                                self.getPaymentStatus(checkoutID: self.checkout?.data?.updateShippingLine?.checkout?.id ?? "") {
+                                    success in
+                                    if success {
+                                        completion(PKPaymentAuthorizationStatus.success)
+                                    }
+                                    else {
+                                        completion(PKPaymentAuthorizationStatus.failure)
+                                    }
+                                }
                             }
                             else {
                                 completion(PKPaymentAuthorizationStatus.failure)
@@ -293,7 +300,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     }
     
     func getPaymentIntent(completionHandler: @escaping (Bool, String?) -> Void) {
-        Monetizr.shared.Payment(checkout: checkout!, selectedVariant: self.selectedVariant!, tag: self.tag ?? "") {success, error, intentString in
+        Monetizr.shared.payment(checkout: checkout!, selectedVariant: self.selectedVariant!, tag: self.tag ?? "") {success, error, intentString in
             if success {
                 // Handle success response
                 completionHandler(true, intentString)
@@ -333,6 +340,36 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                 @unknown default:
                     completionHandler(false)
                 }
+            }
+        }
+    }
+    
+    func getPaymentStatus(checkoutID: String, completionHandler: @escaping (Bool) -> Void) {
+        Monetizr.shared.paymentStatus(checkout: self.checkout!) {success, error, PaymentStatus in
+            if success {
+                // Handle success response
+                if PaymentStatus?.payment_status != "completed" {
+                    // Recheck status
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
+                        Monetizr.shared.paymentStatus(checkout: self.checkout!) {success, error, PaymentStatus in
+                            if success {
+                                // Handle success response
+                                completionHandler(PaymentStatus?.paid ?? false)
+                            }
+                            else {
+                                // Handle error
+                                completionHandler(false)
+                            }
+                        }
+                    })
+                }
+                else {
+                    completionHandler(PaymentStatus?.paid ?? false)
+                }
+            }
+            else {
+                // Handle error
+                completionHandler(false)
             }
         }
     }

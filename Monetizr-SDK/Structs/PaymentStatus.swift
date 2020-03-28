@@ -1,21 +1,21 @@
 //
-//  Store.swift
+//  PaymentStatus.swift
 //  Monetizr-v3-sample-app
 //
-//  Created by Armands Avotins on 28/11/2019.
-//  Copyright © 2019 Monetizr. All rights reserved.
+//  Created by Armands Avotins on 29/03/2020.
+//  Copyright © 2020 Monetizr. All rights reserved.
 //
 
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let stores = try? newJSONDecoder().decode(Stores.self, from: jsonData)
+//   let paymentStatus = try? newJSONDecoder().decode(PaymentStatus.self, from: jsonData)
 
 //
 // To parse values from Alamofire responses:
 //
-//   Alamofire.request(url).responseStore { response in
-//     if let store = response.result.value {
+//   Alamofire.request(url).responsePaymentStatus { response in
+//     if let paymentStatus = response.result.value {
 //       ...
 //     }
 //   }
@@ -23,37 +23,17 @@
 import Foundation
 import Alamofire
 
-// MARK: - Store
-struct Store: Codable {
-    let name: String?
-    let salesStore: SalesStore?
+// MARK: - PaymentStatus
+public struct PaymentStatus: Codable {
+    let status, message, payment_status: String
+    let paid: Bool
 
     enum CodingKeys: String, CodingKey {
-        case name
-        case salesStore = "sales_store"
+        case status, message
+        case payment_status
+        case paid
     }
 }
-
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseSalesStore { response in
-//     if let salesStore = response.result.value {
-//       ...
-//     }
-//   }
-
-// MARK: - SalesStore
-struct SalesStore: Codable {
-    let name, domain, shopifyAPIKey: String?
-
-    enum CodingKeys: String, CodingKey {
-        case name, domain
-        case shopifyAPIKey = "shopify_api_key"
-    }
-}
-
-typealias Stores = [Store]
 
 // MARK: - Helper functions for creating encoders and decoders
 
@@ -94,8 +74,7 @@ extension DataRequest {
     }
 
     @discardableResult
-    func responseStores(queue: DispatchQueue? = nil, completionHandler: @escaping (DataResponse<Stores>) -> Void) -> Self {
+    func responsePaymentStatus(queue: DispatchQueue? = nil, completionHandler: @escaping (DataResponse<PaymentStatus>) -> Void) -> Self {
         return responseDecodable(queue: queue, completionHandler: completionHandler)
     }
 }
-

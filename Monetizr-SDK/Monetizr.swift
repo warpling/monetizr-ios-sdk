@@ -334,7 +334,7 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func Payment(checkout: CheckoutResponse, selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, String?) -> Void) {
+    public func payment(checkout: CheckoutResponse, selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, String?) -> Void) {
         
         let urlString = apiUrl+"products/payment"
         let parameters: [String: Any] = [
@@ -361,12 +361,40 @@ public class Monetizr {
                 completionHandler(false, error, nil)
             }
             else {
-                
                 completionHandler(false, nil, nil)
             }
         }
+    }
+    
+    // Check payment status
+    public func paymentStatus(checkout: CheckoutResponse, completionHandler: @escaping (Bool, Error?, PaymentStatus?) -> Void) {
         
+        let urlString = apiUrl+"products/paymentstatus"
+        let parameters: [String: Any] = [
+            "checkoutId" : checkout.data?.updateShippingLine?.checkout?.id ?? "",
+        ]
         
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responsePaymentStatus { response in
+            if let paymentStatus = response.result.value {
+                if paymentStatus.status == "success" {
+                    completionHandler(true, nil, paymentStatus)
+                    return
+                }
+                if paymentStatus.status == "error" {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : paymentStatus.message])
+                    
+                    completionHandler(false, error, nil)
+                    return
+                }
+                completionHandler(false, nil, nil)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, nil, nil)
+            }
+        }
     }
     
     // MARK: ViewController presentation
