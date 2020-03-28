@@ -9,11 +9,10 @@
 import UIKit
 import PassKit
 import Stripe
-import MobileBuySDK
 
 // Protocol used for sending data back to product view
 protocol ApplePayControllerDelegate: class {
-    func applePayFinishedWithCheckout(checkout: Storefront.Checkout?)
+    func applePayFinishedWithCheckout(paymentStatus: PaymentStatus?)
 }
 
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate, STPAuthenticationContext {
@@ -24,7 +23,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     var selectedVariant: PurpleNode?
     var checkout: CheckoutResponse?
-    var shopifyCheckout: Storefront.Checkout?
+    var paymentStatus: PaymentStatus?
     var tag: String?
     weak var delegate: ApplePayControllerDelegate? = nil
 
@@ -45,7 +44,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     func dismiss() {
         self.dismiss(animated: true, completion: nil)
-        delegate?.applePayFinishedWithCheckout(checkout: self.shopifyCheckout)
+        delegate?.applePayFinishedWithCheckout(paymentStatus: self.paymentStatus)
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
@@ -345,16 +344,18 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     }
     
     func getPaymentStatus(checkoutID: String, completionHandler: @escaping (Bool) -> Void) {
-        Monetizr.shared.paymentStatus(checkout: self.checkout!) {success, error, PaymentStatus in
+        Monetizr.shared.paymentStatus(checkout: self.checkout!) {success, error, paymentStatus in
             if success {
                 // Handle success response
-                if PaymentStatus?.payment_status != "completed" {
+                self.paymentStatus = paymentStatus
+                if paymentStatus?.payment_status != "completed" {
                     // Recheck status
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
-                        Monetizr.shared.paymentStatus(checkout: self.checkout!) {success, error, PaymentStatus in
+                        Monetizr.shared.paymentStatus(checkout: self.checkout!) {success, error, paymentStatus in
                             if success {
                                 // Handle success response
-                                completionHandler(PaymentStatus?.paid ?? false)
+                                self.paymentStatus = paymentStatus
+                                completionHandler(paymentStatus?.paid ?? false)
                             }
                             else {
                                 // Handle error
@@ -364,7 +365,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                     })
                 }
                 else {
-                    completionHandler(PaymentStatus?.paid ?? false)
+                    completionHandler(paymentStatus?.paid ?? false)
                 }
             }
             else {
