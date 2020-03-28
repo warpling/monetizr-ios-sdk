@@ -12,7 +12,6 @@ import Alamofire
 import ImageSlideshow
 import PassKit
 import SafariServices
-import MobileBuySDK
 
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate {
     

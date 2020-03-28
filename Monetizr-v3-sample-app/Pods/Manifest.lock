@@ -9,7 +9,6 @@ PODS:
     - ImageSlideshow/Core
   - ImageSlideshow/Core (1.8.3)
   - McPicker (2.0.1)
-  - Mobile-Buy-SDK (3.7.0)
   - Stripe (19.0.1)
 
 DEPENDENCIES:
@@ -18,7 +17,6 @@ DEPENDENCIES:
   - ImageSlideshow (~> 1.8)
   - ImageSlideshow/Alamofire
   - McPicker
-  - Mobile-Buy-SDK
   - Stripe
 
 SPEC REPOS:
@@ -27,7 +25,6 @@ SPEC REPOS:
     - AlamofireImage
     - ImageSlideshow
     - McPicker
-    - Mobile-Buy-SDK
     - Stripe
 
 SPEC CHECKSUMS:
@@ -35,9 +32,8 @@ SPEC CHECKSUMS:
   AlamofireImage: be9963c6582d68b39e89191f64c82a7d7bf40fdd
   ImageSlideshow: 4694d7d699a1549582e7cc631fb392d8f91630f3
   McPicker: a0a6b8ece8f1642e05401a29867463aba501188b
-  Mobile-Buy-SDK: 31e0e5b6d8373d66dbe09a80849d86ebd829135f
   Stripe: 03313f9520a0786e2c00d9a7a2672c11e08821af
 
-PODFILE CHECKSUM: 36f8c3211c991c6f0d76e16c9d6ccec19314fdd4
+PODFILE CHECKSUM: 110317f4a1adce8c076142a27095ec148b1e6300
 
 COCOAPODS: 1.9.1
