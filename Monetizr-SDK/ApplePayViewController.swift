@@ -355,7 +355,12 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                             if success {
                                 // Handle success response
                                 self.paymentStatus = paymentStatus
-                                completionHandler(paymentStatus?.paid ?? false)
+                                if paymentStatus?.payment_status == "processing" {
+                                    completionHandler(true)
+                                }
+                                else {
+                                    completionHandler(paymentStatus?.paid ?? false)
+                                }
                             }
                             else {
                                 // Handle error
