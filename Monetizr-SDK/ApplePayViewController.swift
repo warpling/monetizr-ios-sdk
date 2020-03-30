@@ -58,6 +58,8 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                         self.confirmPaymentWithStripe(payment: payment, intent: intent ?? "") {
                             success in
                             if success {
+                                completion(PKPaymentAuthorizationStatus.success)
+                                /*
                                 self.getPaymentStatus(checkoutID: self.checkout?.data?.updateShippingLine?.checkout?.id ?? "") {
                                     success in
                                     if success {
@@ -67,6 +69,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                                         completion(PKPaymentAuthorizationStatus.failure)
                                     }
                                 }
+                                */
                             }
                             else {
                                 completion(PKPaymentAuthorizationStatus.failure)
