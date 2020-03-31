@@ -753,6 +753,15 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Apple Pay finished
     func applePayFinishedWithCheckout(paymentStatus: PaymentStatus?) {
+        
+        let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
+        alert.view.tintColor = UIColor(hex: 0xE0093B)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+              // Switch if needed handle buttons
+        }))
+        self.present(alert, animated: true, completion: nil)
+        
+        /*
         // Show confiramtion alert
         guard paymentStatus != nil else {
             return
@@ -766,6 +775,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             }))
             self.present(alert, animated: true, completion: nil)
         }
+        */
     }
     
     // Claim finished

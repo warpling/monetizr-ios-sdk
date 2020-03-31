@@ -96,7 +96,6 @@ public class Monetizr {
         else {
             Stripe.setDefaultPublishableKey("pk_live_CWmQoXocvis3aEFufn7R1CKf")
         }
-        
     }
     
     // Test mode
