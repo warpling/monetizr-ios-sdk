@@ -12,7 +12,7 @@ import Stripe
 
 // Protocol used for sending data back to product view
 protocol ApplePayControllerDelegate: class {
-    func applePayFinishedWithCheckout(paymentStatus: PaymentStatus?)
+    func applePayFinishedWithCheckout(paymentSuccess: Bool?)
 }
 
 class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate, STPAuthenticationContext {
@@ -24,6 +24,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     var selectedVariant: PurpleNode?
     var checkout: CheckoutResponse?
     var paymentStatus: PaymentStatus?
+    var paymentSuccess: Bool?
     var tag: String?
     weak var delegate: ApplePayControllerDelegate? = nil
 
@@ -44,7 +45,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     func dismiss() {
         self.dismiss(animated: true, completion: nil)
-        delegate?.applePayFinishedWithCheckout(paymentStatus: self.paymentStatus)
+        delegate?.applePayFinishedWithCheckout(paymentSuccess: paymentSuccess)
     }
     
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: @escaping ((PKPaymentAuthorizationStatus) -> Void)) {
@@ -58,6 +59,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                         self.confirmPaymentWithStripe(payment: payment, intent: intent ?? "") {
                             success in
                             if success {
+                                self.paymentSuccess = true
                                 completion(PKPaymentAuthorizationStatus.success)
                                 /*
                                 self.getPaymentStatus(checkoutID: self.checkout?.data?.updateShippingLine?.checkout?.id ?? "") {
@@ -72,16 +74,19 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
                                 */
                             }
                             else {
+                                self.paymentSuccess = false
                                 completion(PKPaymentAuthorizationStatus.failure)
                             }
                         }
                     }
                     else {
+                        self.paymentSuccess = false
                         completion(PKPaymentAuthorizationStatus.failure)
                     }
                 }
             }
             else {
+                self.paymentSuccess = false
                 completion(PKPaymentAuthorizationStatus.failure)
             }
         }
