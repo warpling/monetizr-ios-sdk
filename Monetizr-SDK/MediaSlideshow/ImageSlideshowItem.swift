@@ -7,29 +7,29 @@
 
 import UIKit
 
-/// Used to wrap a single slideshow item and allow zooming on it
+// Used to wrap a single slideshow item and allow zooming on it
 @objcMembers
 open class ImageSlideshowItem: UIScrollView, UIScrollViewDelegate {
 
-    /// Image view to hold the image
+    // Image view to hold the image
     public let imageView = UIImageView()
 
-    /// Activity indicator shown during image loading, when nil there won't be shown any
+    // Activity indicator shown during image loading, when nil there won't be shown any
     public let activityIndicator: ActivityIndicatorView?
 
-    /// Input Source for the item
+    // Input Source for the item
     public let image: InputSource
 
-    /// Guesture recognizer to detect double tap to zoom
+    // Guesture recognizer to detect double tap to zoom
     open var gestureRecognizer: UITapGestureRecognizer?
 
-    /// Holds if the zoom feature is enabled
+    // Holds if the zoom feature is enabled
     public let zoomEnabled: Bool
 
-    /// If set to true image is initially zoomed in
+    // If set to true image is initially zoomed in
     open var zoomInInitially = false
     
-    /// Maximum zoom scale
+    // Maximum zoom scale
     open var maximumScale: CGFloat = 2.0
 
     fileprivate var lastFrame = CGRect.zero
@@ -43,7 +43,7 @@ open class ImageSlideshowItem: UIScrollView, UIScrollViewDelegate {
         }
     }
 
-    /// Wraps around ImageView so RTL transformation on it doesn't interfere with UIScrollView zooming
+    // Wraps around ImageView so RTL transformation on it doesn't interfere with UIScrollView zooming
     private let imageViewWrapper = UIView()
 
     // MARK: - Life cycle
@@ -63,6 +63,11 @@ open class ImageSlideshowItem: UIScrollView, UIScrollViewDelegate {
 
         imageViewWrapper.addSubview(imageView)
         imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityTraits = .image
+        if #available(iOS 11.0, *) {
+            imageView.accessibilityIgnoresInvertColors = true
+        }
 
         imageViewWrapper.clipsToBounds = true
         imageViewWrapper.isUserInteractionEnabled = true
@@ -128,7 +133,7 @@ open class ImageSlideshowItem: UIScrollView, UIScrollViewDelegate {
         maximumZoomScale = calculateMaximumScale()
     }
 
-    /// Request to load Image Source to Image View
+    // Request to load Image Source to Image View
     public func loadImage() {
         if self.imageView.image == nil && !isLoading {
             isLoading = true

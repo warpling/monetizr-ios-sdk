@@ -3,19 +3,6 @@
 //  Created by Armands Avotins on 11/09/2019.
 //  Copyright © 2019 Monetizr. All rights reserved.
 
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let checkout = try? newJSONDecoder().decode(CheckoutResponse.self, from: jsonData)
-
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseCheckout { response in
-//     if let CheckoutResponse = response.result.value {
-//       ...
-//     }
-//   }
 
 import Foundation
 import Alamofire
@@ -25,28 +12,10 @@ public struct CheckoutResponse: Codable {
     let data: DataClass?
 }
 
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseDataClass { response in
-//     if let dataClass = response.result.value {
-//       ...
-//     }
-//   }
-
 // MARK: - DataClass
 public struct DataClass: Codable {
     let checkoutCreate, first, second, third, updateShippingAddress, updateShippingLine: CheckoutData?
 }
-
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseCheckoutCreate { response in
-//     if let checkoutCreate = response.result.value {
-//       ...
-//     }
-//   }
 
 // MARK: - CheckoutCreate
 public struct CheckoutData: Codable {
@@ -55,28 +24,11 @@ public struct CheckoutData: Codable {
     let checkout: CheckoutClass?
 }
 
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseCheckoutUserError { response in
-//     if let checkoutUserError = response.result.value {
-//       ...
-//     }
-//   }
-
 // MARK: - CheckoutUserError
 struct CheckoutUserError: Codable {
     let field: [String]?
     let message: String?
 }
-
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseCheckoutClass { response in
-//     if let checkoutClass = response.result.value {
-//       ...
-//     }
-//   }
 
 // MARK: - CheckoutClass
 public struct CheckoutClass: Codable {
@@ -96,29 +48,11 @@ public struct CheckoutClass: Codable {
     }
 }
 
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseAvailableShippingRates { response in
-//     if let availableShippingRates = response.result.value {
-//       ...
-//     }
-//   }
-
 // MARK: - AvailableShippingRates
 public struct AvailableShippingRates: Codable {
     let ready: Bool?
     let shippingRates: [Shipping]?
 }
-
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseShipping { response in
-//     if let shipping = response.result.value {
-//       ...
-//     }
-//   }
 
 // MARK: - Shipping
 public struct Shipping: Codable {
@@ -127,72 +61,27 @@ public struct Shipping: Codable {
     let priceV2: V2?
 }
 
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseV2 { response in
-//     if let v2 = response.result.value {
-//       ...
-//     }
-//   }
-
 // MARK: - V2
 public struct V2: Codable {
     let amount: String?
     let currencyCode: String?
 }
 
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseLineItems { response in
-//     if let lineItems = response.result.value {
-//       ...
-//     }
-//   }
-
 // MARK: - LineItems
 public struct LineItems: Codable {
     let edges: [Edge]?
 }
-
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseEdge { response in
-//     if let edge = response.result.value {
-//       ...
-//     }
-//   }
 
 // MARK: - Edge
 public struct Edge: Codable {
     let node: Node?
 }
 
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responseNode { response in
-//     if let node = response.result.value {
-//       ...
-//     }
-//   }
-
 // MARK: - Node
 public struct Node: Codable {
     let title: String?
     let quantity: Int?
 }
-
-//
-// To parse values from Alamofire responses:
-//
-//   Alamofire.request(url).responsePayment { response in
-//     if let payment = response.result.value {
-//       ...
-//     }
-//   }
 
 // MARK: - Payment
 public struct Payment: Codable {
@@ -216,32 +105,6 @@ fileprivate func newJSONEncoder() -> JSONEncoder {
         encoder.dateEncodingStrategy = .iso8601
     }
     return encoder
-}
-
-// MARK: - Alamofire response handlers
-
-extension DataRequest {
-    fileprivate func decodableResponseSerializer<T: Decodable>() -> DataResponseSerializer<T> {
-        return DataResponseSerializer { _, response, data, error in
-            guard error == nil else { return .failure(error!) }
-            
-            guard let data = data else {
-                return .failure(AFError.responseSerializationFailed(reason: .inputDataNil))
-            }
-            
-            return Result { try newJSONDecoder().decode(T.self, from: data) }
-        }
-    }
-    
-    @discardableResult
-    fileprivate func responseDecodable<T: Decodable>(queue: DispatchQueue? = nil, completionHandler: @escaping (DataResponse<T>) -> Void) -> Self {
-        return response(queue: queue, responseSerializer: decodableResponseSerializer(), completionHandler: completionHandler)
-    }
-    
-    @discardableResult
-    func responseCheckout(queue: DispatchQueue? = nil, completionHandler: @escaping (DataResponse<CheckoutResponse>) -> Void) -> Self {
-        return responseDecodable(queue: queue, completionHandler: completionHandler)
-    }
 }
 
 // MARK: - Encode/decode helpers

@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// A protocol that can be adapted by different Input Source providers
+// A protocol that can be adapted by different Input Source providers
 @objc public protocol InputSource {
     /**
      Load image from the source to image view.
@@ -25,19 +25,19 @@ import UIKit
     @objc optional func cancelLoad(on imageView: UIImageView)
 }
 
-/// Input Source to load plain UIImage
+// Input Source to load plain UIImage
 @objcMembers
 open class ImageSource: NSObject, InputSource {
     var image: UIImage
 
-    /// Initializes a new Image Source with UIImage
-    /// - parameter image: Image to be loaded
+    // Initializes a new Image Source with UIImage
+    // - parameter image: Image to be loaded
     public init(image: UIImage) {
         self.image = image
     }
 
-    /// Initializes a new Image Source with an image name from the main bundle
-    /// - parameter imageString: name of the file in the application's main bundle
+    // Initializes a new Image Source with an image name from the main bundle
+    // - parameter imageString: name of the file in the application's main bundle
     @available(*, deprecated, message: "Use `BundleImageSource` instead")
     public init?(imageString: String) {
         if let image = UIImage(named: imageString) {
@@ -54,13 +54,13 @@ open class ImageSource: NSObject, InputSource {
     }
 }
 
-/// Input Source to load an image from the main bundle
+// Input Source to load an image from the main bundle
 @objcMembers
 open class BundleImageSource: NSObject, InputSource {
     var imageString: String
     
-    /// Initializes a new Image Source with an image name from the main bundle
-    /// - parameter imageString: name of the file in the application's main bundle
+    // Initializes a new Image Source with an image name from the main bundle
+    // - parameter imageString: name of the file in the application's main bundle
     public init(imageString: String) {
         self.imageString = imageString
         super.init()
@@ -73,13 +73,13 @@ open class BundleImageSource: NSObject, InputSource {
     }
 }
 
-/// Input Source to load an image from a local file path
+// Input Source to load an image from a local file path
 @objcMembers
 open class FileImageSource: NSObject, InputSource {
     var path: String
     
-    /// Initializes a new Image Source with an image name from the main bundle
-    /// - parameter imageString: name of the file in the application's main bundle
+    // Initializes a new Image Source with an image name from the main bundle
+    // - parameter imageString: name of the file in the application's main bundle
     public init(path: String) {
         self.path = path
         super.init()

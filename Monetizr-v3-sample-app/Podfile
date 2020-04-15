@@ -2,10 +2,10 @@ platform :ios, '10.0'
 
 def shared_pods
 use_frameworks! 
-pod 'Alamofire', '~> 4.0'
+pod 'Alamofire'
 pod 'AlamofireImage'
-pod 'ImageSlideshow', '~> 1.8'
-pod "ImageSlideshow/Alamofire"
+# pod 'ImageSlideshow', '~> 1.8'
+# pod "ImageSlideshow/Alamofire"
 pod 'McPicker'
 pod 'Stripe'
 end

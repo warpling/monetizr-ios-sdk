@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import Alamofire
-import ImageSlideshow
+//import ImageSlideshow
 import PassKit
 import SafariServices
 
@@ -38,7 +38,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     let titleLabel = UILabel()
     let descriptionSeparatorView = UIView()
     let descriptionTextView = UITextView()
-    let slideShow = ImageSlideshow()
+    let slideShow = MediaSlideshow()
     var optionsTapGesture = UITapGestureRecognizer()
     var optionsSelectorOverlayView = UIView()
     var optionsSelectorOverlayTapGesture = UITapGestureRecognizer()
@@ -818,12 +818,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Slideshow fullscreen
     @objc func slideShowTap() { // https://github.com/zvonicek/ImageSlideshow/issues/366
-        if #available(iOS 13.0, *) {
-            // slideShow.presentFullScreenController(from: self)
-        }
-        else {
-            slideShow.presentFullScreenController(from: self)
-        }
+        
         
         if Monetizr.shared.clickCountInSession < 1 {
             Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
