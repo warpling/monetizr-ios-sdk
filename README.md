@@ -32,7 +32,7 @@ Requires iOS 10.0+
 **CocoaPods:**
 
 ```swift
-pod 'Monetizr', '~> 3.4'
+pod 'Monetizr', '~> 3.5'
 ```
 
 ### Option 2
