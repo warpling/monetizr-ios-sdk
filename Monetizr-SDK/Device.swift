@@ -54,7 +54,7 @@ func regionCode() -> String? {
 }
 
 func countryName() -> String {
-    if let name = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: regionCode() as Any) {
+    if let name = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: (regionCode() ?? "United States") as String) {
         // Country name was found
         return name
     } else {
