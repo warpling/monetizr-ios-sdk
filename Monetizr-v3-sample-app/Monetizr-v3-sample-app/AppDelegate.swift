@@ -17,11 +17,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        // Setup Monetizr
+        // Init Monetizr with token
         Monetizr.shared.token = "4D2E54389EB489966658DDD83E2D1" // set token
         // Monetizr.shared.setTheme(theme: .black) // Optional - .system will be used by default
         Monetizr.shared.setApplePayMerchantID(id: "merchant.com.monetizr.sdk") // Optional, needed to setup Apple Pay
         Monetizr.shared.setCompanyName(companyName: "Monetizing Solutions") // Optional to override default value - App name
+        // Setup mode
+        Monetizr.shared.testMode(enabled: true) // Optional - default false
         
         return true
     }

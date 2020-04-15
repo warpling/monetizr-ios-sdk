@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Alamofire
 import PassKit
-import MobileBuySDK
+import Stripe
 
 public class Monetizr {
     
@@ -22,6 +22,13 @@ public class Monetizr {
             self.setLocale()
         }
     }
+    
+    var isTestMode: Bool? {
+        didSet {
+            self.setStripeToken()
+        }
+    }
+    
     var headers: HTTPHeaders = [:]
     var applePayMerchantID: String?
     var companyName: String?
@@ -34,6 +41,8 @@ public class Monetizr {
     var checkoutCountInSession: Int = 0
     var chosenTheme: ProductViewControllerTheme? = .system
     
+    
+    
     public enum ProductViewControllerTheme {
         case system
         case black
@@ -42,6 +51,7 @@ public class Monetizr {
     // Initialization
     private init(token: String) {
         self.token = token
+        self.setStripeToken()
         DispatchQueue.main.async { self.trackAppVersion() }
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -76,6 +86,21 @@ public class Monetizr {
     // Set language
     public func setLocale() {
         self.localeCodeString = localeIdentifier()
+    }
+    
+    // Set stripe token
+    public func setStripeToken() {
+        if isTestMode ?? false {
+            Stripe.setDefaultPublishableKey("pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu")
+        }
+        else {
+            Stripe.setDefaultPublishableKey("pk_live_CWmQoXocvis3aEFufn7R1CKf")
+        }
+    }
+    
+    // Test mode
+    public func testMode(enabled: Bool) {
+        isTestMode = enabled
     }
     
     // Application become active
@@ -131,6 +156,25 @@ public class Monetizr {
         return duration
     }
     
+    // Track app version
+    public func trackAppVersion() {
+        let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        let versionOfLastRun = UserDefaults.standard.object(forKey: "MonetizrAppVersionOfLastRun") as? String
+        if versionOfLastRun == nil {
+            // First start after installing the app
+            self.installCreate(deviceIdentifier: deviceIdentifier(), completionHandler: {_,_,_ in })
+        } else if versionOfLastRun != currentVersion {
+            // App was updated since last run
+            self.updateCreate(deviceIdentifier: deviceIdentifier(), bundleVersion: currentVersion!, completionHandler: {_,_,_ in })
+        } else {
+            // nothing changed
+        }
+        UserDefaults.standard.set(currentVersion, forKey: "MonetizrAppVersionOfLastRun")
+        UserDefaults.standard.synchronize()
+    }
+    
+    // MARK: Monetizr API
+    
     // Load product data
     public func showProduct(tag: String, playerID: String? = nil, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
@@ -166,21 +210,6 @@ public class Monetizr {
                 completionHandler(false, response.result.error!, nil)
             }
         }
-    }
-    
-    // Create product View
-    func productViewForProduct(product: Product, tag: String, playerID: String?) -> ProductViewController {
-        let productViewController = ProductViewController()
-        productViewController.product = product
-        productViewController.tag = tag
-        productViewController.playerID = playerID
-        return productViewController
-    }
-    
-    // Present product View
-    func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
-        productViewController.modalPresentationStyle = presentationStyle
-        presenter.present(productViewController, animated: true, completion: nil)
     }
     
     // Checkout variant for product
@@ -229,7 +258,7 @@ public class Monetizr {
                     else {
                         let message = responseCheckout.data?.checkoutCreate?.checkoutUserErrors?[0].message
                         let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : message ?? "API error, contact Monetizr for details"])
-                        completionHandler(false, error, nil)
+                        completionHandler(false, error, responseCheckout)
                     }
                 }
                 else {
@@ -304,205 +333,84 @@ public class Monetizr {
     }
     
     // Checkout with payment
-    public func checkoutVariantWithApplePayment(checkout: CheckoutResponse, selectedVariant: PurpleNode, payment: PKPayment, tag: String, amount: NSDecimalNumber, completionHandler: @escaping (Bool, Error?, [Storefront.CheckoutUserError]?, Storefront.Checkout?, Storefront.Payment?) -> Void) {
+    public func payment(checkout: CheckoutResponse, selectedVariant: PurpleNode, tag: String, completionHandler: @escaping (Bool, Error?, String?) -> Void) {
         
-        let urlString = apiUrl+"stores"
+        let urlString = apiUrl+"products/payment"
+        let parameters: [String: Any] = [
+            "product_handle" : tag,
+            "checkoutId" : checkout.data?.updateShippingLine?.checkout?.id ?? "",
+            "type" : "apple_pay",
+            "test": isTestMode ?? false
+        ]
         
-        // Get store
-        Alamofire.request(URL(string: urlString)!, headers: headers).responseStores { response in
-            if let store = response.result.value {
-                // Start checkout from gathered shop
-                // Configure Mobile Buy client
-                let client = Graph.Client(
-                    shopDomain: (store.first?.salesStore?.domain) ?? "",
-                    apiKey:     (store.first?.salesStore?.shopifyAPIKey) ?? ""
-                )
-                
-                let checkoutID = GraphQL.ID(rawValue: checkout.data?.checkoutCreate?.checkout?.id ?? "")
-                
-                let shippingEmail = payment.shippingContact?.emailAddress ?? ""
-                
-                // Update e-mail address
-                let mutation = Storefront.buildMutation { $0
-                    .checkoutEmailUpdateV2(checkoutId: checkoutID, email: shippingEmail) { $0
-                        .checkout { $0
-                            .id()
-                        }
-                        .checkoutUserErrors { $0
-                            .field()
-                            .message()
-                        }
-                    }
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responsePaymentResponse { response in
+            if let paymentResponse = response.result.value {
+                if paymentResponse.status == "success" {
+                    completionHandler(true, nil, paymentResponse.intent)
+                    return
                 }
-                
-                let task = client.mutateGraphWith(mutation) { result, error in
-                    guard error == nil else {
-                        // handle request error
-                        completionHandler(false, error, nil, nil, nil)
-                        return
-                    }
-
-                    guard result?.checkoutEmailUpdateV2?.checkoutUserErrors == nil || result?.checkoutEmailUpdateV2?.checkoutUserErrors.count == 0  else {
-                        // handle any user error
-                        completionHandler(false, nil, result?.checkoutEmailUpdateV2?.checkoutUserErrors, nil, nil)
-                        return
-                    }
-
-                    // Success
-                    // Update shipping address
-                    let shippingStreet = payment.shippingContact?.postalAddress?.street ?? ""
-                    var shippingSubLocality = ""
-                    var shippingSubAdministrativeArea = ""
-                    if #available(iOS 10.3, *) {
-                        shippingSubLocality = payment.shippingContact?.postalAddress?.subLocality ?? ""
-                        shippingSubAdministrativeArea = payment.shippingContact?.postalAddress?.subAdministrativeArea ?? ""
-                    }
-                    else {
-                        // Fallback on earlier versions
-                    }
-                           
-                    let shippingAddress = Storefront.MailingAddressInput.create(
-                        address1:  .value(shippingStreet + shippingSubLocality + shippingSubAdministrativeArea),
-                               //address2:  .value("Suite 400"),
-                        city:      .value(payment.shippingContact?.postalAddress?.city ?? ""),
-                        country:   .value(payment.shippingContact?.postalAddress?.country ?? ""),
-                        firstName: .value(payment.shippingContact?.name?.givenName ?? ""),
-                        lastName:  .value(payment.shippingContact?.name?.familyName ?? ""),
-                        phone:     .value(payment.shippingContact?.phoneNumber?.stringValue ?? ""),
-                        province:  .value(payment.shippingContact?.postalAddress?.state ?? ""),
-                        zip:       .value(payment.shippingContact?.postalAddress?.postalCode ?? "")
-                    )
-                    
-                    let mutation = Storefront.buildMutation { $0
-                        .checkoutShippingAddressUpdateV2(shippingAddress: shippingAddress, checkoutId: checkoutID) { $0
-                            .checkout { $0
-                                .id()
-                            }
-                            .checkoutUserErrors { $0
-                                .field()
-                                .message()
-                            }
-                        }
-                    }
-
-                    let task = client.mutateGraphWith(mutation) { result, error in
-                        guard error == nil else {
-                            // handle request error
-                            completionHandler(false, error, nil, nil, nil)
-                            return
-                        }
-
-                        guard result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors == nil || result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors.count == 0  else {
-                            // handle any user error
-                            completionHandler(false, nil, result?.checkoutShippingAddressUpdateV2?.checkoutUserErrors, nil, nil)
-                            return
-                        }
-                        
-                        // Success
-                        // Update shipping line
-                        let shippingRateHandle = payment.shippingMethod?.identifier ?? ""
-                        let mutation = Storefront.buildMutation { $0
-                            .checkoutShippingLineUpdate(checkoutId: checkoutID, shippingRateHandle: shippingRateHandle) { $0
-                                .checkout { $0
-                                    .id()
-                                }
-                                .checkoutUserErrors { $0
-                                    .field()
-                                    .message()
-                                }
-                            }
-                        }
-                        
-                        let task = client.mutateGraphWith(mutation) { result, error in
-                            guard error == nil else {
-                                // handle request error
-                                completionHandler(false, error, nil, nil, nil)
-                                return
-                            }
-
-                            guard result?.checkoutShippingLineUpdate?.checkoutUserErrors == nil || result?.checkoutShippingLineUpdate?.checkoutUserErrors.count == 0  else {
-                                // handle any user error
-                                completionHandler(false, nil, result?.checkoutShippingLineUpdate?.checkoutUserErrors, nil, nil)
-                                return
-                            }
-
-                            // Success
-                            // Checkout with mobile buy using Apple Payment
-                            let billingStreet = payment.billingContact?.postalAddress?.street ?? ""
-                            var billingSubLocality = ""
-                            var billingSubAdministrativeArea = ""
-                            if #available(iOS 10.3, *) {
-                                billingSubLocality = payment.billingContact?.postalAddress?.subLocality ?? ""
-                                billingSubAdministrativeArea = payment.billingContact?.postalAddress?.subAdministrativeArea ?? ""
-                            } else {
-                                // Fallback on earlier versions
-                            }
-                            
-                            let billingAddress = Storefront.MailingAddressInput.create(
-                                address1:  .value(billingStreet + billingSubLocality + billingSubAdministrativeArea),
-                                //address2:  .value("Suite 400"),
-                                city:      .value(payment.billingContact?.postalAddress?.city ?? ""),
-                                country:   .value(payment.billingContact?.postalAddress?.country ?? ""),
-                                firstName: .value(payment.billingContact?.name?.givenName ?? ""),
-                                lastName:  .value(payment.billingContact?.name?.familyName ?? ""),
-                                phone:     .value(payment.billingContact?.phoneNumber?.stringValue ?? ""),
-                                province:  .value(payment.billingContact?.postalAddress?.state ?? ""),
-                                zip:       .value(payment.billingContact?.postalAddress?.postalCode ?? "")
-                            )
-                            
-                            let currencyCode = Storefront.CurrencyCode.usd
-                            
-                            let paymentAmount = Storefront.MoneyInput.create(amount: amount as Decimal, currencyCode: currencyCode)
-                            
-                            let payment = Storefront.TokenizedPaymentInputV2.create(
-                                paymentAmount:  paymentAmount,
-                                idempotencyKey: payment.token.transactionIdentifier,
-                                billingAddress: billingAddress,
-                                type:           "apple_pay",
-                                paymentData:    String(data: payment.token.paymentData, encoding: .utf8)!
-                            )
-
-                            let mutation = Storefront.buildMutation { $0
-                                .checkoutCompleteWithTokenizedPaymentV2(checkoutId: checkoutID, payment: payment) { $0
-                                    .payment { $0
-                                        .id()
-                                        .ready()
-                                    }
-                                    .checkout { $0
-                                        .id()
-                                        .ready()
-                                    }
-                                    .checkoutUserErrors { $0
-                                        .field()
-                                        .message()
-                                    }
-                                }
-                            }
-
-                            let task = client.mutateGraphWith(mutation) { result, error in
-                                guard error == nil else {
-                                    // handle request error
-                                    completionHandler(false, error, nil, nil, nil)
-                                    return
-                                }
-
-                                guard result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors == nil || result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors.count == 0  else {
-                                    // handle any user error
-                                    completionHandler(false, nil, result?.checkoutCompleteWithTokenizedPaymentV2?.checkoutUserErrors, nil, nil)
-                                    return
-                                }
-
-                                completionHandler(true, nil, nil, result?.checkoutCompleteWithTokenizedPaymentV2?.checkout, result?.checkoutCompleteWithTokenizedPaymentV2?.payment)
-                            }
-                            task.resume()
-                        }
-                        task.resume()
-                    }
-                    task.resume()
+                if paymentResponse.status == "error" {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : paymentResponse.message ?? "Unknown error"])
+                    completionHandler(false, error, nil)
+                    return
                 }
-                task.resume()
+                completionHandler(false, nil, nil)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, nil, nil)
             }
         }
+    }
+    
+    // Check payment status
+    public func paymentStatus(checkout: CheckoutResponse, completionHandler: @escaping (Bool, Error?, PaymentStatus?) -> Void) {
+        
+        let urlString = apiUrl+"products/paymentstatus"
+        let parameters: [String: Any] = [
+            "checkoutId" : checkout.data?.updateShippingLine?.checkout?.id ?? "",
+        ]
+        
+        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responsePaymentStatus { response in
+            if let paymentStatus = response.result.value {
+                if paymentStatus.status == "success" {
+                    completionHandler(true, nil, paymentStatus)
+                    return
+                }
+                if paymentStatus.status == "error" {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : paymentStatus.message])
+                    
+                    completionHandler(false, error, nil)
+                    return
+                }
+                completionHandler(false, nil, nil)
+            }
+            else if let error = response.result.error as? URLError {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, nil, nil)
+            }
+        }
+    }
+    
+    // MARK: ViewController presentation
+    
+    // Create product View
+    func productViewForProduct(product: Product, tag: String, playerID: String?) -> ProductViewController {
+        let productViewController = ProductViewController()
+        productViewController.product = product
+        productViewController.tag = tag
+        productViewController.playerID = playerID
+        return productViewController
+    }
+    
+    // Present product View
+    func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
+        productViewController.modalPresentationStyle = presentationStyle
+        presenter.present(productViewController, animated: true, completion: nil)
     }
     
     // Buy product-variant with Apple Pay
@@ -535,24 +443,8 @@ public class Monetizr {
         completionHandler(true, nil)
     }
     
-    // Track app version
-    public func trackAppVersion() {
-        let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-        let versionOfLastRun = UserDefaults.standard.object(forKey: "MonetizrAppVersionOfLastRun") as? String
-        if versionOfLastRun == nil {
-            // First start after installing the app
-            self.installCreate(deviceIdentifier: deviceIdentifier(), completionHandler: {_,_,_ in })
-        } else if versionOfLastRun != currentVersion {
-            // App was updated since last run
-            self.updateCreate(deviceIdentifier: deviceIdentifier(), bundleVersion: currentVersion!, completionHandler: {_,_,_ in })
-        } else {
-            // nothing changed
-        }
-        UserDefaults.standard.set(currentVersion, forKey: "MonetizrAppVersionOfLastRun")
-        UserDefaults.standard.synchronize()
-    }
+    // MARK: Telemetric
     
-    /* Metrics section */
     // Create a new entry for device data
     public func devicedataCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         let data = deviceData()
