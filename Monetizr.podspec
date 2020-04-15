@@ -14,7 +14,7 @@ Monetizr is a turn-key platform for game developers enabling to sell or give-awa
  
   s.swift_version = "5.0"
   s.ios.deployment_target = '10.0'
-  s.source_files = 'Monetizr-SDK/*'
+  s.source_files = ['Monetizr-SDK/*.{swift}', 'Monetizr-SDK/**/*.{swift}']
   s.resources = ['Monetizr-SDK/*.lproj', 'Monetizr-SDK/*.json', 'Monetizr-SDK/Assets/*']
 
   s.framework = "UIKit"
