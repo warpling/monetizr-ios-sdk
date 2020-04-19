@@ -762,22 +762,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             }))
             self.present(alert, animated: true, completion: nil)
         }
-    
-        /*
-        // Show confiramtion alert
-        guard paymentStatus != nil else {
-            return
-        }
-        
-        if paymentStatus?.paid ?? false {
-            let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
-            alert.view.tintColor = UIColor(hex: 0xE0093B)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
-                  // Switch if needed handle buttons
-            }))
-            self.present(alert, animated: true, completion: nil)
-        }
-        */
     }
     
     // Claim finished
@@ -816,8 +800,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         return min(max(value, minimum), maximum)
     }
     
-    // Slideshow fullscreen
-    @objc func slideShowTap() { // https://github.com/zvonicek/ImageSlideshow/issues/366
+    // Slideshow fullscreen - not implemented
+    @objc func slideShowTap() {
         
         
         if Monetizr.shared.clickCountInSession < 1 {
