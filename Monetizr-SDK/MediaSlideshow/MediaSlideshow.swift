@@ -152,7 +152,7 @@ open class MediaSlideshow: UIView {
     open fileprivate(set) var scrollViewPage: Int = 0
 
     // Input Sources loaded to slideshow
-    open fileprivate(set) var media = [InputSource]()
+    open fileprivate(set) var media = [String]()
 
     // Image Slideshow Items loaded to slideshow
     open fileprivate(set) var slideshowItems = [MediaSlideshowItem]()
@@ -211,7 +211,7 @@ open class MediaSlideshow: UIView {
     }
 
     fileprivate var slideshowTimer: Timer?
-    fileprivate var scrollViewMedia = [InputSource]()
+    fileprivate var scrollViewMedia = [String]()
     fileprivate var isAnimating: Bool = false
     
     private var primaryVisiblePage: Int {
@@ -319,8 +319,9 @@ open class MediaSlideshow: UIView {
         slideshowItems = []
 
         var i = 0
-        for image in scrollViewMedia {
-            let item = MediaSlideshowItem(image: image, zoomEnabled: zoomEnabled, activityIndicator: activityIndicator?.create(), maximumScale: maximumScale)
+        for url in scrollViewMedia {
+            let source = AlamofireSource(urlString: url) // test purposes
+            let item = MediaSlideshowItem(image: source!, zoomEnabled: zoomEnabled, activityIndicator: activityIndicator?.create(), maximumScale: maximumScale)
             item.imageView.contentMode = contentScaleMode
             slideshowItems.append(item)
             scrollView.addSubview(item)
@@ -362,13 +363,13 @@ open class MediaSlideshow: UIView {
      Set image inputs into the image slideshow
      - parameter inputs: Array of InputSource instances.
      */
-    open func setMediaInputs(_ inputs: [InputSource]) {
+    open func setMediaInputs(_ inputs: [String]) {
         media = inputs
         pageIndicator?.numberOfPages = inputs.count
 
         // in circular mode we add dummy first and last image to enable smooth scrolling
         if circular && media.count > 1 {
-            var scMedia = [InputSource]()
+            var scMedia = [String]()
 
             if let last = media.last {
                 scMedia.append(last)

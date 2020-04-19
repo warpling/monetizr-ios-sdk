@@ -22,7 +22,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var selectedVariant: PurpleNode?
     var variantCount = 0
     var variants: [VariantsEdge] = []
-    var mediaLinks: NSMutableArray = []
+    var mediaLinks: [String] = []
     let dateOpened: Date = Date()
     var interaction: Bool = false
     
@@ -475,7 +475,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         if images != nil {
             for image in images! {
                 let link = image.node?.transformedSrc
-                mediaLinks.add(link!)
+                mediaLinks.append(link!)
             }
         }
         
@@ -547,17 +547,23 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
         
         // Load images in carousel
-        let imageSources = NSMutableArray()
+        // let imageSources = NSMutableArray()
         if let selctedVariantImageLinkUrl = selectedVariant?.image?.transformedSrc {
-            mediaLinks.remove(selctedVariantImageLinkUrl)
-            mediaLinks.insert(selctedVariantImageLinkUrl, at: 0)
+            if let index = mediaLinks.firstIndex(of: selctedVariantImageLinkUrl) {
+                mediaLinks.remove(at: index)
+                mediaLinks.insert(selctedVariantImageLinkUrl, at: 0)
+            }
         }
+        
+        /*
         for url in mediaLinks {
             imageSources.add(AlamofireSource(urlString: url as! String)!)
         }
+         */
         slideShow.activityIndicator = DefaultActivityIndicator()
         slideShow.preload = .fixed(offset: 1)
-        slideShow.setMediaInputs(imageSources as! [InputSource])
+        slideShow.setMediaInputs(mediaLinks)
+        
     }
     
     func showOptionsSelector() {
