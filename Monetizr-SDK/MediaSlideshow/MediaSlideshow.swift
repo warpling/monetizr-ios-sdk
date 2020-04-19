@@ -34,8 +34,8 @@ public protocol MediaSlideshowDelegate: class {
 /*
     Used to represent position of the Page Control
     - hidden: Page Control is hidden
-    - insideScrollView: Page Control is inside image slideshow
-    - underScrollView: Page Control is under image slideshow
+    - insideScrollView: Page Control is inside slideshow
+    - underScrollView: Page Control is under slideshow
     - custom: Custom vertical padding, relative to "insideScrollView" position
  */
 public enum PageControlPosition {
@@ -45,7 +45,7 @@ public enum PageControlPosition {
     case custom(padding: CGFloat)
 }
 
-// Used to represent image preload strategy
+// Used to represent media preload strategy
 //
 // - fixed: preload only fixed number of images before and after the current image
 // - all: preload all images in the slideshow
@@ -54,7 +54,7 @@ public enum ImagePreload {
     case all
 }
 
-// Main view containing the Image Slideshow
+// Main view containing the Slideshow
 @objcMembers
 open class MediaSlideshow: UIView {
 
@@ -70,7 +70,7 @@ open class MediaSlideshow: UIView {
         fatalError("pageIndicator is not an instance of UIPageControl")
     }
 
-    // Activity indicator shown when loading image
+    // Activity indicator shown when loading
     open var activityIndicator: ActivityIndicatorFactory? {
         didSet {
             reloadScrollView()
@@ -127,7 +127,7 @@ open class MediaSlideshow: UIView {
         }
     }
 
-    // Delegate called on image slideshow state change
+    // Delegate called on slideshow state change
     open weak var delegate: MediaSlideshowDelegate?
 
     // Called on each currentPage change
@@ -140,7 +140,7 @@ open class MediaSlideshow: UIView {
     open var didEndDecelerating: (() -> ())?
 
     // Currenlty displayed slideshow item
-    open var currentSlideshowItem: ImageSlideshowItem? {
+    open var currentSlideshowItem: MediaSlideshowItem? {
         if slideshowItems.count > scrollViewPage {
             return slideshowItems[scrollViewPage]
         } else {
@@ -152,18 +152,18 @@ open class MediaSlideshow: UIView {
     open fileprivate(set) var scrollViewPage: Int = 0
 
     // Input Sources loaded to slideshow
-    open fileprivate(set) var images = [InputSource]()
+    open fileprivate(set) var media = [InputSource]()
 
     // Image Slideshow Items loaded to slideshow
-    open fileprivate(set) var slideshowItems = [ImageSlideshowItem]()
+    open fileprivate(set) var slideshowItems = [MediaSlideshowItem]()
 
     // MARK: - Preferences
 
     // Enables/disables infinite scrolling between images
     open var circular = true {
         didSet {
-            if images.count > 0 {
-                setImageInputs(images)
+            if media.count > 0 {
+                setMediaInputs(media)
             }
         }
     }
@@ -211,7 +211,7 @@ open class MediaSlideshow: UIView {
     }
 
     fileprivate var slideshowTimer: Timer?
-    fileprivate var scrollViewImages = [InputSource]()
+    fileprivate var scrollViewMedia = [InputSource]()
     fileprivate var isAnimating: Bool = false
     
     private var primaryVisiblePage: Int {
@@ -280,7 +280,7 @@ open class MediaSlideshow: UIView {
 
     open func layoutPageControl() {
         if let pageIndicatorView = pageIndicator?.view {
-            pageIndicatorView.isHidden = images.count < 2
+            pageIndicatorView.isHidden = media.count < 2
 
             var edgeInsets: UIEdgeInsets = UIEdgeInsets.zero
             if #available(iOS 11.0, *) {
@@ -298,7 +298,7 @@ open class MediaSlideshow: UIView {
         let scrollViewBottomPadding = pageIndicatorViewSize.flatMap { pageIndicatorPosition.underPadding(for: $0) } ?? 0
 
         scrollView.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height - scrollViewBottomPadding)
-        scrollView.contentSize = CGSize(width: scrollView.frame.size.width * CGFloat(scrollViewImages.count), height: scrollView.frame.size.height)
+        scrollView.contentSize = CGSize(width: scrollView.frame.size.width * CGFloat(scrollViewMedia.count), height: scrollView.frame.size.height)
 
         for (index, view) in slideshowItems.enumerated() {
             if !view.zoomInInitially {
@@ -319,15 +319,15 @@ open class MediaSlideshow: UIView {
         slideshowItems = []
 
         var i = 0
-        for image in scrollViewImages {
-            let item = ImageSlideshowItem(image: image, zoomEnabled: zoomEnabled, activityIndicator: activityIndicator?.create(), maximumScale: maximumScale)
+        for image in scrollViewMedia {
+            let item = MediaSlideshowItem(image: image, zoomEnabled: zoomEnabled, activityIndicator: activityIndicator?.create(), maximumScale: maximumScale)
             item.imageView.contentMode = contentScaleMode
             slideshowItems.append(item)
             scrollView.addSubview(item)
             i += 1
         }
 
-        if circular && (scrollViewImages.count > 1) {
+        if circular && (scrollViewMedia.count > 1) {
             scrollViewPage = 1
             scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.size.width, y: 0, width: scrollView.frame.size.width, height: scrollView.frame.size.height), animated: false)
         } else {
@@ -362,25 +362,25 @@ open class MediaSlideshow: UIView {
      Set image inputs into the image slideshow
      - parameter inputs: Array of InputSource instances.
      */
-    open func setImageInputs(_ inputs: [InputSource]) {
-        images = inputs
+    open func setMediaInputs(_ inputs: [InputSource]) {
+        media = inputs
         pageIndicator?.numberOfPages = inputs.count
 
         // in circular mode we add dummy first and last image to enable smooth scrolling
-        if circular && images.count > 1 {
-            var scImages = [InputSource]()
+        if circular && media.count > 1 {
+            var scMedia = [InputSource]()
 
-            if let last = images.last {
-                scImages.append(last)
+            if let last = media.last {
+                scMedia.append(last)
             }
-            scImages += images
-            if let first = images.first {
-                scImages.append(first)
+            scMedia += media
+            if let first = media.first {
+                scMedia.append(first)
             }
 
-            scrollViewImages = scImages
+            scrollViewMedia = scMedia
         } else {
-            scrollViewImages = images
+            scrollViewMedia = media
         }
 
         reloadScrollView()
@@ -398,7 +398,7 @@ open class MediaSlideshow: UIView {
      */
     open func setCurrentPage(_ newPage: Int, animated: Bool) {
         var pageOffset = newPage
-        if circular && (scrollViewImages.count > 1) {
+        if circular && (scrollViewMedia.count > 1) {
             pageOffset += 1
         }
 
@@ -411,7 +411,7 @@ open class MediaSlideshow: UIView {
      - parameter animated: true if animate the change
      */
     open func setScrollViewPage(_ newScrollViewPage: Int, animated: Bool) {
-        if scrollViewPage < scrollViewImages.count {
+        if scrollViewPage < scrollViewMedia.count {
             scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.size.width * CGFloat(newScrollViewPage), y: 0, width: scrollView.frame.size.width, height: scrollView.frame.size.height), animated: animated)
             setCurrentPageForScrollViewPage(newScrollViewPage)
             if animated {
@@ -421,7 +421,7 @@ open class MediaSlideshow: UIView {
     }
 
     fileprivate func setTimerIfNeeded() {
-        if slideshowInterval > 0 && scrollViewImages.count > 1 && slideshowTimer == nil {
+        if slideshowInterval > 0 && scrollViewMedia.count > 1 && slideshowTimer == nil {
             slideshowTimer = Timer.scheduledTimer(timeInterval: slideshowInterval, target: self, selector: #selector(MediaSlideshow.slideshowTick(_:)), userInfo: nil, repeats: true)
         }
     }
@@ -430,7 +430,7 @@ open class MediaSlideshow: UIView {
         let page = scrollView.frame.size.width > 0 ? Int(scrollView.contentOffset.x / scrollView.frame.size.width) : 0
         var nextPage = page + 1
 
-        if !circular && page == scrollViewImages.count - 1 {
+        if !circular && page == scrollViewMedia.count - 1 {
             nextPage = 0
         }
 
@@ -456,8 +456,8 @@ open class MediaSlideshow: UIView {
         if circular {
             if page == 0 {
                 // first page contains the last image
-                return Int(images.count) - 1
-            } else if page == scrollViewImages.count - 1 {
+                return Int(media.count) - 1
+            } else if page == scrollViewMedia.count - 1 {
                 // last page contains the first image
                 return 0
             } else {
@@ -503,7 +503,7 @@ open class MediaSlideshow: UIView {
      - Parameter animated: true if animate the change
      */
     open func nextPage(animated: Bool) {
-        if !circular && currentPage == images.count - 1 {
+        if !circular && currentPage == media.count - 1 {
             return
         }
         if isAnimating {
@@ -526,7 +526,7 @@ open class MediaSlideshow: UIView {
             return
         }
 
-        let newPage = scrollViewPage > 0 ? scrollViewPage - 1 : scrollViewImages.count - 3
+        let newPage = scrollViewPage > 0 ? scrollViewPage - 1 : scrollViewMedia.count - 3
         setScrollViewPage(newPage, animated: animated)
         restartTimer()
     }
@@ -547,10 +547,10 @@ extension MediaSlideshow: UIScrollViewDelegate {
     }
 
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if circular && (scrollViewImages.count > 1) {
-            let regularContentOffset = scrollView.frame.size.width * CGFloat(images.count)
+        if circular && (scrollViewMedia.count > 1) {
+            let regularContentOffset = scrollView.frame.size.width * CGFloat(media.count)
 
-            if scrollView.contentOffset.x >= scrollView.frame.size.width * CGFloat(images.count + 1) {
+            if scrollView.contentOffset.x >= scrollView.frame.size.width * CGFloat(media.count + 1) {
                 scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x - regularContentOffset, y: 0)
             } else if scrollView.contentOffset.x <= 0 {
                 scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x + regularContentOffset, y: 0)

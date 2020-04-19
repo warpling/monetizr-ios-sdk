@@ -9,7 +9,7 @@ import UIKit
 
 // Used to wrap a single slideshow item and allow zooming on it
 @objcMembers
-open class ImageSlideshowItem: UIScrollView, UIScrollViewDelegate {
+open class MediaSlideshowItem: UIScrollView, UIScrollViewDelegate {
 
     // Image view to hold the image
     public let imageView = UIImageView()
@@ -90,7 +90,7 @@ open class ImageSlideshowItem: UIScrollView, UIScrollViewDelegate {
         }
 
         // tap gesture recognizer
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ImageSlideshowItem.tapZoom))
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(MediaSlideshowItem.tapZoom))
         tapRecognizer.numberOfTapsRequired = 2
         imageViewWrapper.addGestureRecognizer(tapRecognizer)
         gestureRecognizer = tapRecognizer
