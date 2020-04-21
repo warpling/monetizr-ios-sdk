@@ -1,10 +1,10 @@
 //
 //  MediaSlideshow.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
-//  Created by Armands Avotins on 15/04/2020.
-//
-//  Adopted form ImageSlideshow Created by Petr Zvoníček on 30.07.15.
+//  Adopted by Armands Avotins on 15/04/2020
+//  form
+//  ImageSlideshow Created by Petr Zvoníček on 30.07.15.
 //
 //
 

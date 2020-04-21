@@ -38,6 +38,7 @@
 		28AE865B22C6D279005F2D2D /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865222C6D279005F2D2D /* Product.swift */; };
 		28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865322C6D279005F2D2D /* CheckoutResponse.swift */; };
 		28AE865D22C6D279005F2D2D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865422C6D279005F2D2D /* Device.swift */; };
+		28D6A5BB244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */; };
 		28E5BB63241AC94B00529823 /* AddressInputLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E5BB62241AC94B00529823 /* AddressInputLabel.swift */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
@@ -112,6 +113,7 @@
 		28AE865222C6D279005F2D2D /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		28AE865322C6D279005F2D2D /* CheckoutResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutResponse.swift; sourceTree = "<group>"; };
 		28AE865422C6D279005F2D2D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenSlideshowViewController.swift; sourceTree = "<group>"; };
 		28E5BB62241AC94B00529823 /* AddressInputLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInputLabel.swift; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				285AFAA82447955E0038B8D5 /* SwiftSupport.swift */,
 				285AFAAF244795610038B8D5 /* UIImage+AspectFit.swift */,
 				285AFAA72447955E0038B8D5 /* UIImageView+Tools.swift */,
+				28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */,
 			);
 			path = MediaSlideshow;
 			sourceTree = "<group>";
@@ -428,6 +431,7 @@
 				285AFAB1244795610038B8D5 /* UIImageView+Tools.swift in Sources */,
 				28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */,
 				285AFAB9244795610038B8D5 /* UIImage+AspectFit.swift in Sources */,
+				28D6A5BB244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift in Sources */,
 				285AFAB2244795610038B8D5 /* SwiftSupport.swift in Sources */,
 				28E5BB63241AC94B00529823 /* AddressInputLabel.swift in Sources */,
 				28FE13892430095A00A37BA9 /* PaymentStatus.swift in Sources */,

@@ -1,6 +1,6 @@
 //
 //  ActivityIndicatorPresenter.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
 //  Created by Armands Avotins on 06/05/2019.
 //  Copyright © 2019 Monetizr. All rights reserved.
