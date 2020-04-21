@@ -39,6 +39,9 @@
 		28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865322C6D279005F2D2D /* CheckoutResponse.swift */; };
 		28AE865D22C6D279005F2D2D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865422C6D279005F2D2D /* Device.swift */; };
 		28D6A5BB244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */; };
+		28D6A5BD244F8E7B00FEDE30 /* ZoomAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6A5BC244F8E7B00FEDE30 /* ZoomAnimatedTransitioning.swift */; };
+		28D6A5C0244F939F00FEDE30 /* ic_cross_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28D6A5BE244F939E00FEDE30 /* ic_cross_white@2x.png */; };
+		28D6A5C1244F939F00FEDE30 /* ic_cross_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28D6A5BF244F939F00FEDE30 /* ic_cross_white@3x.png */; };
 		28E5BB63241AC94B00529823 /* AddressInputLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E5BB62241AC94B00529823 /* AddressInputLabel.swift */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
@@ -114,6 +117,9 @@
 		28AE865322C6D279005F2D2D /* CheckoutResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutResponse.swift; sourceTree = "<group>"; };
 		28AE865422C6D279005F2D2D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenSlideshowViewController.swift; sourceTree = "<group>"; };
+		28D6A5BC244F8E7B00FEDE30 /* ZoomAnimatedTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomAnimatedTransitioning.swift; sourceTree = "<group>"; };
+		28D6A5BE244F939E00FEDE30 /* ic_cross_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_cross_white@2x.png"; sourceTree = "<group>"; };
+		28D6A5BF244F939F00FEDE30 /* ic_cross_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_cross_white@3x.png"; sourceTree = "<group>"; };
 		28E5BB62241AC94B00529823 /* AddressInputLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInputLabel.swift; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -150,6 +156,8 @@
 				2810B1CB2358E85600E04235 /* expand-down-black@3x.png */,
 				2810B1C92358E85600E04235 /* expand-down-white@2x.png */,
 				2810B1CA2358E85600E04235 /* expand-down-white@3x.png */,
+				28D6A5BE244F939E00FEDE30 /* ic_cross_white@2x.png */,
+				28D6A5BF244F939F00FEDE30 /* ic_cross_white@3x.png */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -168,6 +176,7 @@
 				285AFAAF244795610038B8D5 /* UIImage+AspectFit.swift */,
 				285AFAA72447955E0038B8D5 /* UIImageView+Tools.swift */,
 				28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */,
+				28D6A5BC244F8E7B00FEDE30 /* ZoomAnimatedTransitioning.swift */,
 			);
 			path = MediaSlideshow;
 			sourceTree = "<group>";
@@ -344,6 +353,7 @@
 			files = (
 				2810B1CD2358E85600E04235 /* expand-down-white@2x.png in Resources */,
 				28E6B7992262109500E43C83 /* LaunchScreen.storyboard in Resources */,
+				28D6A5C1244F939F00FEDE30 /* ic_cross_white@3x.png in Resources */,
 				28AE865522C6D279005F2D2D /* Localizable.strings in Resources */,
 				28E6B7962262109500E43C83 /* Assets.xcassets in Resources */,
 				2810B1CE2358E85600E04235 /* expand-down-white@3x.png in Resources */,
@@ -351,6 +361,7 @@
 				2810B1CC2358E85600E04235 /* expand-down-black@2x.png in Resources */,
 				28E6B7942262109300E43C83 /* Main.storyboard in Resources */,
 				2866FC7E241C44610053CE4A /* country-data.json in Resources */,
+				28D6A5C0244F939F00FEDE30 /* ic_cross_white@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +435,7 @@
 				28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */,
 				28591EB023564B4200611353 /* Styles.swift in Sources */,
 				285AFAA52447533E0038B8D5 /* MediaSlideshow.swift in Sources */,
+				28D6A5BD244F8E7B00FEDE30 /* ZoomAnimatedTransitioning.swift in Sources */,
 				28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */,
 				28AE865B22C6D279005F2D2D /* Product.swift in Sources */,
 				28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */,

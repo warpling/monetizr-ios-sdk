@@ -801,8 +801,12 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Slideshow fullscreen - not implemented
     @objc func slideShowTap() {
-        
-        
+        if #available(iOS 13.0, *) {
+            slideShow.presentFullScreenController(from: self)
+        }
+        else {
+            slideShow.presentFullScreenController(from: self)
+        }
         if Monetizr.shared.clickCountInSession < 1 {
             Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }

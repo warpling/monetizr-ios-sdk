@@ -214,6 +214,9 @@ open class MediaSlideshow: UIView {
     fileprivate var scrollViewMedia = [String]()
     fileprivate var isAnimating: Bool = false
     
+    // Transitioning delegate to manage the transition to full screen controller
+    open fileprivate(set) var slideshowTransitioningDelegate: ZoomAnimatedTransitioningDelegate?
+    
     private var primaryVisiblePage: Int {
         return scrollView.frame.size.width > 0 ? Int(scrollView.contentOffset.x + scrollView.frame.size.width / 2) / Int(scrollView.frame.size.width) : 0
     }
@@ -531,6 +534,33 @@ open class MediaSlideshow: UIView {
         setScrollViewPage(newPage, animated: animated)
         restartTimer()
     }
+    
+    /**
+     Open full screen slideshow
+     - parameter controller: Controller to present the full screen controller from
+     - returns: FullScreenSlideshowViewController instance
+     */
+    @discardableResult
+    open func presentFullScreenController(from controller: UIViewController) -> FullScreenSlideshowViewController {
+        let fullscreen = FullScreenSlideshowViewController()
+        fullscreen.pageSelected = {[weak self] (page: Int) in
+            self?.setCurrentPage(page, animated: false)
+        }
+
+        fullscreen.initialPage = currentPage
+        fullscreen.inputs = media
+        slideshowTransitioningDelegate = ZoomAnimatedTransitioningDelegate(slideshowView: self, slideshowController: fullscreen)
+        fullscreen.transitioningDelegate = slideshowTransitioningDelegate
+        controller.present(fullscreen, animated: true, completion: nil)
+
+        return fullscreen
+    }
+
+    @objc private func pageControlValueChanged() {
+        if let currentPage = pageIndicator?.page {
+            setCurrentPage(currentPage, animated: true)
+        }
+    }
 }
 
 extension MediaSlideshow: UIScrollViewDelegate {
@@ -567,11 +597,5 @@ extension MediaSlideshow: UIScrollViewDelegate {
 
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         isAnimating = false
-    }
-    
-    @objc private func pageControlValueChanged() {
-        if let currentPage = pageIndicator?.page {
-            setCurrentPage(currentPage, animated: true)
-        }
     }
 }
