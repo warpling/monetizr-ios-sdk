@@ -547,7 +547,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
         
         // Load images in carousel
-        // let imageSources = NSMutableArray()
         if let selctedVariantImageLinkUrl = selectedVariant?.image?.transformedSrc {
             if let index = mediaLinks.firstIndex(of: selctedVariantImageLinkUrl) {
                 mediaLinks.remove(at: index)
@@ -555,15 +554,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             }
         }
         
-        /*
-        for url in mediaLinks {
-            imageSources.add(AlamofireSource(urlString: url as! String)!)
-        }
-         */
         slideShow.activityIndicator = DefaultActivityIndicator()
         slideShow.preload = .fixed(offset: 1)
         slideShow.setMediaInputs(mediaLinks)
-        
     }
     
     func showOptionsSelector() {
