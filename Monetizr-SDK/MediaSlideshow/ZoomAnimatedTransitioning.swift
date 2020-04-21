@@ -23,7 +23,7 @@ open class ZoomAnimatedTransitioningDelegate: NSObject, UIViewControllerTransiti
     fileprivate var interactionController: UIPercentDrivenInteractiveTransition?
 
     // Enables or disables swipe-to-dismiss interactive transition
-    open var slideToDismissEnabled: Bool = true
+    open var slideToDismissEnabled: Bool = false // ZoomOutAnimator should be fixed for iOS 13
 
     /*
         Init the transitioning delegate with a source ImageSlideshow
@@ -121,8 +121,9 @@ open class ZoomAnimatedTransitioningDelegate: NSObject, UIViewControllerTransiti
     }
 
     open func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return interactionController
+        return UIPercentDrivenInteractiveTransition()
     }
+    
 }
 
 extension ZoomAnimatedTransitioningDelegate: UIGestureRecognizerDelegate {
