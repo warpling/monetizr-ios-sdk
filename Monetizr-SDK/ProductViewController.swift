@@ -349,10 +349,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func configureCloseButton() {
-        // Close button
-        closeButton.closeProductButtonStyle()
+        // close button configuration
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.accessibilityLabel = NSLocalizedString("Close product", comment: "Close product")
-        closeButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        closeButton.setImage(UIImage(named: "ic_cross_white", in: Bundle(for: type(of: self)), compatibleWith: nil), for: UIControlState())
+        closeButton.addTarget(self, action: #selector(buttonAction), for: UIControlEvents.touchUpInside)
         self.view.addSubview(closeButton)
     }
     

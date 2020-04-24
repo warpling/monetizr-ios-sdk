@@ -73,6 +73,7 @@ open class FullScreenSlideshowViewController: UIViewController {
 
         // close button configuration
         closeButton.setImage(UIImage(named: "ic_cross_white", in: Bundle(for: type(of: self)), compatibleWith: nil), for: UIControlState())
+        closeButton.accessibilityLabel = NSLocalizedString("Close", comment: "Close")
         closeButton.addTarget(self, action: #selector(FullScreenSlideshowViewController.close), for: UIControlEvents.touchUpInside)
         view.addSubview(closeButton)
     }
