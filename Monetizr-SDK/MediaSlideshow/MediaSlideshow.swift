@@ -214,9 +214,6 @@ open class MediaSlideshow: UIView {
     fileprivate var scrollViewMedia = [String]()
     fileprivate var isAnimating: Bool = false
     
-    // Transitioning delegate to manage the transition to full screen controller
-    open fileprivate(set) var slideshowTransitioningDelegate: ZoomAnimatedTransitioningDelegate?
-    
     private var primaryVisiblePage: Int {
         return scrollView.frame.size.width > 0 ? Int(scrollView.contentOffset.x + scrollView.frame.size.width / 2) / Int(scrollView.frame.size.width) : 0
     }
@@ -535,7 +532,7 @@ open class MediaSlideshow: UIView {
         restartTimer()
     }
     
-    /**
+    /*
      Open full screen slideshow
      - parameter controller: Controller to present the full screen controller from
      - returns: FullScreenSlideshowViewController instance
@@ -549,8 +546,6 @@ open class MediaSlideshow: UIView {
 
         fullscreen.initialPage = currentPage
         fullscreen.inputs = media
-        slideshowTransitioningDelegate = ZoomAnimatedTransitioningDelegate(slideshowView: self, slideshowController: fullscreen)
-        fullscreen.transitioningDelegate = slideshowTransitioningDelegate
         controller.present(fullscreen, animated: true, completion: nil)
 
         return fullscreen
@@ -588,8 +583,6 @@ extension MediaSlideshow: UIScrollViewDelegate {
             }
         }
 
-        // Updates the page indicator as the user scrolls (#204). Not called when not dragging to prevent flickers
-        // when interacting with PageControl directly (#376).
         if scrollView.isDragging {
             pageIndicator?.page = currentPageForScrollViewPage(primaryVisiblePage)
         }

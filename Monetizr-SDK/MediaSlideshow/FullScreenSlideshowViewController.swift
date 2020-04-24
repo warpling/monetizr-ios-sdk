@@ -117,6 +117,6 @@ open class FullScreenSlideshowViewController: UIViewController {
             pageSelected(slideshow.currentPage)
         }
 
-        dismiss(animated: false, completion: nil) // animation should be fixed for iOS 13
+        dismiss(animated: true, completion: nil) // animation should be fixed for iOS 13
     }
 }
