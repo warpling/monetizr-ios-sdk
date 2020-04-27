@@ -15,6 +15,16 @@
 		2810B1CF2358E85600E04235 /* expand-down-black@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2810B1CB2358E85600E04235 /* expand-down-black@3x.png */; };
 		283F7E71242AB30100C919FF /* PaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283F7E70242AB30100C919FF /* PaymentResponse.swift */; };
 		28591EB023564B4200611353 /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28591EAF23564B4200611353 /* Styles.swift */; };
+		285AFAA52447533E0038B8D5 /* MediaSlideshow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAA42447533E0038B8D5 /* MediaSlideshow.swift */; };
+		285AFAB0244795610038B8D5 /* PageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAA62447955E0038B8D5 /* PageIndicator.swift */; };
+		285AFAB1244795610038B8D5 /* UIImageView+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAA72447955E0038B8D5 /* UIImageView+Tools.swift */; };
+		285AFAB2244795610038B8D5 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAA82447955E0038B8D5 /* SwiftSupport.swift */; };
+		285AFAB4244795610038B8D5 /* InputSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAAA2447955F0038B8D5 /* InputSource.swift */; };
+		285AFAB5244795610038B8D5 /* MediaSlideshowItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAAB2447955F0038B8D5 /* MediaSlideshowItem.swift */; };
+		285AFAB6244795610038B8D5 /* PageIndicatorPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAAC244795600038B8D5 /* PageIndicatorPosition.swift */; };
+		285AFAB7244795610038B8D5 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAAD244795600038B8D5 /* ActivityIndicator.swift */; };
+		285AFAB9244795610038B8D5 /* UIImage+AspectFit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFAAF244795610038B8D5 /* UIImage+AspectFit.swift */; };
+		285AFABB244797080038B8D5 /* AlamofireSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285AFABA244797080038B8D5 /* AlamofireSource.swift */; };
 		2866FC7E241C44610053CE4A /* country-data.json in Resources */ = {isa = PBXBuildFile; fileRef = 2866FC7D241C44610053CE4A /* country-data.json */; };
 		2866FC80241C46020053CE4A /* CountryCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2866FC7F241C46020053CE4A /* CountryCatalog.swift */; };
 		28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28A32D052337E7C7004F1A5E /* ProductDescriptionScrollView.swift */; };
@@ -28,6 +38,9 @@
 		28AE865B22C6D279005F2D2D /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865222C6D279005F2D2D /* Product.swift */; };
 		28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865322C6D279005F2D2D /* CheckoutResponse.swift */; };
 		28AE865D22C6D279005F2D2D /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AE865422C6D279005F2D2D /* Device.swift */; };
+		28D6A5BB244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */; };
+		28D6A5C0244F939F00FEDE30 /* ic_cross_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28D6A5BE244F939E00FEDE30 /* ic_cross_white@2x.png */; };
+		28D6A5C1244F939F00FEDE30 /* ic_cross_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28D6A5BF244F939F00FEDE30 /* ic_cross_white@3x.png */; };
 		28E5BB63241AC94B00529823 /* AddressInputLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E5BB62241AC94B00529823 /* AddressInputLabel.swift */; };
 		28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B78E2262109300E43C83 /* AppDelegate.swift */; };
 		28E6B7912262109300E43C83 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E6B7902262109300E43C83 /* ViewController.swift */; };
@@ -50,6 +63,16 @@
 		2810B1CB2358E85600E04235 /* expand-down-black@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expand-down-black@3x.png"; sourceTree = "<group>"; };
 		283F7E70242AB30100C919FF /* PaymentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
 		28591EAF23564B4200611353 /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
+		285AFAA42447533E0038B8D5 /* MediaSlideshow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSlideshow.swift; sourceTree = "<group>"; };
+		285AFAA62447955E0038B8D5 /* PageIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageIndicator.swift; sourceTree = "<group>"; };
+		285AFAA72447955E0038B8D5 /* UIImageView+Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Tools.swift"; sourceTree = "<group>"; };
+		285AFAA82447955E0038B8D5 /* SwiftSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSupport.swift; sourceTree = "<group>"; };
+		285AFAAA2447955F0038B8D5 /* InputSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputSource.swift; sourceTree = "<group>"; };
+		285AFAAB2447955F0038B8D5 /* MediaSlideshowItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaSlideshowItem.swift; sourceTree = "<group>"; };
+		285AFAAC244795600038B8D5 /* PageIndicatorPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageIndicatorPosition.swift; sourceTree = "<group>"; };
+		285AFAAD244795600038B8D5 /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		285AFAAF244795610038B8D5 /* UIImage+AspectFit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AspectFit.swift"; sourceTree = "<group>"; };
+		285AFABA244797080038B8D5 /* AlamofireSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireSource.swift; sourceTree = "<group>"; };
 		285F7F2B23A8D912007A79FD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		285F7F2C23A8D912007A79FD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		285F7F2D23A9407A007A79FD /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/Main.strings; sourceTree = "<group>"; };
@@ -92,6 +115,9 @@
 		28AE865222C6D279005F2D2D /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		28AE865322C6D279005F2D2D /* CheckoutResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutResponse.swift; sourceTree = "<group>"; };
 		28AE865422C6D279005F2D2D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenSlideshowViewController.swift; sourceTree = "<group>"; };
+		28D6A5BE244F939E00FEDE30 /* ic_cross_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_cross_white@2x.png"; sourceTree = "<group>"; };
+		28D6A5BF244F939F00FEDE30 /* ic_cross_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_cross_white@3x.png"; sourceTree = "<group>"; };
 		28E5BB62241AC94B00529823 /* AddressInputLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInputLabel.swift; sourceTree = "<group>"; };
 		28E6B78B2262109300E43C83 /* Monetizr-v3-sample-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Monetizr-v3-sample-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28E6B78E2262109300E43C83 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -128,13 +154,34 @@
 				2810B1CB2358E85600E04235 /* expand-down-black@3x.png */,
 				2810B1C92358E85600E04235 /* expand-down-white@2x.png */,
 				2810B1CA2358E85600E04235 /* expand-down-white@3x.png */,
+				28D6A5BE244F939E00FEDE30 /* ic_cross_white@2x.png */,
+				28D6A5BF244F939F00FEDE30 /* ic_cross_white@3x.png */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		285AFAA3244752690038B8D5 /* MediaSlideshow */ = {
+			isa = PBXGroup;
+			children = (
+				285AFABA244797080038B8D5 /* AlamofireSource.swift */,
+				285AFAA42447533E0038B8D5 /* MediaSlideshow.swift */,
+				285AFAAD244795600038B8D5 /* ActivityIndicator.swift */,
+				285AFAAB2447955F0038B8D5 /* MediaSlideshowItem.swift */,
+				285AFAAA2447955F0038B8D5 /* InputSource.swift */,
+				285AFAA62447955E0038B8D5 /* PageIndicator.swift */,
+				285AFAAC244795600038B8D5 /* PageIndicatorPosition.swift */,
+				285AFAA82447955E0038B8D5 /* SwiftSupport.swift */,
+				285AFAAF244795610038B8D5 /* UIImage+AspectFit.swift */,
+				285AFAA72447955E0038B8D5 /* UIImageView+Tools.swift */,
+				28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */,
+			);
+			path = MediaSlideshow;
 			sourceTree = "<group>";
 		};
 		28AE864A22C6D279005F2D2D /* Monetizr-SDK */ = {
 			isa = PBXGroup;
 			children = (
+				285AFAA3244752690038B8D5 /* MediaSlideshow */,
 				2847C68223422BCD004EE18B /* Assets */,
 				28AE864B22C6D279005F2D2D /* Localizable.strings */,
 				2866FC7D241C44610053CE4A /* country-data.json */,
@@ -303,6 +350,7 @@
 			files = (
 				2810B1CD2358E85600E04235 /* expand-down-white@2x.png in Resources */,
 				28E6B7992262109500E43C83 /* LaunchScreen.storyboard in Resources */,
+				28D6A5C1244F939F00FEDE30 /* ic_cross_white@3x.png in Resources */,
 				28AE865522C6D279005F2D2D /* Localizable.strings in Resources */,
 				28E6B7962262109500E43C83 /* Assets.xcassets in Resources */,
 				2810B1CE2358E85600E04235 /* expand-down-white@3x.png in Resources */,
@@ -310,6 +358,7 @@
 				2810B1CC2358E85600E04235 /* expand-down-black@2x.png in Resources */,
 				28E6B7942262109300E43C83 /* Main.storyboard in Resources */,
 				2866FC7E241C44610053CE4A /* country-data.json in Resources */,
+				28D6A5C0244F939F00FEDE30 /* ic_cross_white@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,23 +431,34 @@
 			files = (
 				28A32D062337E7C7004F1A5E /* ProductDescriptionScrollView.swift in Sources */,
 				28591EB023564B4200611353 /* Styles.swift in Sources */,
+				285AFAA52447533E0038B8D5 /* MediaSlideshow.swift in Sources */,
 				28AE865622C6D279005F2D2D /* ProductViewController.swift in Sources */,
 				28AE865B22C6D279005F2D2D /* Product.swift in Sources */,
 				28AE865922C6D279005F2D2D /* Monetizr.swift in Sources */,
 				28E7C0DE240C16BC00A6D9AE /* Claim.swift in Sources */,
+				285AFAB1244795610038B8D5 /* UIImageView+Tools.swift in Sources */,
 				28AE865C22C6D279005F2D2D /* CheckoutResponse.swift in Sources */,
+				285AFAB9244795610038B8D5 /* UIImage+AspectFit.swift in Sources */,
+				28D6A5BB244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift in Sources */,
+				285AFAB2244795610038B8D5 /* SwiftSupport.swift in Sources */,
 				28E5BB63241AC94B00529823 /* AddressInputLabel.swift in Sources */,
 				28FE13892430095A00A37BA9 /* PaymentStatus.swift in Sources */,
 				2800F2D72415083B00FF7A8A /* CheckoutAddress.swift in Sources */,
+				285AFABB244797080038B8D5 /* AlamofireSource.swift in Sources */,
+				285AFAB4244795610038B8D5 /* InputSource.swift in Sources */,
+				285AFAB6244795610038B8D5 /* PageIndicatorPosition.swift in Sources */,
 				28E6B7912262109300E43C83 /* ViewController.swift in Sources */,
 				28AE865722C6D279005F2D2D /* ActivityIndicatorPresenter.swift in Sources */,
 				28E6B78F2262109300E43C83 /* AppDelegate.swift in Sources */,
 				28AE865822C6D279005F2D2D /* VariantSelectionViewController.swift in Sources */,
 				28A32D082337FD22004F1A5E /* VariantSelectionHeaderView.swift in Sources */,
+				285AFAB0244795610038B8D5 /* PageIndicator.swift in Sources */,
 				2800F2D52412E28700FF7A8A /* UpdateCheckoutRequest.swift in Sources */,
 				28E7C0DC240C120C00A6D9AE /* ClaimItemViewController.swift in Sources */,
+				285AFAB7244795610038B8D5 /* ActivityIndicator.swift in Sources */,
 				283F7E71242AB30100C919FF /* PaymentResponse.swift in Sources */,
 				28AE865A22C6D279005F2D2D /* Extensions.swift in Sources */,
+				285AFAB5244795610038B8D5 /* MediaSlideshowItem.swift in Sources */,
 				28F1AAA5230B11D30039FF7E /* ApplePayViewController.swift in Sources */,
 				2866FC80241C46020053CE4A /* CountryCatalog.swift in Sources */,
 				28AE865D22C6D279005F2D2D /* Device.swift in Sources */,
@@ -588,7 +648,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2158;
+				CURRENT_PROJECT_VERSION = 2159;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -596,7 +656,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.5.1;
+				MARKETING_VERSION = 3.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -611,7 +671,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2158;
+				CURRENT_PROJECT_VERSION = 2159;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -619,7 +679,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.5.1;
+				MARKETING_VERSION = 3.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

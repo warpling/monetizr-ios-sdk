@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
 //  Created by Armands Avotins on 13/04/2019.
 //  Copyright © 2019 Monetizr. All rights reserved.
@@ -31,7 +31,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         tokenField.text = "4D2E54389EB489966658DDD83E2D1" //"3adca63cc172c5ae919e5a2529f4f2a8" //"4D2E54389EB489966658DDD83E2D1"
-        merchTagField.text = "free_t_shirt"
+        merchTagField.text = "Sample shirt"
         // Test tags - "free_t_shirt", "Sample pin", "Sample shirt", "blackbox_alt_socks",
         
         // Show device locale

@@ -1,6 +1,6 @@
 //
 //  Monetizr.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
 //  Created by Armands Avotins on 20/04/2019.
 //  Copyright © 2019 Monetizr. All rights reserved.
@@ -185,8 +185,8 @@ public class Monetizr {
         }
         urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
                 
-        Alamofire.request(URL(string: urlString)!, headers: headers).responseProduct { response in
-            if let retrievedProduct = response.result.value {
+        AF.request(URL(string: urlString)!, headers: headers).responseDecodable(of: Product.self) { response in
+            if let retrievedProduct = response.value {
                 if retrievedProduct.data?.productByHandle != nil {
                     if (presenter != nil) {
                         let product = retrievedProduct
@@ -203,11 +203,11 @@ public class Monetizr {
                     completionHandler(false, error, nil)
                 }
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -249,8 +249,8 @@ public class Monetizr {
             }
         }
  
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
-            if let responseCheckout = response.result.value {
+        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseDecodable(of: CheckoutResponse.self) { response in
+            if let responseCheckout = response.value {
                 if responseCheckout.data != nil {
                     if responseCheckout.data?.checkoutCreate?.checkoutUserErrors?.count ?? 0 < 1 {
                         completionHandler(true, nil, responseCheckout)
@@ -266,11 +266,11 @@ public class Monetizr {
                     completionHandler(false, error, nil)
                 }
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -279,8 +279,8 @@ public class Monetizr {
     public func updateCheckout(request: UpdateCheckoutRequest, completionHandler: @escaping (Bool, Error?, CheckoutResponse?) -> Void) {
         let urlString = apiUrl+"products/updatecheckout"
         let parameters = request.dictionaryRepresentation
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseCheckout { response in
-            if let responseCheckout = response.result.value {
+        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseDecodable(of: CheckoutResponse.self) { response in
+            if let responseCheckout = response.value {
                 if responseCheckout.data != nil {
                     if responseCheckout.data?.updateShippingLine?.checkoutUserErrors?.count ?? 0 < 1 {
                         completionHandler(true, nil, responseCheckout)
@@ -296,11 +296,11 @@ public class Monetizr {
                     completionHandler(false, error, nil)
                 }
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -313,8 +313,8 @@ public class Monetizr {
             "player_id" : player_id,
             "in_game_currency_amount" : price
         ]
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseClaim { response in
-            if let responseClaim = response.result.value {
+        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseDecodable(of: Claim.self) { response in
+            if let responseClaim = response.value {
                 if responseClaim.message != nil {
                     completionHandler(true, nil, responseClaim)
                 }
@@ -323,11 +323,11 @@ public class Monetizr {
                     completionHandler(false, error, nil)
                 }
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -343,8 +343,8 @@ public class Monetizr {
             "test": isTestMode ?? false
         ]
         
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responsePaymentResponse { response in
-            if let paymentResponse = response.result.value {
+        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseDecodable(of: PaymentResponse.self) { response in
+            if let paymentResponse = response.value {
                 if paymentResponse.status == "success" {
                     completionHandler(true, nil, paymentResponse.intent)
                     return
@@ -356,7 +356,7 @@ public class Monetizr {
                 }
                 completionHandler(false, nil, nil)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
@@ -373,8 +373,8 @@ public class Monetizr {
             "checkoutId" : checkout.data?.updateShippingLine?.checkout?.id ?? "",
         ]
         
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responsePaymentStatus { response in
-            if let paymentStatus = response.result.value {
+        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseDecodable(of: PaymentStatus.self) { response in
+            if let paymentStatus = response.value {
                 if paymentStatus.status == "success" {
                     completionHandler(true, nil, paymentStatus)
                     return
@@ -387,7 +387,7 @@ public class Monetizr {
                 }
                 completionHandler(false, nil, nil)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
@@ -449,16 +449,16 @@ public class Monetizr {
     public func devicedataCreate(completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
         let data = deviceData()
         let urlString = apiUrl+"telemetric/devicedata"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -471,16 +471,16 @@ public class Monetizr {
         data["trigger_tag"] = tag
         data["time_until_dismiss"] = duration
         let urlString = apiUrl+"telemetric/impressionvisible"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -490,16 +490,16 @@ public class Monetizr {
         var data: Dictionary<String, Any> = [:]
         data["trigger_tag"] = tag
         let urlString = apiUrl+"telemetric/clickreward"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -510,16 +510,16 @@ public class Monetizr {
         data["number_of_triggers"] = numberOfTriggers
         data["funnel_trigger_list"] = funnelTriggerList
         let urlString = apiUrl+"telemetric/design"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -529,16 +529,16 @@ public class Monetizr {
         var data: Dictionary<String, Any> = [:]
         data["trigger_tag"] = tag
         let urlString = apiUrl+"telemetric/dismiss"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -549,16 +549,16 @@ public class Monetizr {
         data["device_identifier"] = deviceIdentifier
         data["installed"] = true
         let urlString = apiUrl+"telemetric/install"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -569,16 +569,16 @@ public class Monetizr {
         data["device_identifier"] = deviceIdentifier
         data["bundle_version"] = bundleVersion
         let urlString = apiUrl+"telemetric/update"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -588,16 +588,16 @@ public class Monetizr {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_shown"] = sessionDuration
         let urlString = apiUrl+"telemetric/firstimpression"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -609,16 +609,16 @@ public class Monetizr {
         data["game_progress"] = gameProgress
         data["session_time"] = sessionDuration
         let urlString = apiUrl+"telemetric/playerbehaviour"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -633,16 +633,16 @@ public class Monetizr {
         data["country"] = country
         data["city"] = city
         let urlString = apiUrl+"telemetric/purchase"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -654,16 +654,16 @@ public class Monetizr {
         data["session_start"] = startDate
         data["session_end"] = endDate
         let urlString = apiUrl+"telemetric/session/session_end"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -674,16 +674,16 @@ public class Monetizr {
         data["device_identifier"] = deviceIdentifier
         data["session_start"] = startDate
         let urlString = apiUrl+"telemetric/session"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -698,16 +698,16 @@ public class Monetizr {
         data["difficulty_level_name"] = difficultyLevelName
         data["difficulty_estimation"] = difficultyEstimation
         let urlString = apiUrl+"telemetric/encounter"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -717,16 +717,16 @@ public class Monetizr {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_click"] = firstImpressionClick
         let urlString = apiUrl+"telemetric/firstimpressionclick"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -736,16 +736,16 @@ public class Monetizr {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_checkout"] = firstImpressionCheckout
         let urlString = apiUrl+"telemetric/firstimpressioncheckout"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }
@@ -755,16 +755,16 @@ public class Monetizr {
         var data: Dictionary<String, Any> = [:]
         data["first_impression_purchase"] = firstImpressionPurchase
         let urlString = apiUrl+"telemetric/firstimpressionpurchase"
-        Alamofire.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: data, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
-            if let value = response.result.value {
+            if let value = response.value {
                 completionHandler(true, nil, value)
             }
-            else if let error = response.result.error as? URLError {
+            else if let error = response.error {
                 completionHandler(false, error, nil)
             }
             else {
-                completionHandler(false, response.result.error!, nil)
+                completionHandler(false, response.error!, nil)
             }
         }
     }

@@ -1,6 +1,6 @@
 //
 //  ProductViewController.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
 //  Created by Armands Avotins on 20/04/2019.
 //  Copyright © 2019 Monetizr. All rights reserved.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import Alamofire
-import ImageSlideshow
+//import ImageSlideshow
 import PassKit
 import SafariServices
 
@@ -22,7 +22,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var selectedVariant: PurpleNode?
     var variantCount = 0
     var variants: [VariantsEdge] = []
-    var imageLinks: NSMutableArray = []
+    var mediaLinks: [String] = []
     let dateOpened: Date = Date()
     var interaction: Bool = false
     
@@ -38,7 +38,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     let titleLabel = UILabel()
     let descriptionSeparatorView = UIView()
     let descriptionTextView = UITextView()
-    let slideShow = ImageSlideshow()
+    let slideShow = MediaSlideshow()
     var optionsTapGesture = UITapGestureRecognizer()
     var optionsSelectorOverlayView = UIView()
     var optionsSelectorOverlayTapGesture = UITapGestureRecognizer()
@@ -349,10 +349,11 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func configureCloseButton() {
-        // Close button
-        closeButton.closeProductButtonStyle()
+        // close button configuration
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.accessibilityLabel = NSLocalizedString("Close product", comment: "Close product")
-        closeButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        closeButton.setImage(UIImage(named: "ic_cross_white", in: Bundle(for: type(of: self)), compatibleWith: nil), for: UIControlState())
+        closeButton.addTarget(self, action: #selector(buttonAction), for: UIControlEvents.touchUpInside)
         self.view.addSubview(closeButton)
     }
     
@@ -475,7 +476,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         if images != nil {
             for image in images! {
                 let link = image.node?.transformedSrc
-                imageLinks.add(link!)
+                mediaLinks.append(link!)
             }
         }
         
@@ -547,17 +548,16 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
         
         // Load images in carousel
-        let imageSources = NSMutableArray()
         if let selctedVariantImageLinkUrl = selectedVariant?.image?.transformedSrc {
-            imageLinks.remove(selctedVariantImageLinkUrl)
-            imageLinks.insert(selctedVariantImageLinkUrl, at: 0)
+            if let index = mediaLinks.firstIndex(of: selctedVariantImageLinkUrl) {
+                mediaLinks.remove(at: index)
+                mediaLinks.insert(selctedVariantImageLinkUrl, at: 0)
+            }
         }
-        for url in imageLinks {
-            imageSources.add(AlamofireSource(urlString: url as! String)!)
-        }
+        
         slideShow.activityIndicator = DefaultActivityIndicator()
         slideShow.preload = .fixed(offset: 1)
-        slideShow.setImageInputs(imageSources as! [InputSource])
+        slideShow.setMediaInputs(mediaLinks)
     }
     
     func showOptionsSelector() {
@@ -762,22 +762,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             }))
             self.present(alert, animated: true, completion: nil)
         }
-    
-        /*
-        // Show confiramtion alert
-        guard paymentStatus != nil else {
-            return
-        }
-        
-        if paymentStatus?.paid ?? false {
-            let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
-            alert.view.tintColor = UIColor(hex: 0xE0093B)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
-                  // Switch if needed handle buttons
-            }))
-            self.present(alert, animated: true, completion: nil)
-        }
-        */
     }
     
     // Claim finished
@@ -816,15 +800,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         return min(max(value, minimum), maximum)
     }
     
-    // Slideshow fullscreen
-    @objc func slideShowTap() { // https://github.com/zvonicek/ImageSlideshow/issues/366
-        if #available(iOS 13.0, *) {
-            // slideShow.presentFullScreenController(from: self)
-        }
-        else {
-            slideShow.presentFullScreenController(from: self)
-        }
-        
+    // Slideshow fullscreen - not implemented
+    @objc func slideShowTap() {
+        slideShow.presentFullScreenController(from: self)
         if Monetizr.shared.clickCountInSession < 1 {
             Monetizr.shared.firstimpressionclickCreate(firstImpressionClick: Monetizr.shared.sessionDurationMiliseconds(), completionHandler: { success, error, value in ()})
         }

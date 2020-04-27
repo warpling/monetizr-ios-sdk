@@ -1,6 +1,6 @@
 //
 //  VariantSelectionHeaderView.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
 //  Created by Armands Avotins on 22/09/2019.
 //  Copyright © 2019 Monetizr. All rights reserved.

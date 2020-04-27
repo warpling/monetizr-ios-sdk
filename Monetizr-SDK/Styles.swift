@@ -1,6 +1,6 @@
 //
 //  Styles.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
 //  Created by Armands Avotins on 15/10/2019.
 //  Copyright © 2019 Monetizr. All rights reserved.
@@ -105,26 +105,7 @@ extension UIStackView {
 
 extension UIButton {
     
-    // Styles
-    func closeProductButtonStyle() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .clear
-        self.setTitle("✕", for: .normal)
-        self.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: UIFont.Weight.light)
-        
-        if Monetizr.shared.chosenTheme == .black {
-            self.setTitleColor(.white, for: .normal)
-        }
-        else {
-            if #available(iOS 13.0, *) {
-                self.setTitleColor(.label, for: .normal)
-            } else {
-                // Fallback on earlier versions
-                self.setTitleColor(.black, for: .normal)
-            }
-        }
-    }
-    
+    // Styles    
     func checkoutProductButtonStyle(title: String? = nil) {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.setTitle(NSLocalizedString("Checkout", comment: "Checkout"), for: .normal)

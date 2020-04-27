@@ -1,6 +1,6 @@
 //
 //  CheckoutAddress.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
 //  Created by Armands Avotins on 08/03/2020.
 //  Copyright © 2020 Monetizr. All rights reserved.

@@ -1,15 +1,10 @@
 //
 //  CountryCatalog.swift
-//  Monetizr-v3-sample-app
+//  Monetizr-v3
 //
 //  Created by Armands Avotins on 14/03/2020.
 //  Copyright © 2020 Monetizr. All rights reserved.
 //
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let countryCatalog = try CountryCatalog(json)
 
 import Foundation
 
