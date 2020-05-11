@@ -58,7 +58,7 @@ To show a product in an [Offer View][4], you need to call a specific product_tag
 Show an Offer View inside your app:
 
 ```swift
-Monetizr.shared.showProduct(tag: Sample shirt, playerID: String(Optional) presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
+Monetizr.shared.showProduct(tag: T-shirt, playerID: String(Optional) presenter: UIViewController?, presentationStyle: UIModalPresentationStyle?) { success, error, product in ()}
 ```
 
 If you choose to show a product in an Offer View provided in the SDK, you should provide a presenter view and presentation style. If presentation style is not provided it will default to `UIModalPresentationStyle.automatic` for iOS 13.x or `UIModalPresentationStyle.overCurrentContext` for other iOS versions.
