@@ -129,6 +129,18 @@
 		28E7C0DB240C120C00A6D9AE /* ClaimItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimItemViewController.swift; sourceTree = "<group>"; };
 		28E7C0DD240C16BC00A6D9AE /* Claim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Claim.swift; sourceTree = "<group>"; };
 		28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayViewController.swift; sourceTree = "<group>"; };
+		28F55FC2246B1A530083FFBA /* ka */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ka; path = ka.lproj/Main.strings; sourceTree = "<group>"; };
+		28F55FC3246B1A530083FFBA /* ka */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ka; path = ka.lproj/Localizable.strings; sourceTree = "<group>"; };
+		28F55FC4246B1A730083FFBA /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/Main.strings"; sourceTree = "<group>"; };
+		28F55FC5246B1A730083FFBA /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		28F55FC6246B1BC00083FFBA /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Main.strings"; sourceTree = "<group>"; };
+		28F55FC7246B1BC00083FFBA /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		28F55FC8246B1BCF0083FFBA /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		28F55FC9246B1BD00083FFBA /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		28F55FCA246B1BE20083FFBA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		28F55FCB246B1BE30083FFBA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		28F55FCC246B1BEF0083FFBA /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
+		28F55FCD246B1BEF0083FFBA /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		28FE13882430095A00A37BA9 /* PaymentStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStatus.swift; sourceTree = "<group>"; };
 		36BF1201E621B75EEE391125 /* Pods-Monetizr-v3-sample-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.debug.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.debug.xcconfig"; sourceTree = "<group>"; };
 		65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Monetizr_v3_sample_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -332,6 +344,12 @@
 				"pt-BR",
 				"pt-PT",
 				sl,
+				ka,
+				"ka-GE",
+				"pl-PL",
+				ru,
+				ja,
+				nl,
 			);
 			mainGroup = 28E6B7822262109300E43C83;
 			productRefGroup = 28E6B78C2262109300E43C83 /* Products */;
@@ -486,6 +504,12 @@
 				285F7F4223A94A74007A79FD /* pt-BR */,
 				285F7F4423A94AA4007A79FD /* pt-PT */,
 				285F7F4623A94B06007A79FD /* sl */,
+				28F55FC3246B1A530083FFBA /* ka */,
+				28F55FC5246B1A730083FFBA /* ka-GE */,
+				28F55FC7246B1BC00083FFBA /* pl-PL */,
+				28F55FC9246B1BD00083FFBA /* ru */,
+				28F55FCB246B1BE30083FFBA /* ja */,
+				28F55FCD246B1BEF0083FFBA /* nl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -508,6 +532,12 @@
 				285F7F4123A94A74007A79FD /* pt-BR */,
 				285F7F4323A94AA4007A79FD /* pt-PT */,
 				285F7F4523A94B06007A79FD /* sl */,
+				28F55FC2246B1A530083FFBA /* ka */,
+				28F55FC4246B1A730083FFBA /* ka-GE */,
+				28F55FC6246B1BC00083FFBA /* pl-PL */,
+				28F55FC8246B1BCF0083FFBA /* ru */,
+				28F55FCA246B1BE20083FFBA /* ja */,
+				28F55FCC246B1BEF0083FFBA /* nl */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -648,7 +678,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2159;
+				CURRENT_PROJECT_VERSION = 2160;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -656,7 +686,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.5.2;
+				MARKETING_VERSION = 3.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -671,7 +701,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2159;
+				CURRENT_PROJECT_VERSION = 2160;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -679,7 +709,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.5.2;
+				MARKETING_VERSION = 3.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "lv.e-life.Monetizr-v3-sample-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
