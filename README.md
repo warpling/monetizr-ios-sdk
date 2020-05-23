@@ -25,7 +25,7 @@ Requires iOS 10.0+
 * [Alamofire][8] - Elegant HTTP Networking in Swift;
 * [AlamofireImage][9] - an image component library for Alamofire;
 * [ImageSlideshow][10] - Swift image slideshow;
-* [Mobile Buy SDK][11] - lets users buy products using Apple Pay;
+* [Stripe][11] - lets users buy products using Apple Pay;
 * [McPicker][12] - UIPickerView drop-in solution.
 
 ### Option 1 (suggested)
@@ -142,5 +142,5 @@ Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: Sample s
 [8]: https://github.com/Alamofire/Alamofire
 [9]: https://github.com/Alamofire/AlamofireImage
 [10]: https://github.com/zvonicek/ImageSlideshow
-[11]: https://github.com/Shopify/mobile-buy-sdk-ios
+[11]: https://github.com/stripe/stripe-ios
 [12]: https://github.com/kmcgill88/McPicker-iOS
