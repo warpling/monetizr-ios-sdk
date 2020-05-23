@@ -23,6 +23,9 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
     @IBOutlet var langCodeLabel: UILabel!
     
     @IBOutlet var openButton: UIButton!
+    @IBOutlet var tshirtButton: UIButton!
+    @IBOutlet var pinButton: UIButton!
+    @IBOutlet var giftcardButton: UIButton!
     @IBOutlet var changeThemeButton: UIButton!
 
     override func viewDidLoad() {
@@ -31,7 +34,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         tokenField.text = "4D2E54389EB489966658DDD83E2D1" //"3adca63cc172c5ae919e5a2529f4f2a8" //"4D2E54389EB489966658DDD83E2D1"
-        merchTagField.text = "Sample shirt"
+        merchTagField.text = ""
         // Test tags - "free_t_shirt", "Sample pin", "Sample shirt", "blackbox_alt_socks",
         
         // Show device locale
@@ -53,29 +56,42 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
     
     @IBAction func buttonTap(sender: UIButton) {
         if sender == openButton {
-            self.showActivityIndicator()
-            // Open product here
-            textLabel.text = "Product loading..."
-            Monetizr.shared.token = tokenField.text!
-            var presentationStyle = UIModalPresentationStyle.overCurrentContext
-            if #available(iOS 13.0, *) {
-                presentationStyle = UIModalPresentationStyle.automatic
-            }
-            
-            Monetizr.shared.showProduct(tag: merchTagField.text!, playerID: "Test Player", presenter: self, presentationStyle: presentationStyle) { success, error, product  in
-                self.hideActivityIndicator()
-                // Show some error if needed
-                if success {
-                    self.textLabel.text = "Product was loaded"
-                }
-                else {
-                    //self.textLabel.text = "Some error received - developer should look for error"
-                    self.textLabel.text = error?.localizedDescription
-                }
-            }
+            showProductWithTag(tag: merchTagField.text!)
+        }
+        if sender == tshirtButton {
+            showProductWithTag(tag: "T-shirt")
+        }
+        if sender == pinButton {
+            showProductWithTag(tag: "Pin")
+        }
+        if sender == giftcardButton {
+            showProductWithTag(tag: "Gift_Card")
         }
         if sender == changeThemeButton {
             self.pickTheme()
+        }
+    }
+    
+    func showProductWithTag(tag: String) {
+        self.showActivityIndicator()
+        // Open product here
+        textLabel.text = "Product loading..."
+        Monetizr.shared.token = tokenField.text!
+        var presentationStyle = UIModalPresentationStyle.overCurrentContext
+        if #available(iOS 13.0, *) {
+            presentationStyle = UIModalPresentationStyle.automatic
+        }
+        
+        Monetizr.shared.showProduct(tag: tag, playerID: "Test Player", presenter: self, presentationStyle: presentationStyle) { success, error, product  in
+            self.hideActivityIndicator()
+            // Show some error if needed
+            if success {
+                self.textLabel.text = "Product was loaded"
+            }
+            else {
+                //self.textLabel.text = "Some error received - developer should look for error"
+                self.textLabel.text = error?.localizedDescription
+            }
         }
     }
     
