@@ -13,6 +13,11 @@ import Alamofire
 import PassKit
 import SafariServices
 
+// Protocol used for sending result when product view is closed
+public protocol ProductViewControllerDelegate: class {
+    func productViewFinishedWith(data: String)
+}
+
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
