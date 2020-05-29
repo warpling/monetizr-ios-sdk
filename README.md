@@ -99,7 +99,7 @@ Versions iOS13+ uses .system uses Dark/Light mode preference and adapts to user 
 Create ProductView Controller:
 
 ```swift
-func productViewForProduct(product: Product, tag: Sample shirt, playerID: String(Optional)) -> ProductViewController
+func productViewForProduct(product: Product, tag: T-shirt, playerID: String(Optional)) -> ProductViewController
 ```
 
 Present ProductView:
@@ -111,7 +111,7 @@ func presentProductView(productViewController: ProductViewController, presenter:
 Checkout for product [variant][7].
 
 ```swift
-func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: Sample shirt, shippingAddress: CheckoutAddress(Optional) completionHandler: @escaping (Bool, Error?, Checkout?) -> Void)
+func checkoutSelectedVariantForProduct(selectedVariant: PurpleNode, tag: T-shirt, shippingAddress: CheckoutAddress(Optional) completionHandler: @escaping (Bool, Error?, Checkout?) -> Void)
 ```
 
 Update checkout
@@ -129,7 +129,7 @@ func claimOrder(shippingLine: CheckoutData?, player_id: String, price: String, c
 Checkout with Apple Pay:
 
 ```swift
-Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: Sample shirt!, presenter: UIViewController) { success, error in ()}
+Monetizr.shared.buyWithApplePay(selectedVariant: selectedVariant!, tag: T-shirt!, presenter: UIViewController) { success, error in ()}
 ```
 
 [1]: https://app.themonetizr.com/
