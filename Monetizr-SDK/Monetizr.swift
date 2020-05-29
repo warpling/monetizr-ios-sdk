@@ -410,6 +410,7 @@ public class Monetizr {
     // Present product View
     func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
         productViewController.modalPresentationStyle = presentationStyle
+        productViewController.delegate = presenter as? MonetizrProductViewControllerDelegate
         presenter.present(productViewController, animated: true, completion: nil)
     }
     

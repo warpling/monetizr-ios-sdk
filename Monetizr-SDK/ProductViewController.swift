@@ -21,7 +21,8 @@ public protocol MonetizrProductViewControllerDelegate: class {
 
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate {
     
-    weak var delegate: MonetizrProductViewControllerDelegate?
+    
+    weak var delegate: MonetizrProductViewControllerDelegate? = nil
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
     var playerID: String?
@@ -71,6 +72,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // ScrollViewDelegate
         descriptionContainerView.delegate = self
         
@@ -146,7 +148,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         UIAccessibility.post(notification: .screenChanged, argument:titleLabel)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         delegate?.monetizrProductViewFinishedWithPurchase(count: purchaseCount)
     }
     
@@ -660,7 +662,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     // Handle button clicks
     @objc func buttonAction(sender:UIButton!){
         if sender == closeButton {
-            delegate?.monetizrProductViewFinishedWithPurchase(count: purchaseCount)
             // Close product view
             navigationController?.popViewController(animated: true)
             Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
@@ -783,8 +784,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         guard claim != nil else {
             return
         }
-         purchaseCount = purchaseCount+1
-        delegate?.monetizrProductViewPurchase(tag: tag, playerID: playerID)
+        if claim?.status == "success" {
+            purchaseCount = purchaseCount+1
+            delegate?.monetizrProductViewPurchase(tag: tag, playerID: playerID)
+        }        
         let alert = UIAlertController(title: "", message: claim?.message, preferredStyle: .alert)
         alert.view.tintColor = UIColor(hex: 0xE0093B)
         alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in

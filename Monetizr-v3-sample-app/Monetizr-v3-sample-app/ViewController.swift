@@ -43,10 +43,11 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
     }
     
     func monetizrProductViewPurchase(tag: String?, playerID: String?) {
-        //
+        // made some purchase
     }
     
     func monetizrProductViewFinishedWithPurchase(count: Int) {
+        // closed product view
         self.textLabel.text = "Closed with purchase count" + " " + String(count)
     }
     
