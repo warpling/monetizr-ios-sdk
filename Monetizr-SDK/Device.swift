@@ -71,6 +71,10 @@ func localeIdentifier() -> String {
     return NSLocale.current.identifier
 }
 
+func timestamp() -> String {
+    return String(describing: Date().timeIntervalSince1970)
+}
+
 // Check if Apple pay is available
 public func applePayAvailable() -> Bool{
     return PKPaymentAuthorizationViewController.canMakePayments()

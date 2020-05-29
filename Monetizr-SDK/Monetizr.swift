@@ -176,7 +176,7 @@ public class Monetizr {
     // MARK: Monetizr API
     
     // Load product data
-    public func showProduct(tag: String, playerID: String? = nil, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?) -> Void){
+    public func showProduct(tag: String, playerID: String? = nil, presenter: UIViewController? = nil, presentationStyle: UIModalPresentationStyle? = nil, completionHandler: @escaping (Bool, Error?, Product?, String?) -> Void){
         let size = screenWidthPixelsInPortraitOrientation().description
         var urlString = apiUrl+"products/tag/"+tag+"?size="+size
         if localeCodeString != nil {
@@ -186,6 +186,7 @@ public class Monetizr {
         urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
                 
         AF.request(URL(string: urlString)!, headers: headers).responseDecodable(of: Product.self) { response in
+            var uniqueID: String? = nil
             if let retrievedProduct = response.value {
                 if retrievedProduct.data?.productByHandle != nil {
                     if (presenter != nil) {
@@ -194,20 +195,21 @@ public class Monetizr {
                         if #available(iOS 13.0, *) {
                             targetStyle = presentationStyle ?? UIModalPresentationStyle.automatic
                         }
-                        self.presentProductView(productViewController: self.productViewForProduct(product: product, tag: tag, playerID: playerID), presenter: presenter!, presentationStyle: targetStyle)
+                        uniqueID = deviceIdentifier()+"/"+timestamp()
+                        self.presentProductView(productViewController: self.productViewForProduct(product: product, tag: tag, playerID: playerID, uniqueID: uniqueID), presenter: presenter!, presentationStyle: targetStyle)
                     }
-                    completionHandler(true, nil, retrievedProduct)
+                    completionHandler(true, nil, retrievedProduct, uniqueID)
                 }
                 else {
                     let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "API error, contact Monetizr for details"])
-                    completionHandler(false, error, nil)
+                    completionHandler(false, error, nil, uniqueID)
                 }
             }
             else if let error = response.error {
-                completionHandler(false, error, nil)
+                completionHandler(false, error, nil, uniqueID)
             }
             else {
-                completionHandler(false, response.error!, nil)
+                completionHandler(false, response.error!, nil, uniqueID)
             }
         }
     }
@@ -399,11 +401,12 @@ public class Monetizr {
     // MARK: ViewController presentation
     
     // Create product View
-    func productViewForProduct(product: Product, tag: String, playerID: String?) -> ProductViewController {
+    func productViewForProduct(product: Product, tag: String, playerID: String?, uniqueID: String?) -> ProductViewController {
         let productViewController = ProductViewController()
         productViewController.product = product
         productViewController.tag = tag
         productViewController.playerID = playerID
+        productViewController.uniqueID = uniqueID
         return productViewController
     }
     

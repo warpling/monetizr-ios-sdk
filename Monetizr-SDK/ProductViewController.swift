@@ -15,8 +15,7 @@ import SafariServices
 
 // Protocol used for sending result when product view is closed
 public protocol MonetizrProductViewControllerDelegate: class {
-    func monetizrProductViewPurchase(tag: String?, playerID: String?)
-    func monetizrProductViewFinishedWithPurchase(count: Int)
+    func monetizrProductViewPurchase(tag: String?, uniqueID: String?)
 }
 
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate {
@@ -33,7 +32,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var mediaLinks: [String] = []
     let dateOpened: Date = Date()
     var interaction: Bool = false
-    var purchaseCount: Int = 0
+    var uniqueID: String?
     
     // Outlets
     let closeButton = UIButton()
@@ -146,10 +145,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         UIAccessibility.post(notification: .screenChanged, argument:titleLabel)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        delegate?.monetizrProductViewFinishedWithPurchase(count: purchaseCount)
     }
     
     override func viewDidLayoutSubviews() {
@@ -767,8 +762,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     // Apple Pay finished
     func applePayFinishedWithCheckout(paymentSuccess: Bool?) {
         if paymentSuccess ?? false {
-             purchaseCount = purchaseCount+1
-            delegate?.monetizrProductViewPurchase(tag: tag, playerID: playerID)
+            delegate?.monetizrProductViewPurchase(tag: tag, uniqueID: uniqueID)
             let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
             alert.view.tintColor = UIColor(hex: 0xE0093B)
             alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
@@ -785,9 +779,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             return
         }
         if claim?.status == "success" {
-            purchaseCount = purchaseCount+1
-            delegate?.monetizrProductViewPurchase(tag: tag, playerID: playerID)
-        }        
+            delegate?.monetizrProductViewPurchase(tag: tag, uniqueID: uniqueID)
+        }
         let alert = UIAlertController(title: "", message: claim?.message, preferredStyle: .alert)
         alert.view.tintColor = UIColor(hex: 0xE0093B)
         alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in

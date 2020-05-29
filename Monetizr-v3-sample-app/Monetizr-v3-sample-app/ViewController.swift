@@ -42,13 +42,9 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         langCodeLabel.text = Monetizr.shared.localeCodeString
     }
     
-    func monetizrProductViewPurchase(tag: String?, playerID: String?) {
+    func monetizrProductViewPurchase(tag: String?, uniqueID: String?) {
         // made some purchase
-    }
-    
-    func monetizrProductViewFinishedWithPurchase(count: Int) {
-        // closed product view
-        self.textLabel.text = "Closed with purchase count" + " " + String(count)
+        self.textLabel.text = "Purchase was made"
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -92,11 +88,12 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
             presentationStyle = UIModalPresentationStyle.automatic
         }
         
-        Monetizr.shared.showProduct(tag: tag, playerID: "Test Player", presenter: self, presentationStyle: presentationStyle) { success, error, product  in
+        Monetizr.shared.showProduct(tag: tag, playerID: "Test Player", presenter: self, presentationStyle: presentationStyle) { success, error, product, uniqueID   in
             self.hideActivityIndicator()
             // Show some error if needed
             if success {
                 self.textLabel.text = "Product was loaded"
+                print(uniqueID as Any)
             }
             else {
                 //self.textLabel.text = "Some error received - developer should look for error"
