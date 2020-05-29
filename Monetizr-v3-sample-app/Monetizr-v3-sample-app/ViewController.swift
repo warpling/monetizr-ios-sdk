@@ -9,7 +9,7 @@
 import UIKit
 import McPicker
 
-class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPresenter {
+class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPresenter, MonetizrProductViewControllerDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     
@@ -30,6 +30,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         // Dismiss keyboard
         self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
@@ -39,6 +40,14 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         
         // Show device locale
         langCodeLabel.text = Monetizr.shared.localeCodeString
+    }
+    
+    func monetizrProductViewPurchase(tag: String?, playerID: String?) {
+        //
+    }
+    
+    func monetizrProductViewFinishedWithPurchase(count: Int) {
+        self.textLabel.text = "Closed with purchase count" + " " + String(count)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {

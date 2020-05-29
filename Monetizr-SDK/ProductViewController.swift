@@ -14,12 +14,14 @@ import PassKit
 import SafariServices
 
 // Protocol used for sending result when product view is closed
-public protocol ProductViewControllerDelegate: class {
-    func productViewFinishedWith(data: String)
+public protocol MonetizrProductViewControllerDelegate: class {
+    func monetizrProductViewPurchase(tag: String?, playerID: String?)
+    func monetizrProductViewFinishedWithPurchase(count: Int)
 }
 
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate {
     
+    weak var delegate: MonetizrProductViewControllerDelegate?
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
     var playerID: String?
@@ -30,6 +32,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var mediaLinks: [String] = []
     let dateOpened: Date = Date()
     var interaction: Bool = false
+    var purchaseCount: Int = 0
     
     // Outlets
     let closeButton = UIButton()
@@ -68,7 +71,6 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // ScrollViewDelegate
         descriptionContainerView.delegate = self
         
@@ -144,10 +146,14 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         UIAccessibility.post(notification: .screenChanged, argument:titleLabel)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        delegate?.monetizrProductViewFinishedWithPurchase(count: purchaseCount)
+    }
+    
     override func viewDidLayoutSubviews() {
         if !screenIsInPortrait() {
             descriptionContainerView.scrollToTop(animated: true)
-        }        
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -654,6 +660,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     // Handle button clicks
     @objc func buttonAction(sender:UIButton!){
         if sender == closeButton {
+            delegate?.monetizrProductViewFinishedWithPurchase(count: purchaseCount)
             // Close product view
             navigationController?.popViewController(animated: true)
             Monetizr.shared.impressionvisibleCreate(tag: tag!, fromDate: dateOpened, completionHandler: { success, error, value in ()})
@@ -758,8 +765,9 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     // Apple Pay finished
     func applePayFinishedWithCheckout(paymentSuccess: Bool?) {
-        
         if paymentSuccess ?? false {
+             purchaseCount = purchaseCount+1
+            delegate?.monetizrProductViewPurchase(tag: tag, playerID: playerID)
             let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
             alert.view.tintColor = UIColor(hex: 0xE0093B)
             alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
@@ -775,7 +783,8 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         guard claim != nil else {
             return
         }
-        
+         purchaseCount = purchaseCount+1
+        delegate?.monetizrProductViewPurchase(tag: tag, playerID: playerID)
         let alert = UIAlertController(title: "", message: claim?.message, preferredStyle: .alert)
         alert.view.tintColor = UIColor(hex: 0xE0093B)
         alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
