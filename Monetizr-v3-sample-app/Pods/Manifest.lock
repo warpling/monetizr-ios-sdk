@@ -1,9 +1,9 @@
 PODS:
-  - Alamofire (5.1.0)
+  - Alamofire (5.2.1)
   - AlamofireImage (4.1.0):
     - Alamofire (~> 5.1)
   - McPicker (2.0.1)
-  - Stripe (19.1.0)
+  - Stripe (19.2.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -19,11 +19,11 @@ SPEC REPOS:
     - Stripe
 
 SPEC CHECKSUMS:
-  Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
+  Alamofire: e911732990610fe89af59ac0077f923d72dc3dfd
   AlamofireImage: c4a2ba349885fb3064feb74d2e547bd42ce9be10
   McPicker: a0a6b8ece8f1642e05401a29867463aba501188b
-  Stripe: 82a3aab0b1a66866eef581139a00adadcb2e6dc4
+  Stripe: d481c2dab9a892fd923f097f854661217f70dc7f
 
-PODFILE CHECKSUM: 13a45c6801f501119183cb22275d78c9eb63f289
+PODFILE CHECKSUM: f7357909d224709a92ef0b6f4b97e9b0c06b0d62
 
 COCOAPODS: 1.9.1
