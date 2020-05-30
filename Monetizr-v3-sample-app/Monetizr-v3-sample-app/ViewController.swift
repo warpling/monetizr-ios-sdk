@@ -9,7 +9,7 @@
 import UIKit
 import McPicker
 
-class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPresenter {
+class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPresenter, MonetizrProductViewControllerDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     
@@ -30,6 +30,7 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         // Dismiss keyboard
         self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
@@ -39,6 +40,11 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         
         // Show device locale
         langCodeLabel.text = Monetizr.shared.localeCodeString
+    }
+    
+    func monetizrProductViewPurchase(tag: String?, uniqueID: String?) {
+        // made some purchase
+        self.textLabel.text = "Purchase was made"
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -82,11 +88,12 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
             presentationStyle = UIModalPresentationStyle.automatic
         }
         
-        Monetizr.shared.showProduct(tag: tag, playerID: "Test Player", presenter: self, presentationStyle: presentationStyle) { success, error, product  in
+        Monetizr.shared.showProduct(tag: tag, playerID: "Test Player", presenter: self, presentationStyle: presentationStyle) { success, error, product, uniqueID   in
             self.hideActivityIndicator()
             // Show some error if needed
             if success {
                 self.textLabel.text = "Product was loaded"
+                print(uniqueID as Any)
             }
             else {
                 //self.textLabel.text = "Some error received - developer should look for error"
