@@ -780,13 +780,13 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
         }
         if claim?.status == "success" {
             delegate?.monetizrProductViewPurchase(tag: tag, uniqueID: uniqueID)
+            let alert = UIAlertController(title: "", message: claim?.message, preferredStyle: .alert)
+            alert.view.tintColor = UIColor(hex: 0xE0093B)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
+                  // Switch if needed handle buttons
+            }))
+            self.present(alert, animated: true, completion: nil)
         }
-        let alert = UIAlertController(title: "", message: claim?.message, preferredStyle: .alert)
-        alert.view.tintColor = UIColor(hex: 0xE0093B)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
-              // Switch if needed handle buttons
-        }))
-        self.present(alert, animated: true, completion: nil)
     }
  
     // Cureency string preparation

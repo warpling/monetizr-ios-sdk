@@ -35,8 +35,9 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
         self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         tokenField.text = "4D2E54389EB489966658DDD83E2D1" //"3adca63cc172c5ae919e5a2529f4f2a8" //"4D2E54389EB489966658DDD83E2D1"
-        merchTagField.text = ""
-        // Test tags - "free_t_shirt", "Sample pin", "Sample shirt", "blackbox_alt_socks",
+        merchTagField.text = "free_t_shirt"
+        // Test tags - "Sample pin", "Sample shirt", "blackbox_alt_socks",
+        // Test claim - "free_t_shirt"
         
         // Show device locale
         langCodeLabel.text = Monetizr.shared.localeCodeString

@@ -327,6 +327,8 @@ public class Monetizr {
             }
             else if let error = response.error {
                 completionHandler(false, error, nil)
+                //let htmlString = String(data: response.data!, encoding: .utf8)
+                //print(htmlString!)
             }
             else {
                 completionHandler(false, response.error!, nil)
