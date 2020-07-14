@@ -12,6 +12,11 @@ import Alamofire
 import PassKit
 import Stripe
 
+// Protocol used to notify about events with Monetizr
+public protocol MonetizrDelegate: class {
+    func monetizrPurchase(tag: String?, uniqueID: String?)
+}
+
 public class Monetizr {
     
     public static let shared = Monetizr(token: "")
@@ -106,7 +111,7 @@ public class Monetizr {
     // Application become active
     @objc func appMovedToForeground() {
         dateSessionStarted = Date()
-        sessionCreate(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), completionHandler: { success, error, value in ()})
+        sessionCreate(deviceIdentifier: deviceIdentifier(), startDate: dateSessionStarted.monetizrDateString(), completionHandler: { success, error, value in ()})
     }
     
     // Application resign active
@@ -115,7 +120,7 @@ public class Monetizr {
         clickCountInSession = 0
         checkoutCountInSession = 0
         dateSessionEnded = Date()
-        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), endDate: stringFromDate(date: dateSessionEnded), completionHandler: { success, error, value in ()})
+        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: dateSessionStarted.monetizrDateString(), endDate: dateSessionEnded.monetizrDateString(), completionHandler: { success, error, value in ()})
     }
     
     // Application resign active
@@ -124,7 +129,7 @@ public class Monetizr {
         clickCountInSession = 0
         checkoutCountInSession = 0
         dateSessionEnded = Date()
-        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), endDate: stringFromDate(date: dateSessionEnded), completionHandler: { success, error, value in ()})
+        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: dateSessionStarted.monetizrDateString(), endDate: dateSessionEnded.monetizrDateString(), completionHandler: { success, error, value in ()})
     }
     
     // Update impression count
@@ -773,17 +778,5 @@ public class Monetizr {
                 completionHandler(false, response.error!, nil)
             }
         }
-    }
-    
-    // Monetizr date string
-    func stringFromDate(date: Date) -> String {
-        // Monetizr requirements "%Y-%m-%d %H:%M:%S.%f", 2019-03-08 14:44:57.08809+02
-        let dateFormatter = DateFormatter()
-        let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.locale = enUSPosixLocale
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSX"
-        dateFormatter.calendar = Calendar(identifier: .gregorian)
-        let datestring = dateFormatter.string(from: date)
-        return datestring
     }
 }

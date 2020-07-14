@@ -192,6 +192,19 @@ extension String {
     }
 }
 
+extension Date {
+    func monetizrDateString() -> String {
+        // Monetizr requirements "%Y-%m-%d %H:%M:%S.%f", 2019-03-08 14:44:57.08809+02
+        let dateFormatter = DateFormatter()
+        let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.locale = enUSPosixLocale
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSX"
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        let datestring = dateFormatter.string(from: self)
+        return datestring
+    }
+}
+
 extension Bundle {
     static func appName() -> String {
         guard let dictionary = Bundle.main.infoDictionary else {
