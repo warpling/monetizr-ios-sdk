@@ -18,7 +18,7 @@ public protocol MonetizrProductViewControllerDelegate: class {
     func monetizrProductViewPurchase(tag: String?, uniqueID: String?)
 }
 
-class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate {
+class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate, SFSafariViewControllerDelegate {
     
     
     weak var delegate: MonetizrProductViewControllerDelegate? = nil
@@ -632,7 +632,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 
                 // Open Checkout in Safaru SFSafariViewController
                 let vc = SFSafariViewController(url: url, entersReaderIfAvailable: false)
-                vc.delegate = self as? SFSafariViewControllerDelegate
+                vc.delegate = self as SFSafariViewControllerDelegate
                 self.present(vc, animated: true)
             }
             else {
@@ -652,6 +652,10 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 self.present(alert, animated: true, completion: nil)
             }
         }
+    }
+    
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        print("SafariVC is dismissed")
     }
     
     // Handle button clicks
