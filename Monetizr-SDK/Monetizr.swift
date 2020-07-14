@@ -35,7 +35,6 @@ public class Monetizr {
     }
     
     weak var delegate: MonetizrDelegate?
-    //weak var delegate: MonetizrDelegate? = nil
     var headers: HTTPHeaders = [:]
     var applePayMerchantID: String?
     var companyName: String?
