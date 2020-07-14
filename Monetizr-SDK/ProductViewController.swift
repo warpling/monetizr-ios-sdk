@@ -13,15 +13,8 @@ import Alamofire
 import PassKit
 import SafariServices
 
-// Protocol used for sending result when product view is closed
-public protocol MonetizrProductViewControllerDelegate: class {
-    func monetizrProductViewPurchase(tag: String?, uniqueID: String?)
-}
-
 class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGestureRecognizerDelegate, UIScrollViewDelegate, VariantSelectionDelegate, ApplePayControllerDelegate, ClaimItemControllerDelegate, SFSafariViewControllerDelegate {
-    
-    
-    weak var delegate: MonetizrProductViewControllerDelegate? = nil
+        
     var activityIndicator = UIActivityIndicatorView()
     var tag: String?
     var playerID: String?
@@ -656,6 +649,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         print("SafariVC is dismissed")
+        Monetizr.shared.productViewPurchase(tag: tag, uniqueID: uniqueID)        
     }
     
     // Handle button clicks
@@ -766,7 +760,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     // Apple Pay finished
     func applePayFinishedWithCheckout(paymentSuccess: Bool?) {
         if paymentSuccess ?? false {
-            delegate?.monetizrProductViewPurchase(tag: tag, uniqueID: uniqueID)
+            Monetizr.shared.productViewPurchase(tag: tag, uniqueID: uniqueID)
             let alert = UIAlertController(title: NSLocalizedString("Thank you!", comment: "Thank you!"), message: NSLocalizedString("Order confirmation", comment: "Order confirmation"), preferredStyle: .alert)
             alert.view.tintColor = UIColor(hex: 0xE0093B)
             alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in
@@ -783,7 +777,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             return
         }
         if claim?.status == "success" {
-            delegate?.monetizrProductViewPurchase(tag: tag, uniqueID: uniqueID)
+            Monetizr.shared.productViewPurchase(tag: tag, uniqueID: uniqueID) 
             let alert = UIAlertController(title: "", message: claim?.message, preferredStyle: .alert)
             alert.view.tintColor = UIColor(hex: 0xE0093B)
             alert.addAction(UIAlertAction(title: NSLocalizedString("Close", comment: "Close"), style: .default, handler: { action in

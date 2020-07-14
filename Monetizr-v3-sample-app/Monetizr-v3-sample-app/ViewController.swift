@@ -9,7 +9,7 @@
 import UIKit
 import McPicker
 
-class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPresenter, MonetizrProductViewControllerDelegate, MonetizrDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPresenter, MonetizrDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     
@@ -44,11 +44,6 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
     }
     
     func monetizrPurchase(tag: String?, uniqueID: String?) {
-        // made some purchase
-        self.textLabel.text = "New - Purchase was made"
-    }
-    
-    func monetizrProductViewPurchase(tag: String?, uniqueID: String?) {
         // made some purchase
         self.textLabel.text = "Purchase was made"
     }

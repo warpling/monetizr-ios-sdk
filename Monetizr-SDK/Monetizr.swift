@@ -34,6 +34,8 @@ public class Monetizr {
         }
     }
     
+    weak var delegate: MonetizrDelegate?
+    //weak var delegate: MonetizrDelegate? = nil
     var headers: HTTPHeaders = [:]
     var applePayMerchantID: String?
     var companyName: String?
@@ -420,7 +422,7 @@ public class Monetizr {
     // Present product View
     func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
         productViewController.modalPresentationStyle = presentationStyle
-        productViewController.delegate = presenter as? MonetizrProductViewControllerDelegate
+        self.delegate = presenter as? MonetizrDelegate
         presenter.present(productViewController, animated: true, completion: nil)
     }
     
@@ -778,5 +780,11 @@ public class Monetizr {
                 completionHandler(false, response.error!, nil)
             }
         }
+    }
+    
+    // MARK: Monetizr Delegate
+    
+    public func productViewPurchase(tag: String?, uniqueID: String?) {
+        delegate?.monetizrPurchase(tag: tag, uniqueID: uniqueID)
     }
 }
