@@ -406,6 +406,51 @@ public class Monetizr {
         }
     }
     
+    // Check checkout status
+    
+    public func checkoutStatus(checkout: CheckoutResponse, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+        
+        let urlString = apiUrl+"products/checkoutstatus"
+        let parameters: [String: Any] = [
+            "checkoutId" : checkout.data?.checkoutCreate?.checkout?.id ?? ""
+        ]
+        
+        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
+            if let value = response.value {
+                completionHandler(true, nil, value)
+            }
+            else if let error = response.error {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, response.error!, nil)
+            }
+            
+            /*
+            if let value = response.value {
+                if value.status == "success" {
+                    completionHandler(true, nil, paymentStatus)
+                    return
+                }
+                if paymentStatus.status == "error" {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : paymentStatus.message])
+                    
+                    completionHandler(false, error, nil)
+                    return
+                }
+                completionHandler(false, nil, nil)
+            }
+            else if let error = response.error {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, nil, nil)
+            }
+             */
+        }
+    }
+    
     // MARK: ViewController presentation
     
     // Create product View
@@ -785,5 +830,16 @@ public class Monetizr {
     
     public func productViewPurchase(tag: String?, uniqueID: String?) {
         delegate?.monetizrPurchase(tag: tag, uniqueID: uniqueID)
+    }
+    
+    public func checkWebCheckoutProcess(checkout: CheckoutResponse?, tag: String?, uniqueID: String?) {
+        if checkout != nil {
+            self.checkoutStatus(checkout: checkout!) { success, error, response in
+                if success {
+                    let some = response
+                    print(some ?? "")
+                }
+            }
+        }
     }
 }

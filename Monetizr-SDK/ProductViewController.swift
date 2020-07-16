@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import Alamofire
-//import ImageSlideshow
 import PassKit
 import SafariServices
 
@@ -22,6 +21,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     var selectedVariant: PurpleNode?
     var variantCount = 0
     var variants: [VariantsEdge] = []
+    var checkout: CheckoutResponse?
     var mediaLinks: [String] = []
     let dateOpened: Date = Date()
     var interaction: Bool = false
@@ -618,6 +618,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
             self.hideActivityIndicator()
             // Show some error if needed
             if success {
+                self.checkout = checkout
                 guard let url = URL(string: (checkout?.data?.checkoutCreate?.checkout?.webURL)!) else { return }
                 
                 // Open Checkout in web browser
@@ -648,8 +649,7 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
     }
     
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        print("SafariVC is dismissed")
-        Monetizr.shared.productViewPurchase(tag: tag, uniqueID: uniqueID)        
+        Monetizr.shared.checkWebCheckoutProcess(checkout: self.checkout, tag: tag, uniqueID: uniqueID)
     }
     
     // Handle button clicks
