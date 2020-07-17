@@ -69,8 +69,7 @@ Implement `MonetizrDelegate` to get notified about events in Monetizr:
 
 ```swift
 func monetizrPurchase(tag: String?, uniqueID: String?)
-``` 
-*Note: method will not fire if purchase is made via web checkout.*
+```
 
 ## Optional settings
 

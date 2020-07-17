@@ -408,33 +408,22 @@ public class Monetizr {
     
     // Check checkout status
     
-    public func checkoutStatus(checkout: CheckoutResponse, completionHandler: @escaping (Bool, Error?, Any?) -> Void) {
+    public func checkoutStatus(checkout: CheckoutResponse, completionHandler: @escaping (Bool, Error?, CheckoutStatus?) -> Void) {
         
         let urlString = apiUrl+"products/checkoutstatus"
         let parameters: [String: Any] = [
             "checkoutId" : checkout.data?.checkoutCreate?.checkout?.id ?? ""
         ]
         
-        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseDecodable(of: CheckoutStatus.self) { response in
             
-            if let value = response.value {
-                completionHandler(true, nil, value)
-            }
-            else if let error = response.error {
-                completionHandler(false, error, nil)
-            }
-            else {
-                completionHandler(false, response.error!, nil)
-            }
-            
-            /*
-            if let value = response.value {
-                if value.status == "success" {
-                    completionHandler(true, nil, paymentStatus)
+            if let checkoutStatus = response.value {
+                if checkoutStatus.status == "success" {
+                    completionHandler(true, nil, checkoutStatus)
                     return
                 }
-                if paymentStatus.status == "error" {
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : paymentStatus.message])
+                if checkoutStatus.status == "error" {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : checkoutStatus.message ?? ""])
                     
                     completionHandler(false, error, nil)
                     return
@@ -447,7 +436,6 @@ public class Monetizr {
             else {
                 completionHandler(false, nil, nil)
             }
-             */
         }
     }
     
@@ -834,10 +822,11 @@ public class Monetizr {
     
     public func checkWebCheckoutProcess(checkout: CheckoutResponse?, tag: String?, uniqueID: String?) {
         if checkout != nil {
-            self.checkoutStatus(checkout: checkout!) { success, error, response in
+            self.checkoutStatus(checkout: checkout!) { success, error, checkoutStatus in
                 if success {
-                    let some = response
-                    print(some ?? "")
+                    if checkoutStatus?.order_number != nil && checkoutStatus?.order_number != "" {
+                        self.delegate?.monetizrPurchase(tag: tag, uniqueID: uniqueID)
+                    }
                 }
             }
         }

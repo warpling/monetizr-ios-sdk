@@ -45,7 +45,8 @@ class ViewController: UIViewController, UITextFieldDelegate, ActivityIndicatorPr
     
     func monetizrPurchase(tag: String?, uniqueID: String?) {
         // made some purchase
-        self.textLabel.text = "Purchase was made"
+        let product_tag = tag ?? ""
+        self.textLabel.text = product_tag + " purchase was made"
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
