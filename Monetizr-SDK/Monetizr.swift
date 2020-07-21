@@ -12,6 +12,11 @@ import Alamofire
 import PassKit
 import Stripe
 
+// Protocol used to notify about events with Monetizr
+public protocol MonetizrDelegate: class {
+    func monetizrPurchase(tag: String?, uniqueID: String?)
+}
+
 public class Monetizr {
     
     public static let shared = Monetizr(token: "")
@@ -29,6 +34,7 @@ public class Monetizr {
         }
     }
     
+    weak var delegate: MonetizrDelegate?
     var headers: HTTPHeaders = [:]
     var applePayMerchantID: String?
     var companyName: String?
@@ -106,7 +112,7 @@ public class Monetizr {
     // Application become active
     @objc func appMovedToForeground() {
         dateSessionStarted = Date()
-        sessionCreate(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), completionHandler: { success, error, value in ()})
+        sessionCreate(deviceIdentifier: deviceIdentifier(), startDate: dateSessionStarted.monetizrDateString(), completionHandler: { success, error, value in ()})
     }
     
     // Application resign active
@@ -115,7 +121,7 @@ public class Monetizr {
         clickCountInSession = 0
         checkoutCountInSession = 0
         dateSessionEnded = Date()
-        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), endDate: stringFromDate(date: dateSessionEnded), completionHandler: { success, error, value in ()})
+        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: dateSessionStarted.monetizrDateString(), endDate: dateSessionEnded.monetizrDateString(), completionHandler: { success, error, value in ()})
     }
     
     // Application resign active
@@ -124,7 +130,7 @@ public class Monetizr {
         clickCountInSession = 0
         checkoutCountInSession = 0
         dateSessionEnded = Date()
-        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: stringFromDate(date: dateSessionStarted), endDate: stringFromDate(date: dateSessionEnded), completionHandler: { success, error, value in ()})
+        sessionEnd(deviceIdentifier: deviceIdentifier(), startDate: dateSessionStarted.monetizrDateString(), endDate: dateSessionEnded.monetizrDateString(), completionHandler: { success, error, value in ()})
     }
     
     // Update impression count
@@ -400,6 +406,39 @@ public class Monetizr {
         }
     }
     
+    // Check checkout status
+    
+    public func checkoutStatus(checkout: CheckoutResponse, completionHandler: @escaping (Bool, Error?, CheckoutStatus?) -> Void) {
+        
+        let urlString = apiUrl+"products/checkoutstatus"
+        let parameters: [String: Any] = [
+            "checkoutId" : checkout.data?.checkoutCreate?.checkout?.id ?? ""
+        ]
+        
+        AF.request(URL(string: urlString)!, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseDecodable(of: CheckoutStatus.self) { response in
+            
+            if let checkoutStatus = response.value {
+                if checkoutStatus.status == "success" {
+                    completionHandler(true, nil, checkoutStatus)
+                    return
+                }
+                if checkoutStatus.status == "error" {
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : checkoutStatus.message ?? ""])
+                    
+                    completionHandler(false, error, nil)
+                    return
+                }
+                completionHandler(false, nil, nil)
+            }
+            else if let error = response.error {
+                completionHandler(false, error, nil)
+            }
+            else {
+                completionHandler(false, nil, nil)
+            }
+        }
+    }
+    
     // MARK: ViewController presentation
     
     // Create product View
@@ -415,7 +454,7 @@ public class Monetizr {
     // Present product View
     func presentProductView(productViewController: ProductViewController, presenter: UIViewController, presentationStyle: UIModalPresentationStyle) {
         productViewController.modalPresentationStyle = presentationStyle
-        productViewController.delegate = presenter as? MonetizrProductViewControllerDelegate
+        self.delegate = presenter as? MonetizrDelegate
         presenter.present(productViewController, animated: true, completion: nil)
     }
     
@@ -775,15 +814,21 @@ public class Monetizr {
         }
     }
     
-    // Monetizr date string
-    func stringFromDate(date: Date) -> String {
-        // Monetizr requirements "%Y-%m-%d %H:%M:%S.%f", 2019-03-08 14:44:57.08809+02
-        let dateFormatter = DateFormatter()
-        let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.locale = enUSPosixLocale
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSX"
-        dateFormatter.calendar = Calendar(identifier: .gregorian)
-        let datestring = dateFormatter.string(from: date)
-        return datestring
+    // MARK: Monetizr Delegate
+    
+    public func productViewPurchase(tag: String?, uniqueID: String?) {
+        delegate?.monetizrPurchase(tag: tag, uniqueID: uniqueID)
+    }
+    
+    public func checkWebCheckoutProcess(checkout: CheckoutResponse?, tag: String?, uniqueID: String?) {
+        if checkout != nil {
+            self.checkoutStatus(checkout: checkout!) { success, error, checkoutStatus in
+                if success {
+                    if checkoutStatus?.order_number != nil && checkoutStatus?.order_number != "" {
+                        self.delegate?.monetizrPurchase(tag: tag, uniqueID: uniqueID)
+                    }
+                }
+            }
+        }
     }
 }

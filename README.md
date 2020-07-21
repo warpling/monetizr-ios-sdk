@@ -63,7 +63,13 @@ Monetizr.shared.showProduct(tag: "T-shirt", playerID: String(Optional) presenter
 
 If you choose to show a product in an Offer View provided in the SDK, you should provide a presenter view and presentation style. If presentation style is not provided it will default to `UIModalPresentationStyle.automatic` for iOS 13.x or `UIModalPresentationStyle.overCurrentContext` for other iOS versions.
 
-Implement `MonetizrProductViewControllerDelegate` to get notified with `tag` and `uniqueID` of the Offer View exposure whenever purchase is made. *Note: delegate method will not fire if purchase is made vis web checkout.*
+Implement `MonetizrDelegate` to get notified about events in Monetizr:
+
+* Offer View exposure whenever purchase is made
+
+```swift
+func monetizrPurchase(tag: String?, uniqueID: String?)
+```
 
 ## Optional settings
 
