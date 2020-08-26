@@ -1,0 +1,27 @@
+
+/* Class = "UIButton"; normalTitle = "T-shirt"; ObjectID = "0r6-2R-FQR"; */
+"0r6-2R-FQR.normalTitle" = "T-shirt";
+
+/* Class = "UIButton"; normalTitle = "Gift Card"; ObjectID = "Gi4-TG-Ftp"; */
+"Gi4-TG-Ftp.normalTitle" = "Gift Card";
+
+/* Class = "UIButton"; normalTitle = "Open custom product"; ObjectID = "Sc4-cT-s41"; */
+"Sc4-cT-s41.normalTitle" = "Open custom product";
+
+/* Class = "UIButton"; normalTitle = "PIN"; ObjectID = "dal-3O-NUP"; */
+"dal-3O-NUP.normalTitle" = "PIN";
+
+/* Class = "UILabel"; text = "Default theme"; ObjectID = "g32-ns-AQh"; */
+"g32-ns-AQh.text" = "Default theme";
+
+/* Class = "UIButton"; normalTitle = "Change theme"; ObjectID = "i0t-oi-iIF"; */
+"i0t-oi-iIF.normalTitle" = "Change theme";
+
+/* Class = "UITextField"; placeholder = "Token"; ObjectID = "jzd-ie-6jq"; */
+"jzd-ie-6jq.placeholder" = "Token";
+
+/* Class = "UILabel"; text = "Device locale not set"; ObjectID = "tpb-Jz-ZxE"; */
+"tpb-Jz-ZxE.text" = "Device locale not set";
+
+/* Class = "UITextField"; placeholder = "Merchandise tag"; ObjectID = "z68-y5-jXC"; */
+"z68-y5-jXC.placeholder" = "Merchandise tag";
