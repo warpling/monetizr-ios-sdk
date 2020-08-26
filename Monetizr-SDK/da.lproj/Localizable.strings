@@ -6,31 +6,40 @@
   Copyright © 2019 Monetizr. All rights reserved.
 */
 
-"Close" = "Close";
-"Close product" = "Close product";
-"Checkout" = "Checkout";
-"Product title" = "Product title";
-"Price" = "Price";
-"Original price" = "Original price";
-"Product description" = "Product description";
-"Product variant selection" = "Product variant selection";
-"Tax" = "Tax";
-"Shipping" = "Shipping";
-"Unknown" = "Unknown";
-"Selected" = "Selected";
-"Thank you!" = "Thank you!";
-"Order confirmation" = "Your order is on its way! \nCheck the order confirmation email for tracking information.";
-"Select product variant" = "Select product variant";
-"Shipping address:" = "Shipping address:";
-"First name" = "First name";
-"Last name" = "Last name";
+"Close" = "Tæt";
+"Close product" = "Luk produktet";
+"Checkout" = "Bestilling";
+"Product title" = "Produkt titel";
+"Price" = "Pris";
+"Original price" = "Original pris";
+"Product description" = "Produkt beskrivelse";
+"Product variant selection" = "Valg af produktvariant";
+"Tax" = "Skat";
+"Shipping" = "Forsendelse";
+"Unknown" = "Ukendt";
+"Selected" = "Valgte";
+"Thank you!" = "Tak skal du have!";
+"Order confirmation" = "Din ordre er på vej! Kontroller ordrebekræftelses-e-mailen.";
+"Select product variant" = "Vælg produktvariant";
+"Shipping address:" = "Leveringsadresse:";
+"First name" = "Fornavn";
+"Last name" = "Efternavn";
 "E-mail" = "E-mail";
-"Address" = "Address";
-"Apartment, suite, etc (optional)" = "Apartment, suite, etc (optional)";
-"City" = "City";
-"Country" = "Country";
-"State/Province" = "State/Province";
-"ZIP/Postal/PIN code" = "ZIP/Postal/PIN code";
-"Submit" = "Submit";
-"Cancel" = "Cancel";
-"Invalid e-mail" = "Invalid e-mail";
+"Address" = "Adresse";
+"Apartment, suite, etc (optional)" = "Lejlighed, Suite (valgfri)";
+"City" = "By";
+"Country" = "Land";
+"State/Province" = "Stat/Provins";
+"ZIP/Postal/PIN code" = "Postnummer";
+"Submit" = "Indsend";
+"Cancel" = "Afbestille";
+"Invalid e-mail" = "Ugyldig email";
+
+
+
+
+
+
+
+
+
