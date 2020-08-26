@@ -364,15 +364,14 @@ extension UILabel {
         self.adjustsFontSizeToFitWidth = true
         self.minimumScaleFactor = 0.7
         
+        self.textColor = .black
         if Monetizr.shared.chosenTheme == .black {
             self.textColor = .white
+            return
         }
         else {
             if #available(iOS 13.0, *) {
                 self.textColor = .label
-            } else {
-                // Fallback on earlier versions
-                self.textColor = .white
             }
         }
     }
@@ -380,6 +379,8 @@ extension UILabel {
     func addressInputLabelStyle() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.layer.cornerRadius = 4
+        self.layer.borderWidth = 0.5
+        self.layer.borderColor = UIColor.gray.cgColor
         self.layer.masksToBounds = true
         if Monetizr.shared.chosenTheme == .black {
             self.textColor = .white
@@ -429,8 +430,8 @@ extension UITextField {
         //self.font = .systemFont(ofSize: 16, weight: UIFont.Weight.light)
         self.returnKeyType = .done
         self.layer.cornerRadius = 4
-        self.layer.borderWidth = 0
-        self.layer.borderColor = UIColor.white.cgColor
+        self.layer.borderWidth = 0.5
+        self.layer.borderColor = UIColor.gray.cgColor
         if Monetizr.shared.chosenTheme == .black {
             self.textColor = .white
             self.backgroundColor = UIColor.white.withAlphaComponent(0.2)

@@ -48,8 +48,26 @@ class ClaimItemViewController: UIViewController, ActivityIndicatorPresenter, UIT
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        self.view.addBlurEffect(style: UIBlurEffect.Style.dark)
+        // Do any additional setup after loading the view.        
+        if #available(iOS 12.0, *) {
+            if self.traitCollection.userInterfaceStyle == .dark || Monetizr.shared.chosenTheme == .black {
+                // User Interface is Dark
+                self.view.addBlurEffect(style: UIBlurEffect.Style.dark)
+            } else {
+                // User Interface is Light
+                self.view.addBlurEffect(style: UIBlurEffect.Style.regular)
+            }
+        } else {
+            // Fallback on earlier versions
+            if Monetizr.shared.chosenTheme == .black {
+                // User Interface is Dark
+                self.view.addBlurEffect(style: UIBlurEffect.Style.dark)
+            } else {
+                // User Interface is Light
+                self.view.addBlurEffect(style: UIBlurEffect.Style.regular)
+            }
+        }
+        
         self.prepareCountryCatalog()
         
         self.configureAddressInputFieldsContainerView()
