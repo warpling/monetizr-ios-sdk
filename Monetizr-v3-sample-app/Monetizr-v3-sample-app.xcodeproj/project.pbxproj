@@ -117,6 +117,10 @@
 		28AE865222C6D279005F2D2D /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		28AE865322C6D279005F2D2D /* CheckoutResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutResponse.swift; sourceTree = "<group>"; };
 		28AE865422C6D279005F2D2D /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		28D2614F24F6E1E70024A2D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
+		28D2615024F6E1E70024A2D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		28D2615124F6E1F40024A2D8 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Main.strings; sourceTree = "<group>"; };
+		28D2615224F6E1F50024A2D8 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		28D6A5BA244F8C3400FEDE30 /* FullScreenSlideshowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenSlideshowViewController.swift; sourceTree = "<group>"; };
 		28D6A5BE244F939E00FEDE30 /* ic_cross_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_cross_white@2x.png"; sourceTree = "<group>"; };
 		28D6A5BF244F939F00FEDE30 /* ic_cross_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_cross_white@3x.png"; sourceTree = "<group>"; };
@@ -353,6 +357,8 @@
 				ru,
 				ja,
 				nl,
+				tr,
+				da,
 			);
 			mainGroup = 28E6B7822262109300E43C83;
 			productRefGroup = 28E6B78C2262109300E43C83 /* Products */;
@@ -514,6 +520,8 @@
 				28F55FC9246B1BD00083FFBA /* ru */,
 				28F55FCB246B1BE30083FFBA /* ja */,
 				28F55FCD246B1BEF0083FFBA /* nl */,
+				28D2615024F6E1E70024A2D8 /* tr */,
+				28D2615224F6E1F50024A2D8 /* da */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -542,6 +550,8 @@
 				28F55FC8246B1BCF0083FFBA /* ru */,
 				28F55FCA246B1BE20083FFBA /* ja */,
 				28F55FCC246B1BEF0083FFBA /* nl */,
+				28D2614F24F6E1E70024A2D8 /* tr */,
+				28D2615124F6E1F40024A2D8 /* da */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -682,7 +692,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2167;
+				CURRENT_PROJECT_VERSION = 2168;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -705,7 +715,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2167;
+				CURRENT_PROJECT_VERSION = 2168;
 				DEVELOPMENT_TEAM = MU2MFS2855;
 				INFOPLIST_FILE = "Monetizr-v3-sample-app/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
