@@ -1,0 +1,23 @@
+/* 
+  Localizable.strings
+  Monetizr-v3-sample-app
+
+  Created by Armands Avotins on 27/05/2019.
+  Copyright © 2019 Monetizr. All rights reserved.
+*/
+
+"Close" = "Cerca";
+"Close product" = "Cerrar producto";
+"Checkout" = "Revisa";
+"Product title" = "Titulo del producto";
+"Price" = "Precio";
+"Original price" = "Precio original";
+"Product description" = "Descripción del producto";
+"Product variant selection" = "Selección de variante de producto";
+"Tax" = "Impuesto";
+"Shipping" = "Envío";
+"Unknown" = "Desconocido";
+"Selected" = "Seleccionado";
+"Thank you!" = "Gracias";
+"Order confirmation" = "Su pedido está en camino! \nCompruebe el correo electrónico de confirmación del pedido para obtener información de seguimiento.";
+"Select product variant" = "Seleccionar variante de producto";

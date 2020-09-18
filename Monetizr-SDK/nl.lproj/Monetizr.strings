@@ -1,0 +1,36 @@
+/* 
+  Localizable.strings
+  Monetizr-v3-sample-app
+
+  Created by Armands Avotins on 27/05/2019.
+  Copyright © 2019 Monetizr. All rights reserved.
+*/
+
+"Close" = "Dichtbij";
+"Close product" = "Product sluiten";
+"Checkout" = "Uitchecken";
+"Product title" = "Producttitel";
+"Price" = "Prijs";
+"Original price" = "Originele prijs";
+"Product description" = "Product beschrijving";
+"Product variant selection" = "Selectie van productvarianten";
+"Tax" = "Belasting";
+"Shipping" = "Verzending";
+"Unknown" = "Onbekend";
+"Selected" = "Geselecteerd";
+"Thank you!" = "Dank u!";
+"Order confirmation" = "Je bestelling is onderweg! \nControleer de e-mail met de orderbevestiging voor trackinginformatie.";
+"Select product variant" = "Selecteer productvariant";
+"Shipping address:" = "Verzendingsadres:";
+"First name" = "Voornaam";
+"Last name" = "Achternaam";
+"E-mail" = "E-mail";
+"Address" = "Adres";
+"Apartment, suite, etc (optional)" = "Appartement, suite, etc (optioneel)";
+"City" = "Stad";
+"Country" = "Land";
+"State/Province" = "Staat / provincie";
+"ZIP/Postal/PIN code" = "Postcode";
+"Submit" = "Verzenden";
+"Cancel" = "Annuleren";
+"Invalid e-mail" = "Ongeldig e-mail";

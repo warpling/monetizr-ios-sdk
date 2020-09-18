@@ -1,0 +1,36 @@
+/* 
+  Localizable.strings
+  Monetizr-v3-sample-app
+
+  Created by Armands Avotins on 27/05/2019.
+  Copyright © 2019 Monetizr. All rights reserved.
+*/
+
+"Close" = "დახურვა";
+"Close product" = "პროდუქტის დახურვა";
+"Checkout" = "გადახდა";
+"Product title" = "პროდუქტის სათაური";
+"Price" = "ფასი";
+"Original price" = "Საწყისი ფასი";
+"Product description" = "Პროდუქტის აღწერა";
+"Product variant selection" = "პროდუქტის ვარიანტის შერჩევა";
+"Tax" = "გადასახადი";
+"Shipping" = "ტრანსპორტირება";
+"Unknown" = "უცნობია";
+"Selected" = "შერჩეულია";
+"Thank you!" = "Გმადლობთ!";
+"Order confirmation" = "თქვენი შეკვეთა გზაზეა! \nშეამოწმეთ შეკვეთის დადასტურების ელ.ფოსტა ინფორმაციის მიკვლევისთვის.";
+"Select product variant" = "აირჩიეთ პროდუქტის ვარიანტი";
+"Shipping address:" = "Მიწოდების მისამართი:";
+"First name" = "Სახელი";
+"Last name" = "Გვარი";
+"E-mail" = "ელ.ფოსტა";
+"Address" = "მისამართი";
+"Apartment, suite, etc (optional)" = "ბინა, ლუქსი და ა.შ. (სურვილისამებრ)";
+"City" = "ქალაქი";
+"Country" = "ქვეყანა";
+"State/Province" = "სახელმწიფო / პროვინცია";
+"ZIP/Postal/PIN code" = "საფოსტო/PIN კოდი";
+"Submit" = "წარუდგინე";
+"Cancel" = "გაუქმება";
+"Invalid e-mail" = "Არასწორი ელ. ფოსტა";

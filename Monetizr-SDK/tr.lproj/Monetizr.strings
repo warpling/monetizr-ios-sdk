@@ -1,0 +1,36 @@
+/* 
+  Localizable.strings
+  Monetizr-v3-sample-app
+
+  Created by Armands Avotins on 27/05/2019.
+  Copyright © 2019 Monetizr. All rights reserved.
+*/
+
+"Close" = "Kapat";
+"Close product" = "Ürünü kapat";
+"Checkout" = "Çıkış yapmak";
+"Product title" = "Ürün başlığı";
+"Price" = "Fiyat";
+"Original price" = "Orijinal fiyat";
+"Product description" = "Ürün Açıklaması";
+"Product variant selection" = "Ürün çeşidi seçimi";
+"Tax" = "Vergi";
+"Shipping" = "Nakliye";
+"Unknown" = "Nakliye";
+"Selected" = "Seçildi";
+"Thank you!" = "Teşekkür ederim!";
+"Order confirmation" = "Siparişiniz yolda! Lütfen sipariş onayı e-postasını kontrol edin.";
+"Select product variant" = "Ürün çeşidini seçin";
+"Shipping address:" = "Teslimat adresi:";
+"First name" = "İsim";
+"Last name" = "Soyadı";
+"E-mail" = "E-posta";
+"Address" = "Adres";
+"Apartment, suite, etc (optional)" = "Apartman, süit (isteğe bağlı)";
+"City" = "Kent";
+"Country" = "Ülke";
+"State/Province" = "Durum/Bölge";
+"ZIP/Postal/PIN code" = "Posta kodu";
+"Submit" = "Sunmak";
+"Cancel" = "İptal etmek";
+"Invalid e-mail" = "Geçersiz e-posta";
