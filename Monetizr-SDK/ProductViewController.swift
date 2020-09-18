@@ -625,7 +625,12 @@ class ProductViewController: UIViewController, ActivityIndicatorPresenter, UIGes
                 //UIApplication.shared.open(url)
                 
                 // Open Checkout in Safaru SFSafariViewController
-                let vc = SFSafariViewController(url: url, entersReaderIfAvailable: false)
+                let vc: SFSafariViewController
+                if #available(iOS 11.0, *) {
+                    vc = SFSafariViewController(url: url)
+                } else {
+                    vc = SFSafariViewController(url: url, entersReaderIfAvailable: true)
+                }
                 vc.delegate = self as SFSafariViewControllerDelegate
                 self.present(vc, animated: true)
             }
