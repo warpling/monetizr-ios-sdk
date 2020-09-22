@@ -20,7 +20,7 @@ Monetizr is a turn-key platform for game developers enabling to sell or give-awa
   s.framework = "UIKit"
   s.framework = "PassKit"
   s.dependency 'Alamofire'
-   s.dependency 'AlamofireImage'
+  s.dependency 'AlamofireImage'
   s.dependency 'Stripe'
   s.dependency 'McPicker'
  
