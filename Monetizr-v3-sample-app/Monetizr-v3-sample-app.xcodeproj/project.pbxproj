@@ -52,7 +52,7 @@
 		28E7C0DE240C16BC00A6D9AE /* Claim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E7C0DD240C16BC00A6D9AE /* Claim.swift */; };
 		28F1AAA5230B11D30039FF7E /* ApplePayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F1AAA4230B11D30039FF7E /* ApplePayViewController.swift */; };
 		28FE13892430095A00A37BA9 /* PaymentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FE13882430095A00A37BA9 /* PaymentStatus.swift */; };
-		F17B7801DCFCEB8AFD9A8583 /* Pods_Monetizr_v3_sample_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */; };
+		380BCE1666D9AAFC48D19FBB /* Pods_Monetizr_v3_sample_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4F674636F8095A4D85BE08C /* Pods_Monetizr_v3_sample_app.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -148,9 +148,9 @@
 		28F55FCC246B1BEF0083FFBA /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
 		28F55FCD246B1BEF0083FFBA /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Monetizr.strings; sourceTree = "<group>"; };
 		28FE13882430095A00A37BA9 /* PaymentStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStatus.swift; sourceTree = "<group>"; };
-		36BF1201E621B75EEE391125 /* Pods-Monetizr-v3-sample-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.debug.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.debug.xcconfig"; sourceTree = "<group>"; };
-		65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Monetizr_v3_sample_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		77A3F60495AE31152A231C31 /* Pods-Monetizr-v3-sample-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.release.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.release.xcconfig"; sourceTree = "<group>"; };
+		7EEF0CD8B4476FC17CEA9525 /* Pods-Monetizr-v3-sample-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.release.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.release.xcconfig"; sourceTree = "<group>"; };
+		BD6A8CD30D4348D89EA051BD /* Pods-Monetizr-v3-sample-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Monetizr-v3-sample-app.debug.xcconfig"; path = "Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app.debug.xcconfig"; sourceTree = "<group>"; };
+		C4F674636F8095A4D85BE08C /* Pods_Monetizr_v3_sample_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Monetizr_v3_sample_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,7 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F17B7801DCFCEB8AFD9A8583 /* Pods_Monetizr_v3_sample_app.framework in Frameworks */,
+				380BCE1666D9AAFC48D19FBB /* Pods_Monetizr_v3_sample_app.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,7 +228,7 @@
 				28E6B78D2262109300E43C83 /* Monetizr-v3-sample-app */,
 				28E6B78C2262109300E43C83 /* Products */,
 				B17220C86D22AF95575764A2 /* Pods */,
-				D91D4358D49DE1A2E982E2E0 /* Frameworks */,
+				6AF646F72184BF33BEF418CA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -270,21 +270,21 @@
 			path = Structs;
 			sourceTree = "<group>";
 		};
+		6AF646F72184BF33BEF418CA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C4F674636F8095A4D85BE08C /* Pods_Monetizr_v3_sample_app.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B17220C86D22AF95575764A2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				36BF1201E621B75EEE391125 /* Pods-Monetizr-v3-sample-app.debug.xcconfig */,
-				77A3F60495AE31152A231C31 /* Pods-Monetizr-v3-sample-app.release.xcconfig */,
+				BD6A8CD30D4348D89EA051BD /* Pods-Monetizr-v3-sample-app.debug.xcconfig */,
+				7EEF0CD8B4476FC17CEA9525 /* Pods-Monetizr-v3-sample-app.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		D91D4358D49DE1A2E982E2E0 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				65559E57BADEC403D653B27A /* Pods_Monetizr_v3_sample_app.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,12 +294,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 28E6B79D2262109500E43C83 /* Build configuration list for PBXNativeTarget "Monetizr-v3-sample-app" */;
 			buildPhases = (
-				96B072E0839DE602660D6096 /* [CP] Check Pods Manifest.lock */,
+				EA22D4574A0E183A3B3D68EB /* [CP] Check Pods Manifest.lock */,
 				28E6B7872262109300E43C83 /* Sources */,
 				28E6B7882262109300E43C83 /* Frameworks */,
 				28E6B7A02262195300E43C83 /* ShellScript */,
 				28E6B7892262109300E43C83 /* Resources */,
-				26FB94B6EC1EDD0A548CFF8B /* [CP] Embed Pods Frameworks */,
+				BCC80CACE454DC317AAA25E9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -392,7 +392,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		26FB94B6EC1EDD0A548CFF8B /* [CP] Embed Pods Frameworks */ = {
+		28E6B7A02262195300E43C83 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n";
+		};
+		BCC80CACE454DC317AAA25E9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -409,25 +426,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Monetizr-v3-sample-app/Pods-Monetizr-v3-sample-app-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		28E6B7A02262195300E43C83 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "
-";
-		};
-		96B072E0839DE602660D6096 /* [CP] Check Pods Manifest.lock */ = {
+		EA22D4574A0E183A3B3D68EB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -689,7 +688,7 @@
 		};
 		28E6B79E2262109500E43C83 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 36BF1201E621B75EEE391125 /* Pods-Monetizr-v3-sample-app.debug.xcconfig */;
+			baseConfigurationReference = BD6A8CD30D4348D89EA051BD /* Pods-Monetizr-v3-sample-app.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
@@ -712,7 +711,7 @@
 		};
 		28E6B79F2262109500E43C83 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 77A3F60495AE31152A231C31 /* Pods-Monetizr-v3-sample-app.release.xcconfig */;
+			baseConfigurationReference = 7EEF0CD8B4476FC17CEA9525 /* Pods-Monetizr-v3-sample-app.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Monetizr-v3-sample-app/Monetizr-v3-sample-app.entitlements";
