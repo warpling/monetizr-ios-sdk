@@ -13,7 +13,7 @@ Monetizr is a turn-key platform for game developers enabling to sell or give-awa
   s.source           = { :git => 'https://github.com/themonetizr/monetizr-ios-sdk.git', :tag => s.version.to_s }
  
   s.swift_version = "5.0"
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
   s.source_files = ['Monetizr-SDK/*.{swift}', 'Monetizr-SDK/**/*.{swift}']
   s.resources = ['Monetizr-SDK/*.lproj', 'Monetizr-SDK/*.json', 'Monetizr-SDK/Assets/*']
 
@@ -21,7 +21,7 @@ Monetizr is a turn-key platform for game developers enabling to sell or give-awa
   s.framework = "PassKit"
   s.dependency 'Alamofire'
   s.dependency 'AlamofireImage'
-  s.dependency 'Stripe'
+  s.dependency 'Stripe', '~> 20.0'
   s.dependency 'McPicker'
  
 end
