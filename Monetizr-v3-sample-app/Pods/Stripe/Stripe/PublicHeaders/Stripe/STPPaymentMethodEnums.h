@@ -76,9 +76,19 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodType) {
     STPPaymentMethodTypeBancontact,
 
     /**
+    A OXXO payment method.
+    */
+    STPPaymentMethodTypeOXXO,
+
+    /**
     A Sofort payment method.
     */
     STPPaymentMethodTypeSofort,
+    
+    /**
+     A PayPal payment method. :nodoc:
+     */
+    STPPaymentMethodTypePayPal,
 
     /**
      An unknown type.

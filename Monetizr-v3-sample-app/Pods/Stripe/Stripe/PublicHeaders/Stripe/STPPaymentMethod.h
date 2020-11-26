@@ -24,6 +24,8 @@ STPPaymentMethodFPX,
 STPPaymentMethodGiropay,
 STPPaymentMethodGrabPay,
 STPPaymentMethodiDEAL,
+STPPaymentMethodOXXO,
+STPPaymentMethodPayPal,
 STPPaymentMethodPrzelewy24,
 STPPaymentMethodSEPADebit,
 STPPaymentMethodSofort;
@@ -129,9 +131,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) STPPaymentMethodBancontact *bancontact;
 
 /**
+ If this is a OXXO PaymentMethod (i.e. `self.type == STPPaymentMethodTypeOXXO`), this contains additional details.
+*/
+@property (nonatomic, nullable, readonly) STPPaymentMethodOXXO *oxxo;
+
+/**
  If this is a Sofort PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSofort`), this contains additional details.
 */
 @property (nonatomic, nullable, readonly) STPPaymentMethodSofort *sofort;
+
+/**
+ If this is a PayPal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPal`), this contains additional details. :nodoc:
+*/
+@property (nonatomic, nullable, readonly) STPPaymentMethodPayPal *payPal;
 
 /**
  The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
