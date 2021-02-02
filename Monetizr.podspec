@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Monetizr'
-  s.version          = '3.5.7'
+  s.version          = '3.5.8'
   s.summary          = 'Platform to Sell Game Gear from Inside the Game UI'
  
   s.description      = <<-DESC
@@ -21,7 +21,7 @@ Monetizr is a turn-key platform for game developers enabling to sell or give-awa
   s.framework = "PassKit"
   s.dependency 'Alamofire'
   s.dependency 'AlamofireImage'
-  s.dependency 'Stripe', '~> 20.1'
+  s.dependency 'Stripe'
   s.dependency 'McPicker'
  
 end

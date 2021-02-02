@@ -97,10 +97,10 @@ public class Monetizr {
     // Set stripe token
     public func setStripeToken() {
         if isTestMode ?? false {
-            Stripe.setDefaultPublishableKey("pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu")
+            StripeAPI.defaultPublishableKey = "pk_test_OS6QyI1IBsFtonsnFk6rh2wb00mSXyblvu"
         }
         else {
-            Stripe.setDefaultPublishableKey("pk_live_CWmQoXocvis3aEFufn7R1CKf")
+            StripeAPI.defaultPublishableKey = "pk_live_CWmQoXocvis3aEFufn7R1CKf"
         }
     }
     

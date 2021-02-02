@@ -6,7 +6,7 @@ pod 'Alamofire'
 pod 'AlamofireImage'
 pod 'McPicker'
 #pod 'Stripe'
-pod 'Stripe', '~> 20.0'
+pod 'Stripe'
 end
 
 target 'Monetizr-v3-sample-app' do

@@ -321,7 +321,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
     
     func confirmPaymentWithStripe(payment: PKPayment, intent: String, completionHandler: @escaping (Bool) -> Void) {
         // Convert the PKPayment into a PaymentMethod
-        STPAPIClient.shared().createPaymentMethod(with: payment) { (paymentMethod: STPPaymentMethod?, error: Error?) in
+        STPAPIClient.shared.createPaymentMethod(with: payment) { (paymentMethod: STPPaymentMethod?, error: Error?) in
             guard let paymentMethod = paymentMethod, error == nil else {
                 // Present error to customer...
                 return
@@ -330,7 +330,7 @@ class ApplePayViewController: UIViewController, PKPaymentAuthorizationViewContro
             paymentIntentParams.paymentMethodId = paymentMethod.stripeId
 
             // Confirm the PaymentIntent with the payment method
-            STPPaymentHandler.shared().confirmPayment(withParams: paymentIntentParams, authenticationContext: self) { (status, paymentIntent, error) in
+            STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) { (status, paymentIntent, error) in
                 switch (status) {
                 case .succeeded:
                     completionHandler(true)
