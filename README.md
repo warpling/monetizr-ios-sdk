@@ -19,7 +19,7 @@ Monetizr uses oAuth 2 authentication behind the scenes for all payment and order
 Read the Monetizr's [iOS documentation][2] to find out more.
 
 ## Installation
-Requires iOS 10.0+
+Requires iOS 11.0+
 
 ### Dependencies
 * [Alamofire][8] - Elegant HTTP Networking in Swift;
