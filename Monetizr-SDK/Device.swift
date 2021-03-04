@@ -64,7 +64,7 @@ func countryName() -> String {
 }
 
 func deviceIdentifier() -> String {
-    return UIDevice.current.identifierForVendor!.uuidString
+    return UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
 }
 
 func localeIdentifier() -> String {
