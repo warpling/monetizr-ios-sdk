@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Monetizr'
-  s.version          = '3.5.9'
+  s.version          = '3.5.10'
   s.summary          = 'Platform to Sell Game Gear from Inside the Game UI'
  
   s.description      = <<-DESC
