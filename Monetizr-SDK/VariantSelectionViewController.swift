@@ -9,7 +9,7 @@
 import UIKit
 
 // Protocol used for sending data back to product view
-protocol VariantSelectionDelegate: class {
+protocol VariantSelectionDelegate: AnyObject {
     func closeOptionsSelector()
     func optionValuesSelected(selectedValues: NSMutableArray)
 }

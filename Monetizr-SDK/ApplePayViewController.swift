@@ -11,7 +11,7 @@ import PassKit
 import Stripe
 
 // Protocol used for sending data back to product view
-protocol ApplePayControllerDelegate: class {
+protocol ApplePayControllerDelegate: AnyObject {
     func applePayFinishedWithCheckout(paymentSuccess: Bool?)
 }
 

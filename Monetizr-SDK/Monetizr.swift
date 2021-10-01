@@ -13,7 +13,7 @@ import PassKit
 import Stripe
 
 // Protocol used to notify about events with Monetizr
-public protocol MonetizrDelegate: class {
+public protocol MonetizrDelegate: AnyObject {
     func monetizrPurchase(tag: String?, uniqueID: String?)
 }
 

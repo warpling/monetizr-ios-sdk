@@ -11,7 +11,7 @@ import ContactsUI
 import McPicker
 
 // Protocol used for sending data back to product view
-protocol ClaimItemControllerDelegate: class {
+protocol ClaimItemControllerDelegate: AnyObject {
     func claimItemFinishedWithCheckout(claim: Claim?)
 }
 
