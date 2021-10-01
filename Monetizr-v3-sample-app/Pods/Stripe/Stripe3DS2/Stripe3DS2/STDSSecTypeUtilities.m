@@ -9,6 +9,7 @@
 #import "STDSSecTypeUtilities.h"
 
 #import <CommonCrypto/CommonCrypto.h>
+#import <CommonCrypto/CommonRandom.h>
 #import <Security/Security.h>
 
 #import "STDSBundleLocator.h"
@@ -56,6 +57,10 @@ SecCertificateRef _Nullable STDSCertificateForServer(STDSDirectoryServer server)
         case STDSDirectoryServerVisa:
             serverKey = @"STDSDirectoryServerVisa";
             break;
+            
+        case STDSDirectoryServerCartesBancaires:
+            serverKey = @"STDSDirectoryServerCartesBancaires";
+            break;
 
         case STDSDirectoryServerCustom:
             break;
@@ -100,6 +105,10 @@ SecCertificateRef _Nullable STDSCertificateForServer(STDSDirectoryServer server)
 
             case STDSDirectoryServerVisa:
                 certificatePath = [[STDSBundleLocator stdsResourcesBundle] pathForResource:@"visa" ofType:@"der"];
+                break;
+                
+            case STDSDirectoryServerCartesBancaires:
+                certificatePath = [[STDSBundleLocator stdsResourcesBundle] pathForResource:@"cartes_bancaires" ofType:@"der"];
                 break;
 
             case STDSDirectoryServerCustom:
