@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 class CheckboxButton: UIControl {
     // MARK: - Properties
@@ -18,6 +19,7 @@ class CheckboxButton: UIControl {
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.numberOfLines = 2
         label.isAccessibilityElement = false
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     private lazy var checkbox: CheckBox = {

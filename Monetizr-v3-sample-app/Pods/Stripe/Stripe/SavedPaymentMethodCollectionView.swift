@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 // MARK: - Constants
 /// Entire cell size
@@ -181,6 +182,7 @@ extension SavedPaymentMethodCollectionView {
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
             update()
         }
 
@@ -188,6 +190,17 @@ extension SavedPaymentMethodCollectionView {
             didSet {
                 update()
             }
+        }
+        
+        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+            let translatedPoint = deleteButton.convert(point, from: self)
+            
+            // Ensures taps on the delete button are handled properly as it lives outside its cells' bounds
+            if (deleteButton.bounds.contains(translatedPoint) && !deleteButton.isHidden) {
+                return deleteButton.hitTest(translatedPoint, with: event)
+            }
+            
+            return super.hitTest(point, with: event)
         }
 
         // MARK: - Internal Methods
@@ -266,9 +279,7 @@ extension SavedPaymentMethodCollectionView {
             }
 
             if isRemovingPaymentMethods {
-                if case .saved(let paymentMethod) = viewModel,
-                    paymentMethod.isDetachableInPaymentSheet
-                {
+                if case .saved = viewModel {
                     deleteButton.isHidden = false
                     contentView.bringSubviewToFront(deleteButton)
                     applyDefaultStyle()

@@ -69,7 +69,7 @@ import UIKit
         return additionalInfoSet.sorted()
     }
 
-    public func logPayload(_ payload: [String: Any]) {
+    func logPayload(_ payload: [String: Any]) {
         #if DEBUG
         NSLog("LOG ANALYTICS: \(payload)")
         #endif
@@ -99,7 +99,12 @@ import UIKit
         payload["event"] = analytic.event.rawValue
         payload["additional_info"] = additionalInfo()
         payload["product_usage"] = productUsage.sorted()
-
+        
+        // Attach error information if this is an error analytic
+        if let errorAnalytic  = analytic as? ErrorAnalytic {
+            payload["error_dictionary"] = errorAnalytic.error.serializeForLogging()
+        }
+        
         payload.merge(analytic.params) { (_, new) in new }
         return payload
     }
@@ -130,17 +135,8 @@ extension STPAnalyticsClient {
         }
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
-        payload["publishable_key"] = publishableKeyProvider?.publishableKey ?? "unknown"
+        payload["publishable_key"] = publishableKeyProvider?.sanitizedPublishableKey ?? "unknown"
         
         return payload
-    }
-
-    public class func serializeError(_ error: NSError) -> [String: Any] {
-        // TODO(mludowise|MOBILESDK-193): Find a better solution than logging `userInfo`
-        return [
-            "domain": error.domain,
-            "code": error.code,
-            "user_info": error.userInfo,
-        ]
     }
 }

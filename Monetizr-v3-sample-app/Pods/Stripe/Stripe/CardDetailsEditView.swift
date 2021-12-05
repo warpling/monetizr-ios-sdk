@@ -8,13 +8,11 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 class CardDetailsEditView: UIView, CardScanningViewDelegate {
     let paymentMethodType: STPPaymentMethodType = .card
     weak var delegate: ElementDelegate?
-    var shouldSavePaymentMethod: Bool {
-        return saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected
-    }
 
     let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
     let merchantDisplayName: String
@@ -36,7 +34,7 @@ class CardDetailsEditView: UIView, CardScanningViewDelegate {
     }
 
     lazy var formView: STPCardFormView = {
-        let formView = STPCardFormView(billingAddressCollection: billingAddressCollection)
+        let formView = STPCardFormView(billingAddressCollection: billingAddressCollection, postalCodeRequirement: .upe)
         formView.internalDelegate = self
         return formView
     }()
@@ -106,12 +104,21 @@ class CardDetailsEditView: UIView, CardScanningViewDelegate {
 
     init(
         shouldDisplaySaveThisPaymentMethodCheckbox: Bool,
-        billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
-        merchantDisplayName: String
+        configuration: PaymentSheet.Configuration
     ) {
-        self.billingAddressCollection = billingAddressCollection
-        self.merchantDisplayName = merchantDisplayName
+        self.billingAddressCollection = configuration.billingAddressCollectionLevel
+        self.merchantDisplayName = configuration.merchantDisplayName
         super.init(frame: .zero)
+        
+        // Hack to set default postal code and country value
+        if let ds = formView.countryField.dataSource as? STPCountryPickerInputField.CountryPickerDataSource,
+           let countryIndex = ds.countries.firstIndex(where: {
+               $0.code == configuration.defaultBillingDetails.address.country
+           }) {
+            formView.countryField.pickerView.selectRow(countryIndex, inComponent: 0, animated: false)
+            formView.countryField.updateValue()
+        }
+        formView.postalCodeField.text = configuration.defaultBillingDetails.address.postalCode
 
         var cardScanningPlaceholderView = UIView()
         // Card scanning button
@@ -197,12 +204,14 @@ extension CardDetailsEditView: STPFormViewInternalDelegate {
 // MARK: - Element
 
 /// :nodoc:
-extension CardDetailsEditView: Element {
+extension CardDetailsEditView: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let paymentMethodParams = paymentMethodParams {
             params.paymentMethodParams.card = paymentMethodParams.card
             params.paymentMethodParams.billingDetails = paymentMethodParams.billingDetails
-            params.savePaymentMethod = saveThisCardCheckboxView.isSelected
+            if !saveThisCardCheckboxView.isHidden {
+                params.shouldSavePaymentMethod = saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected
+            }
             return params
         } else {
             return nil

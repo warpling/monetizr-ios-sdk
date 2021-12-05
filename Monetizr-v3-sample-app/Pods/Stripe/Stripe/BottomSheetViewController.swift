@@ -8,6 +8,8 @@
 
 import SafariServices
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol BottomSheetContentViewController: UIViewController {
     var navigationBar: SheetNavigationBar { get }
@@ -55,6 +57,8 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         contentViewController = toVC
         return popped
     }
+    
+    let isTestMode: Bool
 
     private var contentViewController: BottomSheetContentViewController {
         didSet(oldContentViewController) {
@@ -81,8 +85,9 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         }
     }
 
-    required init(contentViewController: BottomSheetContentViewController) {
+    required init(contentViewController: BottomSheetContentViewController, isTestMode: Bool) {
         self.contentViewController = contentViewController
+        self.isTestMode = isTestMode
 
         super.init(nibName: nil, bundle: nil)
 
@@ -99,8 +104,6 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
     }
 
     // MARK: -
-    private var cachedContentHeight: CGFloat = 0
-    private var cachedKeyboardHeight: CGFloat = 0
     private var scrollViewHeightConstraint: NSLayoutConstraint? = nil
 
     /// :nodoc:
@@ -156,18 +159,36 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
 
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(
-            self, selector: #selector(adjustForKeyboard),
+            self, selector: #selector(keyboardDidHide),
             name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(
-            self, selector: #selector(adjustForKeyboard),
-            name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+            self, selector: #selector(keyboardDidShow),
+            name: UIResponder.keyboardWillShowNotification, object: nil)
     }
 
     @objc
-    private func adjustForKeyboard(notification: Notification) {
+    private func keyboardDidShow(notification: Notification) {
+        // Hack to get orientation without using `UIApplication`
+        let landscape = UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height
+        // Handle iPad landscape edge case where `scrollRectToVisible` isn't sufficient
+        if UIDevice.current.userInterfaceIdiom == .pad && landscape {
+            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+            scrollView.contentInset.bottom = view.convert(keyboardFrame.cgRectValue, from: nil).size.height
+            return
+        }
+        
         if let firstResponder = view.firstResponder() {
             let firstResponderFrame = scrollView.convert(firstResponder.frame, from: firstResponder)
             scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
+        }
+    }
+    
+    @objc
+    private func keyboardDidHide(notification: Notification) {
+        if let firstResponder = view.firstResponder() {
+            let firstResponderFrame = scrollView.convert(firstResponder.frame, from: firstResponder)
+            scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
+            scrollView.contentInset.bottom = .zero
         }
     }
 
@@ -226,7 +247,7 @@ extension BottomSheetViewController: STPAuthenticationContext {
         _ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
-            challengeViewController: threeDS2ChallengeViewController)
+            challengeViewController: threeDS2ChallengeViewController, isTestMode: isTestMode)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         completion()

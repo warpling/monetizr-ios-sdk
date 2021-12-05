@@ -7,6 +7,7 @@
 
 #if os(iOS)
     import UIKit
+    @_spi(STP) import StripeUICore
 
     /// The PanModalPresentationController is the middle layer between the presentingViewController
     /// and the presentedViewController.
@@ -110,6 +111,14 @@
 
         var forceFullHeight: Bool = false {
             didSet {
+                guard containerView != nil else {
+                    // This can happen if we try setting content before
+                    // the presentation animation has run (happens sometimes
+                    // with really fast internet and automated tests)
+                    // fullHeightConstraint will get updated
+                    // when view is added
+                    return
+                }
                 fullHeightConstraint.isActive = forceFullHeight
             }
         }
@@ -346,7 +355,7 @@
             // The presented view (BottomSheetVC) does not inherit safeAreaLayoutGuide.bottom, so use a dummy view instead
             let coverUpBottomView = UIView()
             presentedView.addSubview(coverUpBottomView)
-            coverUpBottomView.backgroundColor = PaymentSheetUI.backgroundColor
+            coverUpBottomView.backgroundColor = ElementsUI.backgroundColor
             coverUpBottomView.translatesAutoresizingMaskIntoConstraints = false
 
             NSLayoutConstraint.activate([
@@ -365,6 +374,8 @@
                     equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
                 coverUpBottomView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             ])
+            
+            fullHeightConstraint.isActive = forceFullHeight
 
             if presentable.showDragIndicator {
                 addDragIndicatorView(to: presentedView)

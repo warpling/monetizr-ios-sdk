@@ -100,10 +100,8 @@ public class PaymentSheet {
 
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheet.load(
-            apiClient: configuration.apiClient,
             clientSecret: intentClientSecret,
-            ephemeralKey: configuration.customer?.ephemeralKeySecret,
-            customerID: configuration.customer?.id
+            configuration: configuration
         ) { result in
             switch result {
             case .success((let intent, let paymentMethods)):
@@ -134,15 +132,20 @@ public class PaymentSheet {
     }
 
     // MARK: - Internal Properties
-    /// An unordered list of paymentMethod types that can be used with PaymentSheet
-    static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL]
 
+    /// The client secret this instance was initialized with
     let intentClientSecret: IntentClientSecret
+    
+    /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> ())?
+    
+    /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
-        let vc = BottomSheetViewController(
-            contentViewController: LoadingViewController(delegate: self)
-        )
+        let loadingViewController = LoadingViewController(delegate: self,
+                                                          isTestMode:configuration.apiClient.isTestmode)
+        
+        let vc = BottomSheetViewController(contentViewController: loadingViewController,
+                                           isTestMode: configuration.apiClient.isTestmode)
         if #available(iOS 13.0, *) {
             configuration.style.configure(vc)
         }

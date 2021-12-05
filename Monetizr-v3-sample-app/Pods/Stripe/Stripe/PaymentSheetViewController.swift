@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
@@ -64,12 +65,14 @@ class PaymentSheetViewController: UIViewController {
 
     }()
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar()
+        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode)
         navBar.delegate = self
         return navBar
     }()
     private lazy var applePayHeader: ApplePayHeaderView = {
-        return ApplePayHeaderView(didTap: didTapApplePayButton)
+        return ApplePayHeaderView(didTap: { [weak self] in
+            self?.didTapApplePayButton()
+        })
     }()
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel()
@@ -78,7 +81,7 @@ class PaymentSheetViewController: UIViewController {
         return DynamicHeightContainerView()
     }()
     private lazy var errorLabel: UILabel = {
-        return PaymentSheetUI.makeErrorLabel()
+        return ElementsUI.makeErrorLabel()
     }()
     private lazy var buyButton: ConfirmButton = {
         let callToAction: ConfirmButton.CallToActionType = {
@@ -92,7 +95,10 @@ class PaymentSheetViewController: UIViewController {
         let button = ConfirmButton(
             style: .stripe,
             callToAction: callToAction,
-            didTap: didTapBuyButton)
+            didTap: { [weak self] in
+                self?.didTapBuyButton()
+            }
+        )
         return button
     }()
 
@@ -194,15 +200,15 @@ class PaymentSheetViewController: UIViewController {
     // state -> view
     private func updateUI(animated: Bool = true) {
         // Disable interaction if necessary
-        if isPaymentInFlight {
-            sendEventToSubviews(.shouldDisableUserInteraction, from: view)
-            view.isUserInteractionEnabled = false
-            isDismissable = false
-        } else {
-            sendEventToSubviews(.shouldEnableUserInteraction, from: view)
-            view.isUserInteractionEnabled = true
-            isDismissable = true
+        let shouldEnableUserInteraction = !isPaymentInFlight
+        if shouldEnableUserInteraction != view.isUserInteractionEnabled {
+            sendEventToSubviews(
+                shouldEnableUserInteraction ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+                from: view
+            )
         }
+        view.isUserInteractionEnabled = shouldEnableUserInteraction
+        isDismissable = !isPaymentInFlight
 
         // Update our views (starting from the top of the screen):
         configureNavBar()
@@ -253,10 +259,10 @@ class PaymentSheetViewController: UIViewController {
         switch mode {
         case .addingNew:
             if addPaymentMethodViewController.setErrorIfNecessary(for: error) == false {
-                errorLabel.text = error?.localizedDescription
+                errorLabel.text = error?.nonGenericDescription
             }
         case .selectingSaved:
-            errorLabel.text = error?.localizedDescription
+            errorLabel.text = error?.nonGenericDescription
         }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.errorLabel.setHiddenIfNecessary(self.error == nil)
@@ -434,6 +440,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             buyButton.update(state: .enabled)
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
+        navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }

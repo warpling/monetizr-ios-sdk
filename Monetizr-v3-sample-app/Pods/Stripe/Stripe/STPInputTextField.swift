@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidationObserver {
     let formatter: STPInputTextFieldFormatter
@@ -65,16 +66,16 @@ class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidation
         }
     }
 
-    internal func addAccessoryImageViews(_ accessoryImageViews: [UIImageView]) {
-        for imageView in accessoryImageViews {
-            accessoryImageStackView.addArrangedSubview(imageView)
+    internal func addAccessoryViews(_ accessoryViews: [UIView]) {
+        for view in accessoryViews {
+            accessoryImageStackView.addArrangedSubview(view)
         }
     }
 
-    internal func removeAccessoryImageViews(_ accessoryImageViews: [UIImageView]) {
-        for imageView in accessoryImageViews {
-            accessoryImageStackView.removeArrangedSubview(imageView)
-            imageView.removeFromSuperview()
+    internal func removeAccessoryViews(_ accessoryViews: [UIView]) {
+        for view in accessoryViews {
+            accessoryImageStackView.removeArrangedSubview(view)
+            view.removeFromSuperview()
         }
     }
 

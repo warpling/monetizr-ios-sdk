@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 class STPCardNumberInputTextField: STPInputTextField {
 
@@ -24,10 +25,7 @@ class STPCardNumberInputTextField: STPInputTextField {
             validator: STPCardNumberInputTextFieldValidator())
     }
 
-    lazy var brandImageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
-    }()
+    let brandImageView = CardBrandView()
 
     lazy var loadingIndicator: STPCardLoadingIndicator = {
         let loadingIndicator = STPCardLoadingIndicator()
@@ -41,7 +39,7 @@ class STPCardNumberInputTextField: STPInputTextField {
         super.init(formatter: formatter, validator: validator)
         keyboardType = .asciiCapableNumberPad
         textContentType = .creditCardNumber
-        addAccessoryImageViews([brandImageView])
+        addAccessoryViews([brandImageView])
         updateRightView()
     }
 
@@ -51,30 +49,25 @@ class STPCardNumberInputTextField: STPInputTextField {
 
     override func setupSubviews() {
         super.setupSubviews()
+        accessibilityIdentifier = "Card number"
         placeholder = STPLocalizedString("Card number", "Label for card number entry text field")
     }
 
     func updateRightView() {
-
-        // These sould be animated https://jira.corp.stripe.com/browse/MOBILESDK-109
         switch validator.validationState {
 
         case .unknown:
             loadingIndicator.removeFromSuperview()
-            brandImageView.image = STPImageLibrary.safeImageNamed("card_unknown_icon")
+            brandImageView.setCardBrand(.unknown, animated: true)
         case .valid, .incomplete:
             loadingIndicator.removeFromSuperview()
-            if cardBrand == .unknown {
-                brandImageView.image = STPImageLibrary.safeImageNamed("card_unknown_icon")
-            } else {
-                brandImageView.image = STPImageLibrary.cardBrandImage(for: cardBrand)
-            }
+            brandImageView.setCardBrand(cardBrand, animated: true)
         case .invalid:
             loadingIndicator.removeFromSuperview()
-            brandImageView.image = STPImageLibrary.safeImageNamed("card_unknown_icon")
+            brandImageView.setCardBrand(.unknown, animated: true)
         case .processing:
             if loadingIndicator.superview == nil {
-                brandImageView.image = STPImageLibrary.safeImageNamed("card_unknown_icon")
+                brandImageView.setCardBrand(.unknown, animated: true)
                 // delay a bit before showing loading indicator because the response may come quickly
                 DispatchQueue.main.asyncAfter(
                     deadline: DispatchTime.now() + Double(
@@ -106,15 +99,5 @@ class STPCardNumberInputTextField: STPInputTextField {
     ) {
         super.validationDidUpdate(to: state, from: previousState, for: unformattedInput, in: input)
         updateRightView()
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        // Workaround until we can use image assets
-        // Re-set the image
-        if cardBrand == .unknown {
-            brandImageView.image = STPImageLibrary.safeImageNamed("card_unknown_icon")
-        } else {
-            brandImageView.image = STPImageLibrary.cardBrandImage(for: cardBrand)
-        }
     }
 }

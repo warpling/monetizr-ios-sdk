@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: AddPaymentMethodViewController)
@@ -20,8 +21,12 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
     lazy var paymentMethodTypes: [STPPaymentMethodType] = {
-        return intent.orderedPaymentMethodTypes.filter {
-            PaymentSheet.supportsAdding(paymentMethod: $0, with: configuration)
+        return intent.recommendedPaymentMethodTypes.filter {
+            PaymentSheet.supportsAdding(
+                paymentMethod: $0,
+                configuration: configuration,
+                intent: intent
+            )
         }
     }()
     var selectedPaymentMethodType: STPPaymentMethodType {
@@ -38,7 +43,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
-    private lazy var paymentMethodFormElement: Element = {
+    private lazy var paymentMethodFormElement: PaymentMethodElement = {
         return makeElement(for: selectedPaymentMethodType)
     }()
 
@@ -145,55 +150,14 @@ class AddPaymentMethodViewController: UIViewController {
         }
     }
 
-    private func makeElement(for type: STPPaymentMethodType) -> Element {
-        let saveMode: FormElement.Configuration.SaveMode = {
-            switch intent {
-            case let .paymentIntent(paymentIntent):
-                if configuration.customer == nil {
-                    return .none
-                } else if paymentIntent.setupFutureUsage != .none {
-                    return .merchantRequired
-                } else {
-                    return .userSelectable
-                }
-            case .setupIntent:
-                return .merchantRequired
-            }
-        }()
-        let formConfiguration = FormElement.Configuration(
-            saveMode: saveMode,
-            merchantDisplayName: configuration.merchantDisplayName
-        )
-        let paymentMethodElement: Element = {
-            switch type {
-            case .card:
-                return CardDetailsEditView(
-                    shouldDisplaySaveThisPaymentMethodCheckbox: saveMode == .userSelectable,
-                    billingAddressCollection: configuration.billingAddressCollectionLevel,
-                    merchantDisplayName: configuration.merchantDisplayName
-                )
-            case .bancontact:
-                return FormElement.makeBancontact(configuration: formConfiguration)
-            case .iDEAL:
-                return FormElement.makeIdeal(configuration: formConfiguration)
-            case .alipay:
-                return FormElement(elements: [])
-            case .sofort:
-                return FormElement.makeSofort(configuration: formConfiguration)
-            case .SEPADebit:
-                return FormElement.makeSepa(configuration: formConfiguration)
-            case .giropay:
-                return FormElement.makeGiropay(configuration: formConfiguration)
-            case .EPS:
-                return FormElement.makeEPS(configuration: formConfiguration)
-            case .przelewy24:
-                return FormElement.makeP24(configuration: formConfiguration)
-            default:
-                fatalError()
-            }
-        }()
-        paymentMethodElement.delegate = self
-        return paymentMethodElement
+    private func makeElement(for type: STPPaymentMethodType) -> PaymentMethodElement {
+        let formElement = PaymentSheetFormFactory(
+            intent: intent,
+            configuration: configuration,
+            paymentMethod: type
+        ).make()
+        formElement.delegate = self
+        return formElement
     }
 }
 
@@ -210,7 +174,9 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 // MARK: - AddPaymentMethodViewDelegate
 
 extension AddPaymentMethodViewController: ElementDelegate {
-    func didFinishEditing(element: Element) { /* no-op */ }
+    func didFinishEditing(element: Element) {
+        delegate?.didUpdate(self)
+    }
     
     func didUpdate(element: Element) {
         delegate?.didUpdate(self)

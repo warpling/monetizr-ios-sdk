@@ -147,10 +147,8 @@ extension PaymentSheet {
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
             PaymentSheet.load(
-                apiClient: configuration.apiClient,
                 clientSecret: clientSecret,
-                ephemeralKey: configuration.customer?.ephemeralKeySecret,
-                customerID: configuration.customer?.id
+                configuration: configuration
             ) { result in
                 switch result {
                 case .success((let intent, let paymentMethods)):
@@ -181,7 +179,8 @@ extension PaymentSheet {
             if let completion = completion {
                 presentPaymentOptionsCompletion = completion
             }
-            let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController)
+            
+            let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController, isTestMode: configuration.apiClient.isTestmode)
             // Workaround to silence a warning in the Catalyst target
             #if targetEnvironment(macCatalyst)
             configuration.style.configure(bottomSheetVC)
@@ -191,16 +190,6 @@ extension PaymentSheet {
             }
             #endif
             presentingViewController.presentPanModal(bottomSheetVC)
-        }
-
-        // TODO: Remove this before releasing version beta-2 + 2
-        /// :nodoc:
-        @available(*, deprecated, message: "Use confirm(from:completion:) instead", renamed:"confirm(from:completion:)")
-        public func confirmPayment(
-            from presentingViewController: UIViewController,
-            completion: @escaping (PaymentSheetResult) -> ()
-        ) {
-            confirm(from: presentingViewController, completion: completion)
         }
 
         /// Completes the payment or setup.

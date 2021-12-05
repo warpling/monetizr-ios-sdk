@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
     func bottomSheet3DS2ViewControllerDidCancel(
@@ -18,7 +19,7 @@ class BottomSheet3DS2ViewController: UIViewController {
     weak var delegate: BottomSheet3DS2ViewControllerDelegate? = nil
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar()
+        let navBar = SheetNavigationBar(isTestMode: isTestMode)
         navBar.setStyle(.back)
         navBar.delegate = self
         return navBar
@@ -29,9 +30,11 @@ class BottomSheet3DS2ViewController: UIViewController {
     }
 
     let challengeViewController: UIViewController
+    let isTestMode: Bool
 
-    required init(challengeViewController: UIViewController) {
+    required init(challengeViewController: UIViewController, isTestMode: Bool) {
         self.challengeViewController = challengeViewController
+        self.isTestMode = isTestMode
         super.init(nibName: nil, bundle: nil)
     }
 

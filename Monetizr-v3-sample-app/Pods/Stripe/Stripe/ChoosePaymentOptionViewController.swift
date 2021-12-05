@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
     func choosePaymentOptionViewControllerShouldClose(
@@ -38,7 +39,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     }
     weak var delegate: ChoosePaymentOptionViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar()
+        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode)
         navBar.delegate = self
         return navBar
     }()
@@ -68,13 +69,15 @@ class ChoosePaymentOptionViewController: UIViewController {
         return DynamicHeightContainerView()
     }()
     private lazy var errorLabel: UILabel = {
-        return PaymentSheetUI.makeErrorLabel()
+        return ElementsUI.makeErrorLabel()
     }()
     private lazy var confirmButton: ConfirmButton = {
         let button = ConfirmButton(
             style: .stripe,
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
-            didTap: didTapAddButton
+            didTap: { [weak self] in
+                self?.didTapAddButton()
+            }
         )
         return button
     }()
@@ -181,13 +184,16 @@ class ChoosePaymentOptionViewController: UIViewController {
     // state -> view
     private func updateUI() {
         // Disable interaction if necessary
-        if isSavingInProgress {
-            sendEventToSubviews(.shouldDisableUserInteraction, from: view)
-            isDismissable = false
-        } else {
-            sendEventToSubviews(.shouldEnableUserInteraction, from: view)
-            isDismissable = true
+        let shouldEnableUserInteraction = !isSavingInProgress
+        if shouldEnableUserInteraction != view.isUserInteractionEnabled {
+            sendEventToSubviews(
+                shouldEnableUserInteraction ?
+                    .shouldEnableUserInteraction : .shouldDisableUserInteraction,
+                from: view
+            )
         }
+        view.isUserInteractionEnabled = shouldEnableUserInteraction
+        isDismissable = !isSavingInProgress
 
         configureNavBar()
 
@@ -358,6 +364,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         } else {
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
+        navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }

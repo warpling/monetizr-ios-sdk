@@ -9,6 +9,8 @@
 import Foundation
 import PassKit
 import UIKit
+@_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 
 private let spinnerMoveToCenterAnimationDuration = 0.35
 private let checkmarkStrokeDuration = 0.2
@@ -102,6 +104,11 @@ class ConfirmButton: UIView {
         layer.shadowPath = UIBezierPath(rect: bounds).cgPath  // To improve performance
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.buyButton.update(status: state, callToAction: callToAction)
+    }
+
     // MARK: - Internal Methods
 
     func update(
@@ -189,7 +196,7 @@ class ConfirmButton: UIView {
         lazy var titleLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
-            label.font = .preferredFont(forTextStyle: .callout)
+            label.font = .preferredFont(forTextStyle: .callout, weight: .medium, maximumPointSize: 25)
             label.textColor = .white
             return label
         }()
@@ -197,7 +204,6 @@ class ConfirmButton: UIView {
             let image = Image.icon_lock.makeImage(template: true)
             let icon = UIImageView(image: image)
             icon.setContentCompressionResistancePriority(.required, for: .horizontal)
-            icon.tintColor = titleLabel.textColor
             return icon
         }()
         lazy var spinnerCenteredToLockConstraint: NSLayoutConstraint = {
@@ -211,10 +217,16 @@ class ConfirmButton: UIView {
             return CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize))
         }()
 
+        var foregroundColor: UIColor = .white {
+            didSet {
+                foregroundColorDidChange()
+            }
+        }
+
         init() {
             super.init(frame: .zero)
             layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-            layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+            layer.cornerRadius = ElementsUI.defaultCornerRadius
             layer.masksToBounds = true
             // Give it a subtle outline, to safeguard against user provided colors that don't contrast enough with the background
             layer.borderWidth = 1
@@ -267,19 +279,8 @@ class ConfirmButton: UIView {
                 switch status {
                 case .enabled, .disabled:
                     switch callToAction {
-                    case let .add(paymentMethodType):
-                        switch paymentMethodType {
-                        case .card:
-                            return STPLocalizedString(
-                                "Add card",
-                                "Label of a button displayed below a card entry form that saves the card details"
-                            )
-                        default:
-                            return STPLocalizedString(
-                                "Select",
-                                "Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step"
-                            )
-                        }
+                    case .add:
+                        return String.Localized.continue
                     case let .pay(amount, currency):
                         let localizedAmount = String.localizedAmountDisplayString(
                             for: amount, currency: currency)
@@ -303,6 +304,15 @@ class ConfirmButton: UIView {
                     return nil
                 }
             }()
+            
+            // Show/hide lock icon
+            switch callToAction {
+              case .add:
+                lockIcon.isHidden = true
+              case .pay,
+                   .setup:
+                lockIcon.isHidden = false
+            }
 
             // Update accessibility information
             accessibilityLabel = text
@@ -354,14 +364,8 @@ class ConfirmButton: UIView {
                     }
                 }()
 
-                self.backgroundColor = {
-                    switch status {
-                    case .enabled, .disabled, .processing:
-                        return Self.appearance().backgroundColor ?? .systemBlue
-                    case .succeeded:
-                        return .systemGreen
-                    }
-                }()
+                self.backgroundColor = self.backgroundColor(for: status)
+                self.foregroundColor = self.foregroundColor(for: status)
 
                 // Show/hide the lock icon, spinner
                 switch status {
@@ -397,6 +401,39 @@ class ConfirmButton: UIView {
             self.spinner.completeProgress()
 
         }
+
+        private func backgroundColor(for status: Status) -> UIColor {
+            switch status {
+            case .enabled, .disabled, .processing:
+                return Self.appearance().backgroundColor ?? .systemBlue
+            case .succeeded:
+                return .systemGreen
+            }
+        }
+
+        private func foregroundColor(for status: Status) -> UIColor {
+            let background = backgroundColor(for: status)
+
+            let contrastRatioToWhite = background.contrastRatio(to: .white)
+            let contrastRatioToBlack = background.contrastRatio(to: .black)
+
+            // Prefer using a white foreground as long as a minimum contrast threshold is met.
+            // Factor the container color to compensate for "local adaptation".
+            // https://github.com/w3c/wcag/issues/695
+            let threshold: CGFloat = traitCollection.isDarkMode ? 3.6 : 2.2
+            if contrastRatioToWhite > threshold {
+                return .white
+            }
+
+            // Pick the foreground color that offers the best contrast ratio
+            return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
+        }
+
+        private func foregroundColorDidChange() {
+            titleLabel.textColor = foregroundColor
+            lockIcon.tintColor = foregroundColor
+            spinner.color = foregroundColor
+        }
     }
 
     // MARK: - CheckProgressView
@@ -404,6 +441,12 @@ class ConfirmButton: UIView {
     class CheckProgressView: UIView {
         let circleLayer = CAShapeLayer()
         let checkmarkLayer = CAShapeLayer()
+
+        var color: UIColor = .white {
+            didSet {
+                colorDidChange()
+            }
+        }
 
         override init(frame: CGRect) {
             // Circle
@@ -419,7 +462,6 @@ class ConfirmButton: UIView {
                 x: 0, y: 0, width: frame.size.width, height: frame.size.width)
             circleLayer.path = circlePath.cgPath
             circleLayer.fillColor = UIColor.clear.cgColor
-            circleLayer.strokeColor = UIColor.white.cgColor
             circleLayer.lineCap = .round
             circleLayer.lineWidth = 1.0
             circleLayer.strokeEnd = 0.0
@@ -438,7 +480,6 @@ class ConfirmButton: UIView {
             checkmarkLayer.path = checkmarkPath.cgPath
             checkmarkLayer.lineCap = .round
             checkmarkLayer.fillColor = UIColor.clear.cgColor
-            checkmarkLayer.strokeColor = UIColor.white.cgColor
             checkmarkLayer.lineWidth = 1.5
             checkmarkLayer.strokeEnd = 0.0
 
@@ -450,6 +491,8 @@ class ConfirmButton: UIView {
             self.backgroundColor = UIColor.clear
             layer.addSublayer(circleLayer)
             layer.addSublayer(checkmarkLayer)
+
+            colorDidChange()
         }
 
         required init?(coder: NSCoder) {
@@ -496,6 +539,11 @@ class ConfirmButton: UIView {
             animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
             checkmarkLayer.strokeEnd = 1.0
             checkmarkLayer.add(animation, forKey: "animateFinishCircle")
+        }
+
+        private func colorDidChange() {
+            circleLayer.strokeColor = color.cgColor
+            checkmarkLayer.strokeColor = color.cgColor
         }
     }
 }

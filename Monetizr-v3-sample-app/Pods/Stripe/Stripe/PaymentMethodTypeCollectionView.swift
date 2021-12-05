@@ -9,14 +9,16 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
 }
 
 // MARK: - Constants
-private let cellSize: CGSize = CGSize(width: 100, height: 52)
 private let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
+private let cellHeight: CGFloat = 52
+private let minInteritemSpacing: CGFloat = 12
 
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 class PaymentMethodTypeCollectionView: UICollectionView {
@@ -43,8 +45,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         layout.sectionInset = UIEdgeInsets(
             top: 0, left: PaymentSheetUI.defaultPadding, bottom: 0,
             right: PaymentSheetUI.defaultPadding)
-        layout.itemSize = cellSize
-        layout.minimumInteritemSpacing = 12
+        layout.minimumInteritemSpacing = minInteritemSpacing
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
         self.delegate = self
@@ -56,6 +57,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         register(PaymentTypeCell.self, forCellWithReuseIdentifier: PaymentTypeCell.reuseIdentifier)
         clipsToBounds = false
         layer.masksToBounds = false
+        accessibilityIdentifier = "PaymentMethodTypeCollectionView"
     }
 
     required init?(coder: NSCoder) {
@@ -63,13 +65,13 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: cellSize.height)
+        return CGSize(width: UIView.noIntrinsicMetric, height: cellHeight)
     }
 }
 
-// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
 
-extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollectionViewDelegate {
+extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
         -> Int
     {
@@ -96,6 +98,15 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         selected = paymentMethodTypes[indexPath.item]
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // Fixed size cells for iPad
+        guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: cellHeight) }
+
+        // Show 3 full cells plus 30% of the next if present
+        let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (minInteritemSpacing * 3.0))) / 3.3
+        return CGSize(width: cellWidth, height: cellHeight)
+    }
 }
 
 // MARK: - Cells
@@ -112,7 +123,8 @@ extension PaymentMethodTypeCollectionView {
         private lazy var label: UILabel = {
             let label = UILabel()
             label.numberOfLines = 1
-            label.font = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium)
+            label.font = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
+            label.adjustsFontSizeToFitWidth = true
             label.textColor = CompatibleColor.label
             return label
         }()
@@ -160,10 +172,10 @@ extension PaymentMethodTypeCollectionView {
                 label.bottomAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leftAnchor.constraint(equalTo: paymentMethodLogo.leftAnchor),
-                label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor),
+                label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -5),
             ])
 
-            contentView.layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+            contentView.layer.cornerRadius = ElementsUI.defaultCornerRadius
             contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
             contentView.layer.shadowRadius = 1.5
             contentView.layer.shadowColor = UIColor.black.cgColor
@@ -185,6 +197,7 @@ extension PaymentMethodTypeCollectionView {
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
             update()
         }
 
@@ -234,6 +247,7 @@ extension PaymentMethodTypeCollectionView {
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
+            accessibilityIdentifier = STPPaymentMethod.string(from: paymentMethodType)
         }
     }
 }

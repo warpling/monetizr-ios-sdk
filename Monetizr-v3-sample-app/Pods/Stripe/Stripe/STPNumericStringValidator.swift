@@ -7,6 +7,8 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 enum STPTextValidationState: Int {
     case empty

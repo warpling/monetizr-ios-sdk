@@ -15,7 +15,7 @@ import Foundation
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
-
+    
     var clientSecret: String {
         switch self {
         case .paymentIntent(let pi):
@@ -24,14 +24,23 @@ enum Intent {
             return si.clientSecret
         }
     }
-
-    /// A sorted list of payment method types supported by the Intent and PaymentSheet, ordered from most recommended to least recommended.
-    var orderedPaymentMethodTypes: [STPPaymentMethodType] {
+    
+    var unactivatedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
-            return pi.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+            return pi.unactivatedPaymentMethodTypes
         case .setupIntent(let si):
-            return si.orderedPaymentMethodTypes.filter { PaymentSheet.supportedPaymentMethods.contains($0) }
+            return si.unactivatedPaymentMethodTypes
+        }
+    }
+    
+    /// A sorted list of payment method types supported by the Intent and PaymentSheet, ordered from most recommended to least recommended.
+    var recommendedPaymentMethodTypes: [STPPaymentMethodType] {
+        switch self {
+        case .paymentIntent(let pi):
+            return pi.orderedPaymentMethodTypes
+        case .setupIntent(let si):
+            return si.orderedPaymentMethodTypes
         }
     }
 }
@@ -42,7 +51,7 @@ enum Intent {
 enum IntentClientSecret {
     /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     case paymentIntent(clientSecret: String)
-
+    
     /// The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
     case setupIntent(clientSecret: String)
 }
@@ -54,9 +63,10 @@ enum IntentClientSecret {
 class IntentConfirmParams {
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: STPPaymentMethodType
-
+    
+    /// If we're displaying a "Save for future payments?" toggle, this should be set to the value of the toggle. Otherwise, leave it nil.
     /// - Note: PaymentIntent-only
-    var savePaymentMethod: Bool = false
+    var shouldSavePaymentMethod: Bool? = nil
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     
@@ -69,8 +79,10 @@ class IntentConfirmParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
         params.paymentMethodParams = paymentMethodParams
         params.paymentMethodOptions = paymentMethodOptions
-        if savePaymentMethod {
-            params.setupFutureUsage = .offSession
+        
+        if let shouldSavePaymentMethod = shouldSavePaymentMethod {
+            // Instead of using `params.setupFutureUsage`, we use additionalAPIParameters to send "" as a value to avoid changing the public string value of STPPaymentIntentSetupFutureUsage.none
+            params.additionalAPIParameters["setup_future_usage"] = shouldSavePaymentMethod ? "off_session" : ""
         }
         return params
     }
@@ -87,7 +99,7 @@ class IntentConfirmParams {
         
         // Dashboard only supports a specific payment flow today
         assert(paymentMethodOptions == nil)
-        assert(savePaymentMethod == false)
+        assert(shouldSavePaymentMethod == false)
         params.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         let cardOptions = STPConfirmCardOptions()
         cardOptions.additionalAPIParameters["moto"] = true

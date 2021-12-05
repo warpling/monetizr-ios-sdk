@@ -3,12 +3,16 @@ PODS:
   - AlamofireImage (4.2.0):
     - Alamofire (~> 5.4)
   - McPicker (3.0.0)
-  - Stripe (21.8.1):
-    - Stripe/Stripe3DS2 (= 21.8.1)
-    - StripeCore (= 21.8.1)
-  - Stripe/Stripe3DS2 (21.8.1):
-    - StripeCore (= 21.8.1)
-  - StripeCore (21.8.1)
+  - Stripe (21.9.1):
+    - Stripe/Stripe3DS2 (= 21.9.1)
+    - StripeCore (= 21.9.1)
+    - StripeUICore (= 21.9.1)
+  - Stripe/Stripe3DS2 (21.9.1):
+    - StripeCore (= 21.9.1)
+    - StripeUICore (= 21.9.1)
+  - StripeCore (21.9.1)
+  - StripeUICore (21.9.1):
+    - StripeCore (= 21.9.1)
 
 DEPENDENCIES:
   - Alamofire
@@ -23,13 +27,15 @@ SPEC REPOS:
     - McPicker
     - Stripe
     - StripeCore
+    - StripeUICore
 
 SPEC CHECKSUMS:
   Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
   AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
   McPicker: ba38be56a8194faa5249eca4226c364eed628044
-  Stripe: 57c6997c64042a3f5aedae9b76e331942f8b75d2
-  StripeCore: a6e50d58119a0c7601773b56f274db2d394dcdac
+  Stripe: 22c1b8da5ee20a1aaf40fd198160efa72e71644a
+  StripeCore: 91ea038ac0abbb72f11014044dfd1e5d39089714
+  StripeUICore: 7edf64b24c9c178bfd97e988f2cffdbb7a7628b0
 
 PODFILE CHECKSUM: 532084802424d6ad45fb9bb96b969ccb85c8d305
 
